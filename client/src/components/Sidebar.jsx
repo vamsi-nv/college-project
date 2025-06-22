@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { FiHome, FiCompass, FiBell, FiUser, FiLogOut } from "react-icons/fi";
+import { LuUsers } from "react-icons/lu";
 import { useAuth } from "../context/UserContextProvider";
 
 function Sidebar() {
@@ -22,6 +23,11 @@ function Sidebar() {
       icon: FiBell,
     },
     {
+      label : "Clubs",
+      path: "/clubs",
+      icon : LuUsers
+    },
+    {
       label: "Profile",
       path: "/profile",
       icon: FiUser,
@@ -29,7 +35,7 @@ function Sidebar() {
   ];
 
   return (
-    <div className="min-h-screen border-r border-gray-400 px-8 py-8">
+    <div className="min-h-screen border-r border-gray-300 px-8 py-8">
       <div className="flex flex-col group">
         {navItems.map(({ label, path, icon: Icon }) => (
           <div className="relative group" key={path}>

@@ -26,6 +26,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+
+    clubs: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Club",
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Notifications from "./pages/Notifications";
 import Profile from "./pages/Profile";
 import Explore from "./pages/Explore";
+import Clubs from "./pages/Clubs";
 
 function App() {
   const { user, loading } = useAuth();
@@ -24,9 +25,10 @@ function App() {
           element={user ? <HomeLayout /> : <Navigate to="/login" />}
         >
           <Route index element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/notifications" element={<Notifications />} />
           <Route path="/explore" element={<Explore />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/clubs" element={<Clubs/>}/>
+          <Route path="/profile" element={<Profile />} />
         </Route>
         <Route
           path="/register"
