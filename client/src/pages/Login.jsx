@@ -1,20 +1,32 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../components/Input";
+import axiosInstance from "../utils/axiosInstance";
+import { api_paths } from "../utils/apiPaths";
+import { validateEmail } from "../utils/helper";
+import { useAuth } from "../context/UserContextProvider";
 
 function Login() {
+  const {fetchCurrentUser} = useAuth()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    console.log("Form submitted");
 
     if (!email) {
       setError("Email is required");
       return;
+    }
+    if (email) {
+      if (!validateEmail(email)) {
+        setError("Invalid email format");
+        return;
+      }
     }
     if (!password) {
       setError("Password is required");
@@ -22,6 +34,29 @@ function Login() {
     }
 
     setError("");
+
+    try {
+      const response = await axiosInstance.post(api_paths.auth.login, {
+        email,
+        password,
+      });
+      const data = response.data;
+      if (data.success) {
+        console.log(data.message);
+        localStorage.setItem("college-token", response.data.token);
+
+        fetchCurrentUser()
+        navigate("/");
+      }
+    } catch (error) {
+      setError(
+        error.response?.data?.message ||
+          error.message ||
+          "Something went wrong. Please try again"
+      );
+
+      console.log(error);
+    }
   };
 
   return (
