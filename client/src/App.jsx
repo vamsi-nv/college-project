@@ -1,9 +1,13 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
-import Home from "./pages/Home";
 import { useAuth } from "./context/UserContextProvider";
 import Loader from "./components/Loader";
+import HomeLayout from "./layout/HomeLayout";
+import Home from "./pages/Home";
+import Notifications from "./pages/Notifications";
+import Profile from "./pages/Profile";
+import Explore from "./pages/Explore";
 
 function App() {
   const { user, loading } = useAuth();
@@ -15,7 +19,15 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Routes>
-        <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} />
+        <Route
+          path="/"
+          element={user ? <HomeLayout /> : <Navigate to="/login" />}
+        >
+          <Route index element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/explore" element={<Explore />} />
+        </Route>
         <Route
           path="/register"
           element={!user ? <Signup /> : <Navigate to="/" />}

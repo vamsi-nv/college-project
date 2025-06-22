@@ -1,10 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
+import { useNavigate } from "react-router-dom";
 
 const UserContext = createContext();
 
 function UserContextProvider({ children }) {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -30,7 +32,7 @@ function UserContextProvider({ children }) {
   const logout = () => {
     setUser(null); // {} is a truthy value
     localStorage.removeItem("college-token");
-    window.location.href = "/login"
+    navigate("/login");
   };
 
   const value = { user, logout, loading, fetchCurrentUser };

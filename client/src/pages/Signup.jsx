@@ -5,6 +5,7 @@ import axiosInstance from "../utils/axiosInstance.js";
 import { api_paths } from "../utils/apiPaths";
 import { validateEmail } from "../utils/helper.js";
 import { useAuth } from "../context/UserContextProvider.jsx";
+import Loader from "../components/Loader";
 
 function Signup() {
   const { fetchCurrentUser } = useAuth();
@@ -13,6 +14,7 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); 
 
   const navigate = useNavigate();
 
@@ -38,6 +40,7 @@ function Signup() {
     }
 
     setError("");
+    setLoading(true); 
     try {
       const response = await axiosInstance.post(api_paths.auth.register, {
         name,
@@ -46,9 +49,8 @@ function Signup() {
       });
       const data = response.data;
       if (data.success) {
-        console.log(data.message);
         localStorage.setItem("college-token", response.data.token);
-        fetchCurrentUser();
+        await fetchCurrentUser();
         navigate("/");
       }
     } catch (error) {
@@ -58,8 +60,12 @@ function Signup() {
           "Something went wrong. Please try again"
       );
       console.log(error);
+    } finally {
+      setLoading(false); 
     }
   };
+
+  if (loading) return <Loader />; 
 
   return (
     <div className="min-h-screen flex items-center justify-center">

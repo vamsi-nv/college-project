@@ -5,18 +5,19 @@ import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
 import { validateEmail } from "../utils/helper";
 import { useAuth } from "../context/UserContextProvider";
+import Loader from "../components/Loader";
 
 function Login() {
-  const {fetchCurrentUser} = useAuth()
+  const { fetchCurrentUser } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Form submitted");
 
     if (!email) {
       setError("Email is required");
@@ -34,6 +35,7 @@ function Login() {
     }
 
     setError("");
+    setLoading(true);
 
     try {
       const response = await axiosInstance.post(api_paths.auth.login, {
@@ -42,10 +44,8 @@ function Login() {
       });
       const data = response.data;
       if (data.success) {
-        console.log(data.message);
         localStorage.setItem("college-token", response.data.token);
-
-        fetchCurrentUser()
+        await fetchCurrentUser();
         navigate("/");
       }
     } catch (error) {
@@ -54,10 +54,13 @@ function Login() {
           error.message ||
           "Something went wrong. Please try again"
       );
-
       console.log(error);
+    } finally {
+      setLoading(false); 
     }
   };
+
+  if (loading) return <Loader />; 
 
   return (
     <div className="min-h-screen flex items-center justify-center">
