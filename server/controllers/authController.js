@@ -43,6 +43,7 @@ export const registerUser = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server Error",
+      error: error.message,
     });
   }
 };
@@ -79,13 +80,14 @@ export const loginUser = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server Error",
+      error: error.message,
     });
   }
 };
 
 export const getCurrentUser = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password");
+    const user = await User.findById(req.user._id).select("-password");
 
     if (!user) {
       return res.status(404).json({
@@ -103,6 +105,7 @@ export const getCurrentUser = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server Error",
+      error: error.message,
     });
   }
 };
