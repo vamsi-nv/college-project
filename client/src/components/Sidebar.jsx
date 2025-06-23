@@ -35,9 +35,11 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
   ];
 
   return (
-    <div
-      className={`min-h-screen bg-gray-100 border-r border-gray-300 px-8 py-8 transfrom transition-transform duration-300 ease-in-out ${
-        isMobileMenuOpen ? "absolute z-50 sm:fixed translate-x-0" : "sm:block max-sm:-translate-x-full"
+    <section
+      className={`min-h-screen bg-gray-100 border-r border-gray-300 p-4 lg:p-8  transfrom transition-transform duration-300 ease-in-out ${
+        isMobileMenuOpen
+          ? "absolute z-50 sm:fixed translate-x-0"
+          : "sm:block max-sm:hidden max-sm:-translate-x-full"
       }`}
     >
       <div className="flex flex-col group">
@@ -50,7 +52,9 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
             <NavLink
               to={path}
               className={({ isActive }) =>
-                `flex items-center gap-3 text-base mb-4 p-4 transition-all duration-100 rounded-lg ${
+                `flex items-center ${
+                  !isMobileMenuOpen && "max-xl:justify-center"
+                } gap-3 text-base mb-4 p-4 transition-all duration-100 rounded-lg ${
                   isActive ? "bg-neutral-900" : "hover:bg-gray-200"
                 }`
               }
@@ -58,7 +62,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
               {({ isActive }) => (
                 <>
                   <Icon
-                    className={`size-6 max-xl:size-6 transition-all duration-200 ${
+                    className={`size-5 lg:size-6 transition-all duration-200 ${
                       isActive ? "stroke-2 text-white" : "stroke-gray-500"
                     }`}
                   />
@@ -91,7 +95,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
           Logout
         </span>
       </button>
-    </div>
+    </section>
   );
 }
 

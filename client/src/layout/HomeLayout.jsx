@@ -9,7 +9,7 @@ function HomeLayout() {
   return (
     <div
       className={`min-h-screen relative flex ${
-        isMobileMenuOpen ? "flex-col" : "flex-row"
+        isMobileMenuOpen ? "flex-col" : ""
       } bg-gray-100`}
     >
       <div>
@@ -33,7 +33,7 @@ function HomeLayout() {
         ></div>
       )}
 
-      <div className="flex-1 p-6 overflow-y-auto">
+      <div className="flex-1 p-6 mt-10 overflow-y-auto">
         <Outlet />
       </div>
     </div>

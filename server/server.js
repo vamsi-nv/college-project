@@ -1,8 +1,9 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import authRouter from "./routes/authRoutes.js";
 import connectDB from "./config/db.js";
+import authRouter from "./routes/authRoutes.js";
+import clubRouter from "./routes/clubRoutes.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/clubs", clubRouter)
 
 
 app.listen(port, () => {
