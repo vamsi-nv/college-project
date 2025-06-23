@@ -3,7 +3,7 @@ import { FiHome, FiCompass, FiBell, FiUser, FiLogOut } from "react-icons/fi";
 import { LuUsers } from "react-icons/lu";
 import { useAuth } from "../context/UserContextProvider";
 
-function Sidebar() {
+function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
   const { logout } = useAuth();
 
   const navItems = [
@@ -23,9 +23,9 @@ function Sidebar() {
       icon: FiBell,
     },
     {
-      label : "Clubs",
+      label: "Clubs",
       path: "/clubs",
-      icon : LuUsers
+      icon: LuUsers,
     },
     {
       label: "Profile",
@@ -35,10 +35,18 @@ function Sidebar() {
   ];
 
   return (
-    <div className="min-h-screen border-r border-gray-300 px-8 py-8">
+    <div
+      className={`min-h-screen bg-gray-100 border-r border-gray-300 px-8 py-8 transfrom transition-transform duration-300 ease-in-out ${
+        isMobileMenuOpen ? "absolute z-50 sm:fixed translate-x-0" : "sm:block max-sm:-translate-x-full"
+      }`}
+    >
       <div className="flex flex-col group">
         {navItems.map(({ label, path, icon: Icon }) => (
-          <div className="relative group" key={path}>
+          <div
+            className="relative"
+            onClick={() => setIsMobileMenuOpen(false)}
+            key={path}
+          >
             <NavLink
               to={path}
               className={({ isActive }) =>
@@ -55,7 +63,9 @@ function Sidebar() {
                     }`}
                   />
                   <span
-                    className={`hidden xl:flex-1 xl:block transition-all duration-200 ${
+                    className={`${
+                      isMobileMenuOpen ? "max-sm:block" : ""
+                    } hidden xl:flex-1 xl:block transition-all duration-200 ${
                       isActive ? "text-white" : "text-gray-500"
                     }`}
                   >
@@ -70,10 +80,16 @@ function Sidebar() {
 
       <button
         onClick={logout}
-        className="flex items-center gap-3 text-base p-4 text-gray-500 hover:gap-4 hover:text-neutral-950 transition-all duration-200"
+        className={`  flex items-center gap-3 text-base p-4 text-gray-500 hover:gap-4 hover:text-neutral-950 transition-all duration-200`}
       >
         <FiLogOut className="h-5 w-5 max-xl:flex-1" />
-        <span className="hidden xl:flex-1 xl:block">Logout</span>
+        <span
+          className={`${
+            isMobileMenuOpen ? "max-sm:block" : ""
+          }  hidden xl:flex-1 xl:block`}
+        >
+          Logout
+        </span>
       </button>
     </div>
   );

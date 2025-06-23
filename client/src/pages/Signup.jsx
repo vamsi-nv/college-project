@@ -68,12 +68,12 @@ function Signup() {
   if (loading) return <Loader />; 
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="w-4/5 md:w-3/5 lg:w-2/5 max-w-lg shadow-md border border-gray-200 p-8 bg-gray-50 rounded-lg">
-        <h2 className="mx-4 my-5 font-semibold text-2xl text-center">
+    <div className="min-h-screen flex items-center justify-center px-2">
+      <div className="w-full max-w-sm sm:max-w-lg shadow-md border border-gray-200 p-4 sm:p-8 bg-gray-50 rounded-lg">
+        <h2 className="mx-2 sm:mx-4 my-5 font-semibold text-xl sm:text-2xl text-center">
           Sign Up
         </h2>
-        <form onSubmit={handleSignUp} className="flex flex-col">
+        <form onSubmit={handleSignUp} className="flex flex-col gap-1 sm:gap-4 p-2 sm:p-4" >
           <Input
             value={name}
             id="name"
@@ -98,9 +98,9 @@ function Signup() {
             label="Password"
             placeholder="Enter your password"
           />
-          {error && <p className="text-sm text-red-500 mb-3 ml-4">*{error}</p>}
+          {error && <p className="text-xs sm:text-sm text-red-500 mb-2 sm:mb-3 ml-2 sm:ml-4">*{error}</p>}
 
-          <p className="text-sm mb-4 ml-4 text-gray-400">
+          <p className="text-xs sm:text-sm mb-2 sm:mb-4 ml-2 sm:ml-4 text-gray-400">
             Already have an account?{" "}
             <span
               onClick={() => navigate("/login")}
@@ -110,7 +110,7 @@ function Signup() {
             </span>
           </p>
 
-          <button type="submit" className="form-submit-btn">
+          <button type="submit" className="form-submit-btn w-full">
             Sign Up
           </button>
         </form>

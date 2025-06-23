@@ -10,13 +10,13 @@ button {
 }
 
 .input-field {
-  @apply outline-none p-4 border border-gray-300 focus:ring-1 focus:ring-black placeholder:text-gray-400 rounded-lg bg-neutral-50;
+  @apply outline-none p-2 sm:p-4 border border-gray-300 focus:ring-1 focus:ring-black placeholder:text-gray-400 rounded-lg bg-neutral-50 text-sm sm:text-base;
 }
 
 .input-field-label {
-  @apply px-4 text-gray-600 text-sm;
+  @apply px-4 text-gray-600 text-sm max-sm:text-xs;
 }
 
 .form-submit-btn {
-  @apply bg-neutral-950 text-white p-4 text-base rounded-lg hover:bg-neutral-900/95 hover:scale-105 transition-all duration-300;
+  @apply bg-neutral-950 text-white p-4 max-sm:text-sm text-base rounded-lg hover:bg-neutral-900/95 hover:scale-105 transition-all duration-300;
 }
