@@ -38,8 +38,8 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
     <section
       className={`min-h-screen bg-gray-100 border-r border-gray-300 p-4 lg:p-8  transfrom transition-transform duration-300 ease-in-out ${
         isMobileMenuOpen
-          ? "absolute z-50 sm:fixed translate-x-0"
-          : "sm:block max-sm:hidden max-sm:-translate-x-full"
+          ? "absolute z-50 translate-x-0"
+          : "md:block max-sm:hidden max-sm:-translate-x-full"
       }`}
     >
       <div className="flex flex-col group">

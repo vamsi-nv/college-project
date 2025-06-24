@@ -2,16 +2,13 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { RiMenu2Fill } from "react-icons/ri";
 import { useState } from "react";
+import RightSidebar from "../components/RightSidebar";
 
 function HomeLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div
-      className={`min-h-screen relative flex ${
-        isMobileMenuOpen ? "flex-col" : ""
-      } bg-gray-100`}
-    >
+    <div className={`min-h-screen relative flex bg-gray-100`}>
       <div>
         <Sidebar
           isMobileMenuOpen={isMobileMenuOpen}
@@ -33,8 +30,11 @@ function HomeLayout() {
         ></div>
       )}
 
-      <div className="flex-1 p-6 mt-10 overflow-y-auto">
+      <div className="flex-2 p-6 mt-10 overflow-y-auto">
         <Outlet />
+      </div>
+      <div className="flex-1 max-md:hidden border-l border-gray-300">
+        <RightSidebar />
       </div>
     </div>
   );
