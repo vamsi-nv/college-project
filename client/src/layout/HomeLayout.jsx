@@ -30,7 +30,7 @@ function HomeLayout() {
         ></div>
       )}
 
-      <div className="flex-2 p-6 mt-10 overflow-y-auto">
+      <div className="flex-2 overflow-y-auto">
         <Outlet />
       </div>
       <div className="flex-1 max-md:hidden border-l border-gray-300">

@@ -106,7 +106,7 @@ export const joinClub = async (req, res) => {
     club.members.push(userId);
     await club.save();
 
-    res.status(400).json({
+    res.status(200).json({
       success: true,
       message: "Joined club successfully",
       club,

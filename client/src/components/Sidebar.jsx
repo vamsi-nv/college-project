@@ -55,7 +55,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                 `flex items-center ${
                   !isMobileMenuOpen && "max-xl:justify-center"
                 } gap-3 text-base mb-4 p-4 transition-all duration-100 rounded-lg ${
-                  isActive ? "bg-neutral-900" : "hover:bg-gray-200"
+                  isActive ? "bg-primary" : "hover:bg-gray-200"
                 }`
               }
             >

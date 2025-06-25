@@ -70,7 +70,7 @@ function Signup() {
   return (
     <div className="min-h-screen flex items-center justify-center px-2">
       <div className="w-full max-w-sm sm:max-w-lg shadow-md border border-gray-200 p-4 sm:p-8 bg-gray-50 rounded-lg">
-        <h2 className="mx-2 sm:mx-4 my-5 font-semibold text-xl sm:text-2xl text-center">
+        <h2 className="mx-2 sm:mx-4 my-5 font-semibold text-xl sm:text-2xl text-center text-primary">
           Sign Up
         </h2>
         <form onSubmit={handleSignUp} className="flex flex-col gap-1 sm:gap-4 p-2 sm:p-4" >
