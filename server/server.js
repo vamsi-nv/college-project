@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import authRouter from "./routes/authRoutes.js";
 import clubRouter from "./routes/clubRoutes.js";
 import eventRouter from "./routes/eventRoutes.js";
+import annoucementRouter from "./routes/announcementRoutes.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/clubs", clubRouter);
 app.use("/api/events", eventRouter);
+app.use("/api/announcements", annoucementRouter);
 
 app.listen(port, () => {
   console.log("Server is up and running on port : " + port);

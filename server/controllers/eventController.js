@@ -24,7 +24,7 @@ export const createEvent = async (req, res) => {
     const newEvent = await Event.create({
       title,
       description,
-      date,
+      date : new Date(date),
       location,
       bannerImage,
       club,
@@ -150,6 +150,14 @@ export const deleteEvent = async (req, res) => {
         success: false,
         message: "Event not found",
       });
+    }
+
+    const club = await Club.findById(event.club);
+    if(!club.admins.includes(userId)){
+      return res.status(403).json({
+        success : false,
+        message : "Not authorized to perform this action"
+      })
     }
 
     await Event.findByIdAndDelete(req.params.id);
