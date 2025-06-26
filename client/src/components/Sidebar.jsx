@@ -4,7 +4,7 @@ import { LuUsers } from "react-icons/lu";
 import { useAuth } from "../context/UserContextProvider";
 
 function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const navItems = [
     {
@@ -36,7 +36,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
 
   return (
     <section
-      className={`min-h-screen bg-gray-100 border-r border-gray-300 p-4 lg:p-8  transfrom transition-transform duration-300 ease-in-out ${
+      className={`min-h-screen bg-gray-100 lg:ml-30 border-r border-gray-300 p-4 lg:p-8 transfrom transition-transform duration-300 ease-in-out flex flex-col items-start ${
         isMobileMenuOpen
           ? "absolute z-50 translate-x-0"
           : "md:block max-sm:hidden max-sm:-translate-x-full"
@@ -84,7 +84,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
 
       <button
         onClick={logout}
-        className={`  flex items-center gap-3 text-base p-4 text-gray-500 hover:gap-4 hover:text-neutral-950 transition-all duration-200`}
+        className={`flex items-center gap-3 text-base p-4 text-gray-500 hover:gap-4 hover:text-neutral-950 transition-all duration-200`}
       >
         <FiLogOut className="h-5 w-5 max-xl:flex-1" />
         <span

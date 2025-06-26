@@ -30,10 +30,10 @@ function HomeLayout() {
         ></div>
       )}
 
-      <div className="flex-2 overflow-y-auto">
+      <div className="flex-5 overflow-y-auto">
         <Outlet />
       </div>
-      <div className="flex-1 max-md:hidden border-l border-gray-300">
+      <div className="flex-4 max-md:hidden border-l border-gray-300">
         <RightSidebar />
       </div>
     </div>

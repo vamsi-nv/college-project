@@ -34,7 +34,7 @@ button {
 }
 
 .tab-selected {
-  @apply after:opacity-100 after:scale-x-100 text-primary;
+  @apply after:opacity-100 after:scale-x-100 font-medium text-primary;
 }
 
 .tab-not-selected {

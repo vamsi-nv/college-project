@@ -6,15 +6,17 @@ import { api_paths } from "../utils/apiPaths";
 import { validateEmail } from "../utils/helper.js";
 import { useAuth } from "../context/UserContextProvider.jsx";
 import Loader from "../components/Loader";
-
+import { RxAvatar } from "react-icons/rx";
+import ProfilePhotoSelector from "../components/ProfilePhotoSelector.jsx";
 function Signup() {
   const { fetchCurrentUser } = useAuth();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [image, setImage] = useState(null);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -28,24 +30,34 @@ function Signup() {
       setError("Email is required");
       return;
     }
-    if (email) {
-      if (!validateEmail(email)) {
-        setError("Invalid email format");
-        return;
-      }
+
+    if (!validateEmail(email)) {
+      setError("Invalid email format");
+      return;
     }
+
     if (!password) {
       setError("Password is required");
       return;
     }
 
     setError("");
-    setLoading(true); 
+    setLoading(true);
     try {
-      const response = await axiosInstance.post(api_paths.auth.register, {
-        name,
-        email,
-        password,
+
+      const formData = new FormData()
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("password", password);
+      if(image){
+        formData.append("image", image)
+      }
+
+
+      const response = await axiosInstance.post(api_paths.auth.register, formData, {
+        headers : {
+          "Content-Type" : "multipart/form-data"
+        }
       });
       const data = response.data;
       if (data.success) {
@@ -61,11 +73,11 @@ function Signup() {
       );
       console.log(error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
-  if (loading) return <Loader />; 
+  if (loading) return <Loader />;
 
   return (
     <div className="min-h-screen flex items-center justify-center px-2">
@@ -73,7 +85,11 @@ function Signup() {
         <h2 className="mx-2 sm:mx-4 my-5 font-semibold text-xl sm:text-2xl text-center text-primary">
           Sign Up
         </h2>
-        <form onSubmit={handleSignUp} className="flex flex-col gap-1 sm:gap-4 p-2 sm:p-4" >
+        <form
+          onSubmit={handleSignUp}
+          className="flex flex-col gap-1 sm:gap-4 p-2 sm:p-4"
+        >
+          <ProfilePhotoSelector image={image} setImage={setImage} />
           <Input
             value={name}
             id="name"
@@ -98,7 +114,11 @@ function Signup() {
             label="Password"
             placeholder="Enter your password"
           />
-          {error && <p className="text-xs sm:text-sm text-red-500 mb-2 sm:mb-3 ml-2 sm:ml-4">*{error}</p>}
+          {error && (
+            <p className="text-xs sm:text-sm text-red-500 mb-2 sm:mb-3 ml-2 sm:ml-4">
+              *{error}
+            </p>
+          )}
 
           <p className="text-xs sm:text-sm mb-2 sm:mb-4 ml-2 sm:ml-4 text-gray-400">
             Already have an account?{" "}

@@ -23,11 +23,9 @@ function Login() {
       setError("Email is required");
       return;
     }
-    if (email) {
-      if (!validateEmail(email)) {
-        setError("Invalid email format");
-        return;
-      }
+    if (!validateEmail(email)) {
+      setError("Invalid email format");
+      return;
     }
     if (!password) {
       setError("Password is required");
@@ -68,7 +66,10 @@ function Login() {
         <h2 className="mx-2 sm:mx-4 my-5 font-semibold text-xl sm:text-2xl text-center text-primary">
           Login
         </h2>
-        <form onSubmit={handleLogin} className="flex flex-col gap-1 sm:gap-4 p-2 sm:p-4">
+        <form
+          onSubmit={handleLogin}
+          className="flex flex-col gap-1 sm:gap-4 p-2 sm:p-4"
+        >
           <Input
             value={email}
             id="email"

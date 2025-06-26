@@ -1,7 +1,14 @@
 import { useState } from "react";
+import axiosInstance from "../utils/axiosInstance";
+import { api_paths } from "../utils/apiPaths";
+import { useEffect } from "react";
+import EventCard from "../components/EventCard";
 
 function Home() {
   const [currentTab, setCurrentTab] = useState("For You");
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const tabItems = [
     {
@@ -15,11 +22,37 @@ function Home() {
     },
   ];
 
+  const fetchEvents = async () => {
+    try {
+      setLoading(true), setError("");
+      const response = await axiosInstance.get(
+        api_paths.events.get_user_club_events
+      );
+      const data = response.data;
+
+      if (data.success) {
+        setEvents(data.events);
+      } else {
+        setError("No events found");
+      }
+    } catch (error) {
+      setError(error.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (currentTab === "Events") {
+      fetchEvents();
+    }
+  }, [currentTab]);
+
   return (
-    <div className=" w-full h-full relative">
-      <div className="sticky top-5 w-full flex items-center justify-around overflow-x-scroll border-b border-gray-200">
+    <div className=" w-full h-full">
+      <div className="sticky pt-12 sm:pt-5 w-full flex items-center justify-around overflow-x-scroll border-b border-gray-200">
         {tabItems.map((tabItem) => (
-          <span
+          <button
             key={tabItem.label}
             onClick={() => setCurrentTab(tabItem.label)}
             className={`tab-label ${
@@ -27,9 +60,17 @@ function Home() {
             }`}
           >
             {tabItem.label}
-          </span>
+          </button>
         ))}
       </div>
+
+      {currentTab === "Events" && (
+        <div className="">
+          {events.map((event) => (
+            <EventCard key={event._id} event={event} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

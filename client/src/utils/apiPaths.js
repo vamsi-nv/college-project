@@ -25,6 +25,7 @@ export const api_paths = {
     update_event: (id) => `/api/events/${id}`,
     delete_event: (id) => `/api/events/${id}`,
     rsvp_event: (id) => `/api/events/${id}/rsvp`,
+    get_user_club_events : "/api/events/user/user-events"
   },
 
   announcements: {
