@@ -24,7 +24,7 @@ export const createEvent = async (req, res) => {
     const newEvent = await Event.create({
       title,
       description,
-      date : new Date(date),
+      date: new Date(date),
       location,
       bannerImage,
       club,
@@ -72,7 +72,7 @@ export const getAllEvents = async (req, res) => {
 
 export const getEventById = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id)
+    const event = await Event.findById(req.params.id.toString())
       .populate("club", "name")
       .populate("createdBy", "name")
       .populate("attendees", "name email");
@@ -153,11 +153,11 @@ export const deleteEvent = async (req, res) => {
     }
 
     const club = await Club.findById(event.club);
-    if(!club.admins.includes(userId)){
+    if (!club.admins.includes(userId)) {
       return res.status(403).json({
-        success : false,
-        message : "Not authorized to perform this action"
-      })
+        success: false,
+        message: "Not authorized to perform this action",
+      });
     }
 
     await Event.findByIdAndDelete(req.params.id);
@@ -210,6 +210,42 @@ export const rsvpEvent = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error updating RSVP",
+      error: error.message,
+    });
+  }
+};
+
+export const getUserClubEvents = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const userClubs = await Club.find({ members: userId }).select("_id");
+    const clubIds = userClubs.map((club) => club._id);
+    // const userClubs = await Club.find({
+    //   $or: [{ members: userId }, { admins: userId }]
+    // }).select("_id");
+    if (clubIds.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "No Clubs found for this user",
+        events: [],
+      });
+    }
+
+    const events = await Event.find({ club: { $in: clubIds } })
+      .populate("club", "name")
+      .populate("createdBy", "name email")
+      .sort({ date: -1 });
+
+    res.status(200).json({
+      success: true,
+      events,
+    });
+  } catch (error) {
+    console.error("Error in getUserClubEvents controller:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch user club events.",
       error: error.message,
     });
   }

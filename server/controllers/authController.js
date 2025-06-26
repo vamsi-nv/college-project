@@ -16,6 +16,7 @@ export const registerUser = async (req, res) => {
   const name = req.body.name.trim();
   const email = req.body.email.trim();
   const password = req.body.password.trim();
+  const profileImageUrl = req.file?.path;
   try {
     const existingUser = await User.findOne({ email });
 
@@ -30,6 +31,7 @@ export const registerUser = async (req, res) => {
       name,
       email,
       password,
+      profileImageUrl,
     });
 
     res.status(201).json({

@@ -5,10 +5,11 @@ import {
   registerUser,
 } from "../controllers/authController.js";
 import protect from "../middleware/authMiddleware.js";
+import { upload } from "../middleware/uploadMiddleware.js";
 
 const authRouter = express.Router();
 
-authRouter.post("/register", registerUser);
+authRouter.post("/register", upload.single("image"), registerUser);
 authRouter.post("/login", loginUser);
 authRouter.get("/current-user", protect, getCurrentUser);
 

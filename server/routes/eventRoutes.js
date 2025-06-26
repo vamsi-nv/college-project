@@ -4,6 +4,7 @@ import {
   deleteEvent,
   getAllEvents,
   getEventById,
+  getUserClubEvents,
   rsvpEvent,
   updateEvent,
 } from "../controllers/eventController.js";
@@ -12,6 +13,7 @@ import protect from "../middleware/authMiddleware.js";
 const eventRouter = express.Router();
 
 eventRouter.route("/").get(getAllEvents).post(protect, createEvent);
+eventRouter.route("/user/user-events").get(protect, getUserClubEvents);
 eventRouter
   .route("/:id")
   .get(getEventById)
