@@ -5,7 +5,7 @@ import {
   registerUser,
 } from "../controllers/authController.js";
 import protect from "../middleware/authMiddleware.js";
-import { upload } from "../middleware/uploadMiddleware.js";
+import { upload } from "../middleware/authUploadMiddleware.js";
 
 const authRouter = express.Router();
 

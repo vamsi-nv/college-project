@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { FiHome, FiCompass, FiBell, FiUser, FiLogOut } from "react-icons/fi";
 import { LuUsers } from "react-icons/lu";
 import { useAuth } from "../context/UserContextProvider";
-
+import logo from "../assets/globe.png";
 function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
   const { logout, user } = useAuth();
 
@@ -35,13 +35,19 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
   ];
 
   return (
-    <section
-      className={`min-h-screen bg-gray-100 lg:ml-30 border-r border-gray-300 p-4 lg:p-8 transfrom transition-transform duration-300 ease-in-out flex flex-col items-start ${
+    <div
+      className={`min-h-screen lg:w-60 p-4 bg-gray-100 lg:ml-25 border-r border-gray-300 lg:p-8 transfrom transition-transform duration-300 ease-in-out flex flex-col items-start ${
         isMobileMenuOpen
           ? "absolute z-50 translate-x-0"
           : "md:block max-sm:hidden max-sm:-translate-x-full"
       }`}
     >
+      <div className="flex items-center mb-5 gap-1 px-2">
+        <img src={logo} alt="logo" className="w-10" />
+        <h2 className={`hidden font-medium text-xl lg:block ${isMobileMenuOpen && "max-sm:block"}`}>
+          CSphere
+        </h2>
+      </div>
       <div className="flex flex-col group">
         {navItems.map(({ label, path, icon: Icon }) => (
           <div
@@ -55,7 +61,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                 `flex items-center ${
                   !isMobileMenuOpen && "max-xl:justify-center"
                 } gap-3 text-base mb-4 p-4 transition-all duration-100 rounded-lg ${
-                  isActive ? "bg-primary" : "hover:bg-gray-200"
+                  isActive ? "bg-primary/10" : "hover:bg-gray-200/50"
                 }`
               }
             >
@@ -63,14 +69,14 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                 <>
                   <Icon
                     className={`size-5 lg:size-6 transition-all duration-200 ${
-                      isActive ? "stroke-2 text-white" : "stroke-gray-500"
+                      isActive ? "stroke-2 text-primary" : "stroke-gray-500"
                     }`}
                   />
                   <span
                     className={`${
                       isMobileMenuOpen ? "max-sm:block" : ""
-                    } hidden xl:flex-1 xl:block transition-all duration-200 ${
-                      isActive ? "text-white" : "text-gray-500"
+                    } hidden lg:flex-1 lg:block transition-all duration-200 ${
+                      isActive ? "text-primary font-medium" : "text-gray-500"
                     }`}
                   >
                     {label}
@@ -84,18 +90,38 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
 
       <button
         onClick={logout}
-        className={`flex items-center gap-3 text-base p-4 text-gray-500 hover:gap-4 hover:text-neutral-950 transition-all duration-200`}
+        className={`flex items-center gap-3 text-base p-4 mb-4 text-gray-500 hover:gap-4 hover:text-neutral-950 transition-all duration-200`}
       >
         <FiLogOut className="h-5 w-5 max-xl:flex-1" />
         <span
           className={`${
             isMobileMenuOpen ? "max-sm:block" : ""
-          }  hidden xl:flex-1 xl:block`}
+          }  hidden lg:flex-1 lg:block`}
         >
           Logout
         </span>
       </button>
-    </section>
+      <div className="hidden">
+        <div className="flex items-center gap-3">
+          <div className="">
+            {user.profileImageUrl ? (
+              <img
+                src={user.profileImageUrl}
+                alt=""
+                className="w-10 h-10 rounded-full"
+              />
+            ) : (
+              <></>
+            )}
+          </div>
+          <div>
+            <p className="text-sm text-gray-500 font-semibold hidden lg:block">
+              {user.name}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

@@ -234,7 +234,7 @@ export const getUserClubEvents = async (req, res) => {
 
     const events = await Event.find({ club: { $in: clubIds } })
       .populate("club", "name")
-      .populate("createdBy", "name email")
+      .populate("createdBy", "name email profileImageUrl")
       .sort({ date: -1 });
 
     res.status(200).json({

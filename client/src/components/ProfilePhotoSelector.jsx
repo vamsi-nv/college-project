@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { LuUser, LuUpload, LuTrash } from "react-icons/lu";
 
-function ProfilePhotoSelector({ image, setImage }) {
+function ProfilePhotoSelector({ image, setImage, Icon }) {
   const inputRef = useRef();
   const [previewUrl, setPreviewUrl] = useState(null);
 
@@ -36,7 +36,7 @@ function ProfilePhotoSelector({ image, setImage }) {
 
       {!image ? (
         <div className="size-22 flex items-center justify-center bg-blue-100/50 rounded-full relative">
-          <LuUser className=" text-4xl text-primary" />
+          <Icon className=" text-4xl text-primary/90" />
           <button
             type="button"
             onClick={onChooseFile}

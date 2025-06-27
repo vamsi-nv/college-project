@@ -6,16 +6,17 @@ const clubSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      trim : true,
+      trim: true,
     },
 
     description: {
       type: String,
-      trim : true
+      trim: true,
     },
 
     coverImage: {
       type: String,
+      default: "",
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,

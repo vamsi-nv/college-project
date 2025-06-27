@@ -6,8 +6,9 @@ import { api_paths } from "../utils/apiPaths";
 import { validateEmail } from "../utils/helper.js";
 import { useAuth } from "../context/UserContextProvider.jsx";
 import Loader from "../components/Loader";
-import { RxAvatar } from "react-icons/rx";
 import ProfilePhotoSelector from "../components/ProfilePhotoSelector.jsx";
+import { LuUser } from "react-icons/lu";
+
 function Signup() {
   const { fetchCurrentUser } = useAuth();
 
@@ -44,21 +45,23 @@ function Signup() {
     setError("");
     setLoading(true);
     try {
-
-      const formData = new FormData()
+      const formData = new FormData();
       formData.append("name", name);
       formData.append("email", email);
       formData.append("password", password);
-      if(image){
-        formData.append("image", image)
+      if (image) {
+        formData.append("image", image);
       }
 
-
-      const response = await axiosInstance.post(api_paths.auth.register, formData, {
-        headers : {
-          "Content-Type" : "multipart/form-data"
+      const response = await axiosInstance.post(
+        api_paths.auth.register,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-      });
+      );
       const data = response.data;
       if (data.success) {
         localStorage.setItem("college-token", response.data.token);
@@ -80,16 +83,20 @@ function Signup() {
   if (loading) return <Loader />;
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-2">
-      <div className="w-full max-w-sm sm:max-w-lg shadow-md border border-gray-200 p-4 sm:p-8 bg-gray-50 rounded-lg">
+    <div className="min-h-screen flex items-center justify-center px-2 bg-gradient-to-t from-primary/90 to-primary/10">
+      <div className="w-full max-w-sm sm:max-w-lg shadow-lg border border-gray-200 p-4 sm:p-8 bg-gray-50 rounded-lg">
         <h2 className="mx-2 sm:mx-4 my-5 font-semibold text-xl sm:text-2xl text-center text-primary">
           Sign Up
         </h2>
         <form
           onSubmit={handleSignUp}
-          className="flex flex-col gap-1 sm:gap-4 p-2 sm:p-4"
+          className="flex flex-col gap-1 sm:gap-2 p-2 sm:p-4"
         >
-          <ProfilePhotoSelector image={image} setImage={setImage} />
+          <ProfilePhotoSelector
+            image={image}
+            setImage={setImage}
+            Icon={LuUser}
+          />
           <Input
             value={name}
             id="name"

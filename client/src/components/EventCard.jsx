@@ -14,6 +14,7 @@ function EventCard({ event }) {
       const data = response.data;
       if (data.success) {
         console.log("Event deleted");
+        window.location.reload();
       } else {
         
         
@@ -25,19 +26,22 @@ function EventCard({ event }) {
   };
 
   return (
-    <div className="flex flex-col relative border-b border-gray-300 p-6 md:p-8">
+    <div className="flex flex-col relative border-b border-gray-200 p-6 md:p-8">
       <div className="flex items-center gap-1 text-gray-400 font-medium text-sm">
         <LuUsers />
         <p>{event.club.name}</p>
       </div>
       <div className="flex items-center gap-2 mb-2">
-        <p className="text-base font-semibold">{event.createdBy.name}</p>
-        <p className="text-xs text-gray-500">
-          {" "}
-          • {moment(event.createdAt).fromNow()}
-        </p>
+        
+        <div className="flex items-center gap-2">
+          <p className="text-base font-medium text-gray-800">{event.createdBy.name}</p>
+          <p className="text-xs text-gray-500">
+            {" "}
+            • {moment(event.createdAt).fromNow()}
+          </p>
+        </div>
       </div>
-      <div>
+      <div className="text-[15px] text-gray-600">
         <p>{event.title}</p>
         <p>{event.description}</p>
       </div>

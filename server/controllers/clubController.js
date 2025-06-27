@@ -1,11 +1,11 @@
 import Club from "../models/clubModel.js";
 
 export const createClub = async (req, res) => {
-  const { name, description, coverImage } = req.body;
+  const { name, description } = req.body;
   const userId = req.user._id;
 
   try {
-    const existingClub = await Club.findOne({ name: name.trim() });
+    const existingClub = await Club.findOne({ name });
     if (existingClub) {
       return res.status(400).json({
         success: false,
@@ -13,10 +13,12 @@ export const createClub = async (req, res) => {
       });
     }
 
+    console.log(name, description);
+
     const newClub = await Club.create({
-      name: name.trim(),
+      name,
       description,
-      coverImage,
+      coverImage: req.file?.path,
       createdBy: userId,
       members: [userId],
       admins: [userId],
@@ -39,13 +41,14 @@ export const createClub = async (req, res) => {
 };
 
 export const getAllClubs = async (req, res) => {
+  const userId = req.user._id;
   try {
     const clubs = await Club.find()
       .populate("createdBy", "name")
       .select("-__v");
     res.status(200).json({
       success: true,
-      clubs,
+      clubs: clubs.filter((club) => !club.members.includes(userId)),
     });
   } catch (error) {
     console.log("Error in getAllClubs controller : ", error.message);
@@ -236,5 +239,12 @@ export const deleteClub = async (req, res) => {
       success: false,
       message: "Club deleted successfully",
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log("Error in deleteClub controller:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Error updating club",
+      error: error.message,
+    });
+  }
 };

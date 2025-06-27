@@ -9,10 +9,14 @@ import {
   leaveClub,
   updateClub,
 } from "../controllers/clubController.js";
+import { clubUpload } from "../middleware/clubUploadMiddleware.js";
 
 const clubRouter = express.Router();
 
-clubRouter.route("/").post(protect, createClub).get(protect, getAllClubs);
+clubRouter
+  .route("/")
+  .post(protect, clubUpload.single("coverImage"), createClub)
+  .get(protect, getAllClubs);
 clubRouter
   .route("/:id")
   .get(protect, getClubById)
