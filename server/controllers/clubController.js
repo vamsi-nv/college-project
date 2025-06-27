@@ -43,15 +43,37 @@ export const createClub = async (req, res) => {
 export const getAllClubs = async (req, res) => {
   const userId = req.user._id;
   try {
-    const clubs = await Club.find()
+    const clubs = await Club.find({ members: { $ne: userId } })
       .populate("createdBy", "name")
       .select("-__v");
+
     res.status(200).json({
       success: true,
-      clubs: clubs.filter((club) => !club.members.includes(userId)),
+      clubs,
     });
   } catch (error) {
-    console.log("Error in getAllClubs controller : ", error.message);
+    console.log("Error in getAllClubs controller:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching clubs",
+      error: error.message,
+    });
+  }
+};
+
+export const getUSerClubs = async (req, res) => {
+  const userId = req.user._id;
+  try {
+    const clubs = await Club.find({ members: userId })
+      .populate("createdBy", "name")
+      .select("-__v");
+
+    res.status(200).json({
+      success: true,
+      clubs,
+    });
+  } catch (error) {
+    console.log("Error in getAllClubs controller:", error.message);
     res.status(500).json({
       success: false,
       message: "Error fetching clubs",

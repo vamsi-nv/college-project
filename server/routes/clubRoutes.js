@@ -5,6 +5,7 @@ import {
   deleteClub,
   getAllClubs,
   getClubById,
+  getUSerClubs,
   joinClub,
   leaveClub,
   updateClub,
@@ -17,6 +18,7 @@ clubRouter
   .route("/")
   .post(protect, clubUpload.single("coverImage"), createClub)
   .get(protect, getAllClubs);
+clubRouter.route("/user").get(protect, getUSerClubs);
 clubRouter
   .route("/:id")
   .get(protect, getClubById)

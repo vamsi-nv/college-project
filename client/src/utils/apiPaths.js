@@ -13,6 +13,7 @@ export const api_paths = {
     join_club: (id) => `/api/clubs/${id}/join`,
     leave_club: (id) => `/api/clubs/${id}/leave`,
     get_all_clubs: "/api/clubs",
+    get_user_clubs : "/api/clubs/user",
     get_club: (id) => `/api/clubs/${id}`,
     update_club: (id) => `/api/clubs/${id}`,
     delete_club: (id) => `/api/clubs/${id}`,

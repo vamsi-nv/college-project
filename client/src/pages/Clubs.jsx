@@ -1,11 +1,12 @@
+import { useState, useEffect } from "react";
 import { LuUsers } from "react-icons/lu";
-import Input from "../components/Input";
-import { useState } from "react";
+import { HiOutlineUserGroup } from "react-icons/hi2";
 import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
-import { IoCloseOutline } from "react-icons/io5";
-import { HiOutlineUserGroup } from "react-icons/hi2";
+import Input from "../components/Input";
 import ProfilePhotoSelector from "../components/ProfilePhotoSelector";
+import ClubCard from "../components/ClubCard";
+import Modal from "../components/Modal";
 
 function Clubs() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,136 +15,147 @@ function Clubs() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [coverImage, setCoverImage] = useState(null);
+  const [clubs, setClubs] = useState([]);
+
+  const fetchUserClubs = async () => {
+    try {
+      const response = await axiosInstance(api_paths.clubs.get_user_clubs);
+      const data = response.data;
+      if (data.success) setClubs(data.clubs);
+    } catch (error) {
+      console.log(error.response?.data?.message || error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserClubs();
+  }, []);
 
   const handleCreateClub = async (e) => {
     e.preventDefault();
-    console.log("Form submitted");
-    console.log(name, description);
 
-    if (!name) {
-      setError("Name is required");
+    if (!name || !description) {
+      setError(!name ? "Name is required" : "Description is required");
       return;
     }
 
-    if (!description) {
-      setError("Description is required");
-      return;
-    }
     setError("");
     setLoading(true);
+
     try {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("description", description);
-      if (coverImage) {
-        formData.append("coverImage", coverImage);
-      }
+      if (coverImage) formData.append("coverImage", coverImage);
 
       const response = await axiosInstance.post(
         api_paths.clubs.create_club,
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         }
       );
 
       const data = response.data;
       if (data.success) {
-        console.log("Club created : ", data.club);
+        console.log("Club created:", data.club);
         setIsModalOpen(false);
+        setName("");
+        setDescription("");
+        setCoverImage(null);
+        fetchUserClubs();
       }
     } catch (error) {
       setError(
         error.response?.data?.message ||
           error.message ||
-          "Something went wrong. Please try again"
+          "Something went wrong. Please try again."
       );
       console.log(error);
     } finally {
       setLoading(false);
-      setName("");
-      setDescription("");
-      setCoverImage(null);
     }
   };
 
   return (
-    <div>
-      <div className="border-b border-gray-200 pt-12 pb-2 sm:pt-2 w-full flex items-center justify-between px-5">
-        <LuUsers className="size-6 text-gray-500" />
+    <div className="w-full min-h-screen">
+      {/* Sticky Header */}
+      <div className="sticky top-0 z-10 flex items-center justify-between w-full px-5 pt-12 pb-2 border-b border-gray-200 sm:pt-2 backdrop-blur-xl bg-gray-100/60">
+        <LuUsers className="text-gray-500 size-6" />
         <button
           onClick={() => setIsModalOpen(true)}
-          className=" text-sm hover:bg-primary/20 px-4 py-2 rounded-full bg-primary/10 text-primary font-medium border border-primary transition-all duration-300 ease-in-out"
+          className="px-4 py-2 text-sm font-medium transition-all duration-300 ease-in-out border rounded-full hover:bg-primary/20 bg-primary/10 text-primary border-primary"
         >
           + Create Club
         </button>
       </div>
+
+      {/* Modal */}
       {isModalOpen && (
-        <div
-          onClick={() => setIsModalOpen(false)}
-          className="fixed inset-0 bg-gray-300/30 backdrop-blur-xs flex items-center justify-center w-full px-2"
+        <Modal
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          loading={loading}
         >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-sm sm:max-w-lg shadow-lg border border-gray-200 p-4 sm:p-8 bg-gray-50 rounded-lg"
+          <h2 className="mx-2 my-5 text-xl font-semibold text-center sm:mx-4 sm:text-2xl text-primary">
+            Create Club
+          </h2>
+          <form
+            onSubmit={handleCreateClub}
+            className="flex flex-col gap-1 p-2 sm:gap-2 sm:p-4"
           >
-            <h2 className="mx-2 sm:mx-4 my-5 font-semibold text-xl sm:text-2xl text-center text-primary">
-              Create Club
-            </h2>
-            <form
-              onSubmit={handleCreateClub}
-              className="flex flex-col gap-1 sm:gap-2 p-2 sm:p-4"
-            >
-              <ProfilePhotoSelector
-                image={coverImage}
-                setImage={setCoverImage}
-                Icon={HiOutlineUserGroup}
+            <ProfilePhotoSelector
+              image={coverImage}
+              setImage={setCoverImage}
+              Icon={HiOutlineUserGroup}
+            />
+            <Input
+              value={name}
+              id="club-name"
+              onChange={({ target }) => setName(target.value)}
+              type="text"
+              label="Club Name"
+              placeholder="Enter club name"
+            />
+            <div className="flex flex-col mb-4">
+              <label className="input-field-label" htmlFor="description">
+                Description
+              </label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Enter club description"
+                id="description"
+                rows={6}
+                className="input-field"
               />
-              <Input
-                value={name}
-                id="club-name"
-                onChange={({ target }) => setName(target.value)}
-                type="text"
-                label="Club Name"
-                placeholder="Enter club name"
-              />
-
-              <div className="flex flex-col mb-4">
-                <label className="input-field-label" htmlFor={"description"}>
-                  Description
-                </label>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Enter club description"
-                  name="description"
-                  id="description"
-                  rows={6}
-                  className="input-field"
-                ></textarea>
-              </div>
-              {error && (
-                <p className="text-xs sm:text-sm text-red-500 mb-2 sm:mb-3 ml-2 sm:ml-4">
-                  *{error}
-                </p>
-              )}
-
-              <button type="submit" className="form-submit-btn">
-                {loading ? "Creating..." : "Create"}
-              </button>
-            </form>
+            </div>
+            {error && (
+              <p className="mb-2 ml-2 text-xs text-red-500 sm:text-sm sm:mb-3 sm:ml-4">
+                *{error}
+              </p>
+            )}
             <button
               disabled={loading}
-              onClick={() => setIsModalOpen(false)}
-              className="absolute hover:bg-primary/10 p-2 hover:text-primary rounded-full top-5 right-5"
+              type="submit"
+              className="form-submit-btn"
             >
-              <IoCloseOutline className="size-5" />
+              {loading ? "Creating..." : "Create"}
             </button>
-          </div>
-        </div>
+          </form>
+        </Modal>
       )}
+
+      {/* Club List */}
+      <div className="flex flex-col justify-center w-full h-full">
+        {clubs.length === 0 ? (
+          <p className="mt-10 text-center text-gray-400">
+            No clubs yet. Create one!
+          </p>
+        ) : (
+          clubs.map((club) => <ClubCard key={club._id} club={club} />)
+        )}
+      </div>
     </div>
   );
 }

@@ -9,7 +9,7 @@ function HomeLayout() {
 
   return (
     <div className={`min-h-screen relative flex bg-gray-100`}>
-      <div>
+      <div className="">
         <Sidebar
           isMobileMenuOpen={isMobileMenuOpen}
           setIsMobileMenuOpen={setIsMobileMenuOpen}
@@ -18,22 +18,22 @@ function HomeLayout() {
 
       <button
         onClick={() => setIsMobileMenuOpen(true)}
-        className="fixed top-4 left-4 z-30 sm:hidden text-gray-800"
+        className="fixed z-30 text-gray-800 top-4 left-4 sm:hidden"
       >
         <RiMenu2Fill className="text-2xl" />
       </button>
 
       {isMobileMenuOpen && (
         <div
-          className="inset-0 z-20 absolute bg-neutral-400/40"
+          className="absolute inset-0 z-20 bg-neutral-300/20 backdrop-blur-xl"
           onClick={() => setIsMobileMenuOpen(false)}
         ></div>
       )}
 
-      <div className="flex-5 overflow-y-auto">
+      <div className="border-gray-200 flex-5 border-x">
         <Outlet />
       </div>
-      <div className="flex-4 max-md:hidden border-l border-gray-300">
+      <div className="flex-4 max-md:hidden">
         <RightSidebar />
       </div>
     </div>

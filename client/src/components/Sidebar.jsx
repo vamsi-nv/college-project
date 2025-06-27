@@ -36,15 +36,19 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
 
   return (
     <div
-      className={`min-h-screen lg:w-60 p-4 bg-gray-100 lg:ml-25 border-r border-gray-300 lg:p-8 transfrom transition-transform duration-300 ease-in-out flex flex-col items-start ${
+      className={`min-h-screen  top-0 lg:w-60 p-4 bg-gray-100 lg:ml-25 lg:p-8 transfrom transition-transform duration-300 ease-in-out flex flex-col items-start ${
         isMobileMenuOpen
           ? "absolute z-50 translate-x-0"
-          : "md:block max-sm:hidden max-sm:-translate-x-full"
+          : "md:block hidden max-sm:-translate-x-full sticky"
       }`}
     >
-      <div className="flex items-center mb-5 gap-1 px-2">
+      <div className="flex items-center gap-1 px-2 mb-5">
         <img src={logo} alt="logo" className="w-10" />
-        <h2 className={`hidden font-medium text-xl lg:block ${isMobileMenuOpen && "max-sm:block"}`}>
+        <h2
+          className={`hidden font-medium text-xl lg:block ${
+            isMobileMenuOpen && "max-sm:block"
+          }`}
+        >
           CSphere
         </h2>
       </div>
@@ -92,7 +96,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
         onClick={logout}
         className={`flex items-center gap-3 text-base p-4 mb-4 text-gray-500 hover:gap-4 hover:text-neutral-950 transition-all duration-200`}
       >
-        <FiLogOut className="h-5 w-5 max-xl:flex-1" />
+        <FiLogOut className="w-5 h-5 max-xl:flex-1" />
         <span
           className={`${
             isMobileMenuOpen ? "max-sm:block" : ""
@@ -115,7 +119,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
             )}
           </div>
           <div>
-            <p className="text-sm text-gray-500 font-semibold hidden lg:block">
+            <p className="hidden text-sm font-semibold text-gray-500 lg:block">
               {user.name}
             </p>
           </div>
