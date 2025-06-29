@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { api_paths } from "../utils/apiPaths";
 import axiosInstance from "../utils/axiosInstance";
-import { useAuth } from "../context/UserContextProvider";
 import { HiOutlineUserGroup } from "react-icons/hi2";
+import { Link } from "react-router-dom";
 
 function RightSidebar() {
   const [clubs, setClubs] = useState([]);
@@ -22,6 +22,7 @@ function RightSidebar() {
       const data = response.data;
       if (data.success) {
         console.log("Joined club");
+        fetchAllclubs()
       }
     } catch (error) {
       setError(
@@ -38,8 +39,8 @@ function RightSidebar() {
   }, []);
 
   return (
-    <div className="mt-10 p-3 lg:p-6">
-      <h3 className="font-medium text-lg mb-3 px-4 text-gray-500">
+    <div className="p-3 mt-10 lg:p-6">
+      <h3 className="px-4 mb-3 text-lg font-medium text-gray-500">
         What to join
       </h3>
       <div className=" xl:w-[60%] flex flex-col">
@@ -51,14 +52,16 @@ function RightSidebar() {
                   <img
                     src={club.coverImage}
                     alt="club cover image"
-                    className="w-14 h-14 bg-contain rounded-full"
+                    className="bg-contain rounded-full w-14 h-14"
                   />
                 ) : (
-                  <HiOutlineUserGroup className="w-12 h-12 p-2 text-gray-400 border border-gray-300 bg-contain rounded-full" />
+                  <HiOutlineUserGroup className="w-12 h-12 p-2 text-gray-400 bg-contain border border-gray-300 rounded-full" />
                 )}
               </div>
               <div>
-                <h4 className="text-base ">{club.name}</h4>
+                <Link to={`/clubs/${club._id}`}>
+                  <h4 className="text-base ">{club.name}</h4>
+                </Link>
                 <p className="text-xs text-gray-400">
                   {club.members.length} members
                 </p>
@@ -66,7 +69,7 @@ function RightSidebar() {
             </div>
             <button
               onClick={() => handleJoinClub(club._id)}
-              className="bg-primary hover:bg-primary/90 transition-colors duration-300 text-white px-3 py-1 rounded-full text-xs place-self-start mt-2"
+              className="px-4 py-1 mt-2 text-sm text-white transition-colors duration-300 rounded-full bg-primary hover:bg-primary/90 place-self-start"
             >
               Join
             </button>

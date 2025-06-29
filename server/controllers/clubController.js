@@ -157,6 +157,13 @@ export const leaveClub = async (req, res) => {
       });
     }
 
+    if (club.createdBy.toString() === userId.toString()) {
+      return res.status(400).json({
+        success: false,
+        message: "Club creator cannot leave the club",
+      });
+    }
+
     if (!club.members.includes(userId)) {
       return res.status(400).json({
         success: false,
@@ -255,10 +262,10 @@ export const deleteClub = async (req, res) => {
       });
     }
 
-    await club.save();
+    await Club.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
-      success: false,
+      success: true,
       message: "Club deleted successfully",
     });
   } catch (error) {

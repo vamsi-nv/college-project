@@ -9,6 +9,7 @@ function Home() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  
 
   const tabItems = [
     {
@@ -49,11 +50,12 @@ function Home() {
   }, [currentTab]);
 
   return (
-    <div className=" w-full h-full">
-      <div className="sticky pt-12 sm:pt-5 w-full flex items-center justify-around overflow-x-scroll border-b border-gray-200">
+    <div className="w-full h-full ">
+      <div className="sticky flex items-center justify-around w-full pt-12 overflow-x-scroll border-b border-gray-200 sm:pt-5">
         {tabItems.map((tabItem) => (
           <button
             key={tabItem.label}
+            title={tabItem.label}
             onClick={() => setCurrentTab(tabItem.label)}
             className={`tab-label ${
               currentTab === tabItem.label ? "tab-selected" : "tab-not-selected"

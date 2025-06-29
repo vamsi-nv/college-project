@@ -9,6 +9,8 @@ import Notifications from "./pages/Notifications";
 import Profile from "./pages/Profile";
 import Explore from "./pages/Explore";
 import Clubs from "./pages/Clubs";
+import ClubDetails from "./pages/ClubDetails";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const { user, loading } = useAuth();
@@ -19,16 +21,18 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100">
+      <Toaster position="top-center" reverseOrder={false} />
       <Routes>
         <Route
           path="/"
           element={user ? <HomeLayout /> : <Navigate to="/login" />}
         >
           <Route index element={<Home />} />
-          <Route path="/explore" element={<Explore />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/clubs" element={<Clubs/>}/>
-          <Route path="/profile" element={<Profile />} />
+          <Route path="explore" element={<Explore />} />
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="clubs" element={<Clubs />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="clubs/:id" element={<ClubDetails />} />
         </Route>
         <Route
           path="/register"

@@ -36,10 +36,10 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
 
   return (
     <div
-      className={`min-h-screen  top-0 lg:w-60 p-4 bg-gray-100 lg:ml-25 lg:p-8 transfrom transition-transform duration-300 ease-in-out flex flex-col items-start ${
+      className={`min-h-screen  top-0 lg:w-60 p-4 bg-gray-100 lg:ml-10 xl:ml-25 lg:p-8 transfrom transition-transform duration-300 ease-in-out flex flex-col items-start ${
         isMobileMenuOpen
           ? "absolute z-50 translate-x-0"
-          : "md:block hidden max-sm:-translate-x-full sticky"
+          : "sm:block md:block hidden max-sm:-translate-x-full sticky"
       }`}
     >
       <div className="flex items-center gap-1 px-2 mb-5">
@@ -72,7 +72,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
               {({ isActive }) => (
                 <>
                   <Icon
-                    className={`size-5 lg:size-6 transition-all duration-200 ${
+                    className={`size-5  lg:size-6 transition-all duration-200 ${
                       isActive ? "stroke-2 text-primary" : "stroke-gray-500"
                     }`}
                   />

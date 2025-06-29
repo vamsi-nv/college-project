@@ -2,7 +2,7 @@ import Event from "../models/eventModel.js";
 import Club from "../models/clubModel.js";
 
 export const createEvent = async (req, res) => {
-  const userId = req.user._id;
+  const userId = req.user?._id;
   const { title, description, date, location, bannerImage, club } = req.body;
 
   try {
@@ -53,7 +53,7 @@ export const getAllEvents = async (req, res) => {
     const filter = clubId ? { club: clubId } : {};
     const events = await Event.find(filter)
       .populate("club", "name")
-      .populate("createdBy", "name email")
+      .populate("createdBy", "name email profileImageUrl")
       .sort({ date: 1 });
 
     res.status(200).json({
@@ -153,7 +153,9 @@ export const deleteEvent = async (req, res) => {
     }
 
     const club = await Club.findById(event.club);
-    if (!club.admins.includes(userId)) {
+    if (
+      !club.admins.some((adminId) => adminId.toString() === userId.toString())
+    ) {
       return res.status(403).json({
         success: false,
         message: "Not authorized to perform this action",

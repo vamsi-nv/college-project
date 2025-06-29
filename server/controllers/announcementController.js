@@ -4,7 +4,7 @@ import Club from "../models/clubModel.js";
 export const createAnnoucement = async (req, res) => {
   const userId = req.user._id;
 
-  const { title, content, club } = req.body;
+  const { title, content, club, pinned } = req.body;
 
   try {
     const foundClub = await Club.findById(club);
@@ -30,6 +30,7 @@ export const createAnnoucement = async (req, res) => {
       content,
       postedBy: userId,
       club,
+      pinned,
     });
 
     res.status(201).json({
@@ -52,7 +53,8 @@ export const getAllAnnouncements = async (req, res) => {
   try {
     const filter = clubId ? { club: clubId } : {};
     const announcements = await Announcement.find(filter)
-      .populate("postedBy", "name email")
+      .populate("postedBy", "name email profileImageUrl")
+      .populate("club", "name")
       .sort({ pinned: -1, createdAt: -1 });
 
     res.status(200).json({
@@ -203,7 +205,7 @@ export const togglePinAnnouncement = async (req, res) => {
       message: announcement.pinned
         ? "Announcement pinned"
         : "Announcement unpinned",
-      annoucement,
+      announcement,
     });
   } catch (error) {
     console.log("Error in togglePinAnnouncement controller : ", error.message);

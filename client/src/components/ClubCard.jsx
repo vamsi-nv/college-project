@@ -2,7 +2,7 @@ import { PiUsersThreeThin } from "react-icons/pi";
 
 function ClubCard({ club }) {
   return (
-    <div className="mx-auto my-3 w-[85%] sm:w-[60%] md:w-4/5 lg:w-3/5 border border-gray-300 rounded-2xl shadow-gray-300/80 hover:shadow-[0_0_10px] hover:scale-105 transition-all duration-300 cursor-pointer">
+    <div title={club.name} className="hover:bg-gray-50/50 mx-auto my-3 w-[85%] sm:w-[80%] md:w-6/7 lg:w-3/5 border border-gray-300 rounded-2xl shadow-gray-300/80 hover:shadow-[0_0_10px] hover:scale-105 transition-all duration-300 cursor-pointer">
       {club.coverImage ? (
         <img
           src={club.coverImage}
