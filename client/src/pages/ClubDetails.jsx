@@ -308,7 +308,7 @@ function ClubDetails() {
               <AnnouncementCard
                 key={announcement._id}
                 announcement={announcement}
-                fetchClubAnnouncements={fetchClubAnnouncements}
+                fetchAnnouncements={fetchClubAnnouncements}
               />
             ))}
           </div>

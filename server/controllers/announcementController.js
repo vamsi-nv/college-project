@@ -49,9 +49,31 @@ export const createAnnoucement = async (req, res) => {
 };
 
 export const getAllAnnouncements = async (req, res) => {
-  const { clubId } = req.query;
+  const userId = req.user?._id;
+  const { clubId, userOnly } = req.query;
+
   try {
-    const filter = clubId ? { club: clubId } : {};
+    let filter = {};
+
+    if (userOnly === "true" && userId) {
+      const userClubs = await Club.find({ members: userId }).select("_id");
+      const clubIds = userClubs.map((club) => club._id);
+
+      console.log("User Clubs:", clubIds);
+
+      if (clubIds.length === 0) {
+        return res.status(200).json({
+          success: true,
+          message: "No clubs found for this user",
+          announcements: [],
+        });
+      }
+
+      filter.club = { $in: clubIds };
+    } else if (clubId) {
+      filter.club = clubId;
+    }
+
     const announcements = await Announcement.find(filter)
       .populate("postedBy", "name email profileImageUrl")
       .populate("club", "name")
@@ -62,7 +84,7 @@ export const getAllAnnouncements = async (req, res) => {
       announcements,
     });
   } catch (error) {
-    console.log("Error in getAllAnnouncements : ", error.message);
+    console.log("Error in getAnnouncements : ", error.message);
     res.status(500).json({
       success: false,
       message: "Error fetching announcements",

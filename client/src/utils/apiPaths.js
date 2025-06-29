@@ -24,11 +24,11 @@ export const api_paths = {
     get_all_events: (clubId) => {
       return clubId ? `/api/events?clubId=${clubId}` : `/api/events`;
     },
+    get_user_club_events: `/api/events?userOnly=true`,
     get_event: (id) => `/api/events/${id}`,
     update_event: (id) => `/api/events/${id}`,
     delete_event: (id) => `/api/events/${id}`,
     rsvp_event: (id) => `/api/events/${id}/rsvp`,
-    get_user_club_events: "/api/events/user/user-events",
   },
 
   announcements: {
@@ -38,6 +38,7 @@ export const api_paths = {
         ? `/api/announcements?clubId=${clubId}`
         : "/api/announcements";
     },
+    get_user_club_announcements: `/api/announcements?userOnly=true`,
     get_announcement: (id) => `/api/announcements/${id}`,
     update_announcement: (id) => `/api/announcements/${id}`,
     delete_announcement: (id) => `/api/announcements/${id}`,

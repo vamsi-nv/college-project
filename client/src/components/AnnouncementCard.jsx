@@ -1,5 +1,4 @@
 import { LuUsers } from "react-icons/lu";
-import { FiClock } from "react-icons/fi";
 import moment from "moment";
 import { RxDotsHorizontal } from "react-icons/rx";
 import { api_paths } from "../utils/apiPaths";
@@ -10,7 +9,7 @@ import { HiMiniUserCircle } from "react-icons/hi2";
 import toast from "react-hot-toast";
 import { BsFillPinFill } from "react-icons/bs";
 
-function AnnouncementCard({ announcement, fetchClubAnnouncements }) {
+function AnnouncementCard({ announcement, fetchAnnouncements }) {
   const navigate = useNavigate();
   const { user } = useAuth();
   const handleDelete = async (id) => {
@@ -26,7 +25,7 @@ function AnnouncementCard({ announcement, fetchClubAnnouncements }) {
       const data = response.data;
       if (data.success) {
         toast.success("Announcement deleted");
-        fetchClubAnnouncements();
+        fetchAnnouncements();
       }
     } catch (error) {
       toast.error("Error deleting Announcement");
@@ -42,7 +41,7 @@ function AnnouncementCard({ announcement, fetchClubAnnouncements }) {
       const data = response.data;
       if (data.success) {
         toast.success(data.message);
-        fetchClubAnnouncements();
+        fetchAnnouncements();
       }
     } catch (error) {
       toast.error(error.response.data.message);

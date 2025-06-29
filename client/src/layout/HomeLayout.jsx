@@ -8,7 +8,11 @@ function HomeLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className={`min-h-screen relative flex bg-gray-100`}>
+    <div
+      className={`min-h-screen relative flex bg-gray-100 ${
+        isMobileMenuOpen && "overflow-y-hidden"
+      }`}
+    >
       <div className="">
         <Sidebar
           isMobileMenuOpen={isMobileMenuOpen}
@@ -30,7 +34,7 @@ function HomeLayout() {
         ></div>
       )}
 
-      <div className="border-gray-200 flex-6 xl:flex-5  border-x">
+      <div className="border-gray-200 flex-6 xl:flex-5 border-x">
         <Outlet />
       </div>
       <div className="flex-4 max-md:hidden">

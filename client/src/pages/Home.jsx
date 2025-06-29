@@ -3,13 +3,14 @@ import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
 import { useEffect } from "react";
 import EventCard from "../components/EventCard";
+import AnnouncementCard from "../components/AnnouncementCard";
 
 function Home() {
   const [currentTab, setCurrentTab] = useState("For You");
   const [events, setEvents] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
 
   const tabItems = [
     {
@@ -43,9 +44,33 @@ function Home() {
     }
   };
 
+  const fetchAnnouncements = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      const response = await axiosInstance.get(
+        api_paths.announcements.get_user_club_announcements
+      );
+      const data = response.data;
+      if (data.success) {
+        setAnnouncements(data.announcements);
+      } else {
+        setError("No announcements found");
+      }
+    } catch (error) {
+      setError(error.response.data?.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (currentTab === "Events") {
       fetchEvents();
+    }
+
+    if (currentTab === "Announcements") {
+      fetchAnnouncements();
     }
   }, [currentTab]);
 
@@ -70,6 +95,18 @@ function Home() {
         <div className="">
           {events.map((event) => (
             <EventCard key={event._id} event={event} />
+          ))}
+        </div>
+      )}
+
+      {currentTab === "Announcements" && (
+        <div className="">
+          {announcements.map((announcement) => (
+            <AnnouncementCard
+              key={announcement._id}
+              announcement={announcement}
+              fetchAnnouncements={fetchAnnouncements}
+            />
           ))}
         </div>
       )}

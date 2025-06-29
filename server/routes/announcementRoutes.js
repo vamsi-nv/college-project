@@ -9,19 +9,19 @@ import {
 } from "../controllers/announcementController.js";
 import protect from "../middleware/authMiddleware.js";
 
-const annoucementRouter = express.Router();
+const announcementRouter = express.Router();
 
-annoucementRouter
+announcementRouter
   .route("/")
-  .get(getAllAnnouncements)
+  .get(protect, getAllAnnouncements)
   .post(protect, createAnnoucement);
 
-annoucementRouter
+announcementRouter
   .route("/:id")
   .get(getAnnouncementById)
   .put(protect, updateAnnouncement)
   .delete(protect, deleteAnnouncement);
 
-annoucementRouter.route("/:id/pin").patch(protect, togglePinAnnouncement);
+announcementRouter.route("/:id/pin").patch(protect, togglePinAnnouncement);
 
-export default annoucementRouter;
+export default announcementRouter;
