@@ -112,7 +112,11 @@ function AnnouncementCard({ announcement, fetchClubAnnouncements }) {
           </div>
         )}
         {announcement.postedBy._id === user._id && (
-          <button className="relative p-2 rounded-full cursor-pointer group text-md hover:bg-gray-500/10">
+          <div
+            role="button"
+            tabIndex={0}
+            className="relative p-2 rounded-full cursor-pointer group text-md hover:bg-gray-500/10"
+          >
             <RxDotsHorizontal />
             <div className="absolute flex-col items-start hidden text-xs bg-gray-100 border border-gray-200 rounded-lg shadow-md group-hover:flex">
               <button
@@ -128,7 +132,7 @@ function AnnouncementCard({ announcement, fetchClubAnnouncements }) {
                 Delete
               </button>
             </div>
-          </button>
+          </div>
         )}
       </div>
     </div>
