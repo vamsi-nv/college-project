@@ -1,7 +1,13 @@
 import { useRef, useState } from "react";
 import { LuUser, LuUpload, LuTrash } from "react-icons/lu";
 
-function ProfilePhotoSelector({ image, setImage, Icon }) {
+function ProfilePhotoSelector({
+  image,
+  setImage,
+  Icon,
+  profileImageUrl,
+  setProfileImageUrl,
+}) {
   const inputRef = useRef();
   const [previewUrl, setPreviewUrl] = useState(null);
 
@@ -36,14 +42,31 @@ function ProfilePhotoSelector({ image, setImage, Icon }) {
 
       {!image ? (
         <div className="size-22 flex items-center justify-center bg-blue-100/50 rounded-full relative">
-          <Icon className=" text-4xl text-primary/90" />
-          <button
-            type="button"
-            onClick={onChooseFile}
-            className="size-8 flex items-center justify-center bg-primary text-white rounded-full absolute -bottom-1 -right-1"
-          >
-            <LuUpload />
-          </button>
+          {profileImageUrl ? (
+            <img
+              src={profileImageUrl}
+              className="size-20 rounded-full object-cover"
+              alt="Profile Photo"
+            />
+          ) : (
+            <Icon className=" text-4xl text-primary/90 size-full" />
+          )}
+          {profileImageUrl ? (
+            <button
+              onClick={() => setProfileImageUrl("")}
+              className="size-8 flex items-center justify-center bg-red-500 text-white rounded-full absolute -bottom-1 -right-1"
+            >
+              <LuTrash />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={onChooseFile}
+              className="size-8 flex items-center justify-center bg-primary text-white rounded-full absolute -bottom-1 -right-1"
+            >
+              <LuUpload />
+            </button>
+          )}
         </div>
       ) : (
         <div className="relative">

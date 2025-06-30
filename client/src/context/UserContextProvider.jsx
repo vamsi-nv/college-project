@@ -10,7 +10,7 @@ function UserContextProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const fetchCurrentUser = async () => {
+   const fetchCurrentUser = async () => {
     try {
       setLoading(true);
       const response = await axiosInstance.get(api_paths.auth.get_current_user);

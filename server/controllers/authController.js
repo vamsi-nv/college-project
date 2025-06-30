@@ -111,3 +111,48 @@ export const getCurrentUser = async (req, res) => {
     });
   }
 };
+
+export const updateUser = async (req, res) => {
+  const { name } = req.body;
+  const profileImageUrl = req.file?.path;
+  const userId = req.user?._id;
+
+  if (!userId) {
+    return res.status(403).json({
+      success: false,
+      message: "Not authorized to perform this action",
+    });
+  }
+
+  try {
+    const updateFields = {};
+    if (name) updateFields.name = name;
+    if (profileImageUrl) updateFields.profileImageUrl = profileImageUrl;
+
+    // if (Object.keys(updateFields).length === 0) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "No fields to update",
+    //   });
+    // }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: updateFields },
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    res.status(200).json({
+      success: true,
+      message: "User profile updated",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Error in updateUser controller:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Error updating user profile",
+      error: error.message,
+    });
+  }
+};

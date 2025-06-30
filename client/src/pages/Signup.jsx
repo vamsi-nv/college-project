@@ -8,6 +8,7 @@ import { useAuth } from "../context/UserContextProvider.jsx";
 import Loader from "../components/Loader";
 import ProfilePhotoSelector from "../components/ProfilePhotoSelector.jsx";
 import { LuUser } from "react-icons/lu";
+import { HiMiniUserCircle } from "react-icons/hi2";
 
 function Signup() {
   const { fetchCurrentUser } = useAuth();
@@ -95,7 +96,7 @@ function Signup() {
           <ProfilePhotoSelector
             image={image}
             setImage={setImage}
-            Icon={LuUser}
+            Icon={HiMiniUserCircle}
           />
           <Input
             value={name}

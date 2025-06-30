@@ -4,7 +4,7 @@ function Modal({ setIsModalOpen, children, loading }) {
   return (
     <div
       onClick={() => !loading && setIsModalOpen(false)}
-      className="fixed inset-0 z-10 flex items-center justify-center w-full px-2 bg-gray-900/30 backdrop-blur-xs"
+      className="fixed inset-0 z-10 flex items-center justify-center w-full px-2 bg-gray-900/30 backdrop-blur-xl"
     >
       <div
         onClick={(e) => e.stopPropagation()}

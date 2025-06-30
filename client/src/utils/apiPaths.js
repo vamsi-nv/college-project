@@ -5,6 +5,7 @@ export const api_paths = {
     register: "/api/auth/register",
     login: "/api/auth/login",
     get_current_user: "/api/auth/current-user",
+    update_current_user: "/api/auth/current-user",
     // logout: "/api/auth/logout",
   },
 
