@@ -212,6 +212,13 @@ export const rsvpEvent = async (req, res) => {
       });
     }
 
+    if (new Date(event.date) < new Date()) {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot RSVP to a past event",
+      });
+    }
+
     const alreadyAttending = event.attendees.includes(userId);
 
     if (!alreadyAttending) {
@@ -224,7 +231,7 @@ export const rsvpEvent = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: alreadyAttending ? "RSVP removed" : "RSVP confirmed",
+      message: alreadyAttending ? "RSVP Cancelled" : "RSVP confirmed",
       attendees: event.attendees,
     });
   } catch (error) {

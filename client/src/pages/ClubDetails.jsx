@@ -11,6 +11,7 @@ import Modal from "../components/Modal";
 import Input from "../components/Input";
 import AnnouncementCard from "../components/AnnouncementCard";
 import { LuTrash2 } from "react-icons/lu";
+import { HiMiniUserCircle } from "react-icons/hi2";
 
 function ClubDetails() {
   const navigate = useNavigate();
@@ -37,7 +38,11 @@ function ClubDetails() {
     pinned: false,
   });
 
-  const tabItems = [{ label: "Events" }, { label: "Announcements" }];
+  const tabItems = [
+    { label: "Members" },
+    { label: "Events" },
+    { label: "Announcements" },
+  ];
 
   const fetchClubDetails = async () => {
     try {
@@ -293,6 +298,34 @@ function ClubDetails() {
             ))}
           </div>
         </div>
+
+        {currentTab === "Members" && (
+          <div className="flex flex-col items-start">
+            {club.members.map((member) => (
+              <div className="flex items-center justify-between w-full py-4 px-5 ">
+                <div className="flex items-center gap-2">
+                  <div className="size-8">
+                    {member.profileImageUrl ? (
+                      <img
+                        src={member.profileImageUrl}
+                        alt=""
+                        className="size-full rounded-full"
+                      />
+                    ) : (
+                      <HiMiniUserCircle className="size-full text-gray-300" />
+                    )}
+                  </div>
+                  <p>{member.name}</p>
+                </div>
+                {club.admins.some((admin) => admin._id === member._id) && (
+                  <span className="text-xs font-medium bg-green-500/10 px-3 py-1 text-green-500 border border-green-500 rounded-full">
+                    Admin
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
 
         {currentTab === "Events" && (
           <div>

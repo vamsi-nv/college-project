@@ -8,6 +8,10 @@ import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
 import Loader from "../components/Loader";
 import { FiEdit2 } from "react-icons/fi";
+import toast from "react-hot-toast";
+import { PiUsersThreeThin } from "react-icons/pi";
+import { Link } from "react-router-dom";
+
 function Profile() {
   const { fetchCurrentUser, user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,7 +20,8 @@ function Profile() {
   const [image, setImage] = useState(null);
   const [name, setName] = useState();
   const [profileImageUrl, setProfileImageUrl] = useState("");
-  const [currentTab, setCurrentTab] = useState("Clubs")
+  const [currentTab, setCurrentTab] = useState("Clubs");
+  const [clubs, setClubs] = useState([]);
 
   const tabItems = [
     {
@@ -71,9 +76,25 @@ function Profile() {
     }
   };
 
+  const fetchUserClubs = async () => {
+    try {
+      const response = await axiosInstance.get(api_paths.clubs.get_user_clubs);
+      const data = response.data;
+      if (data.success) {
+        setClubs(data.clubs);
+      } else {
+        toast.error("Error fetching clubs");
+      }
+    } catch (error) {
+      toast.error("Error fetching clubs");
+      console.log(error.response?.data?.message || error.message);
+    }
+  };
+
   useEffect(() => {
     if (user) {
       setName(user.name);
+      fetchUserClubs();
     }
 
     if (user.profileImageUrl) {
@@ -126,6 +147,40 @@ function Profile() {
             </button>
           ))}
         </div>
+
+        {currentTab === "Clubs" && (
+          <div>
+            {clubs.map((club) => (
+              <Link key={club._id} to={`/clubs/${club._id}`}>
+                <div
+                  title={club.name}
+                  className="hover:bg-gray-50/50 mx-auto my-3 w-[85%] sm:w-[80%] md:w-6/7 lg:w-3/5 border border-gray-300 rounded-2xl shadow-gray-300/80 hover:shadow-[0_0_10px] hover:scale-105 transition-all duration-300 cursor-pointer"
+                >
+                  {club.coverImage ? (
+                    <img
+                      src={club.coverImage}
+                      alt={club.name}
+                      className="object-cover aspect-video rounded-t-2xl"
+                    />
+                  ) : (
+                    <PiUsersThreeThin className="mx-auto font-light text-gray-300 size-40" />
+                  )}
+                  <div className="p-4">
+                    <h2 className="text-lg flex items-center justify-between font-semibold text-gray-700">
+                      {club.name}
+                      {club.admins.includes(user._id) && (
+                        <span className="text-xs font-medium bg-green-500/10 px-3 py-1 text-green-500 border border-green-500 rounded-full">
+                          Admin
+                        </span>
+                      )}
+                    </h2>
+                    <p className="text-sm text-gray-500">{club.description}</p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       {isModalOpen && (
