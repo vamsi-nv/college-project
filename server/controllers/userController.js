@@ -50,42 +50,118 @@ export const registerUser = async (req, res) => {
   }
 };
 
+// export const loginUser = async (req, res) => {
+//   if (!req.body.email || !req.body.password) {
+//     return res.status(400).json({
+//       success: false,
+//       message: "Email and password are required",
+//     });
+//   }
+
+//   const email = req.body.email.trim();
+//   const password = req.body.password.trim();
+
+//   try {
+//     const user = await User.findOne({ email });
+
+//     if (!user || !(await user.comparePassword(password))) {
+//       return res.status(401).json({
+//         success: false,
+//         message: "Invalid credentials",
+//       });
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       message: "User login successfull",
+//       user,
+//       token: generateToken(user._id),
+//     });
+//   } catch (error) {
+//     console.error("Error in loginUser controller : ", error.message);
+//     res.status(500).json({
+//       success: false,
+//       message: "Server Error",
+//       error: error.message,
+//     });
+//   }
+// };
+
 export const loginUser = async (req, res) => {
-  if (!req.body.email || !req.body.password) {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
     return res.status(400).json({
       success: false,
       message: "Email and password are required",
     });
   }
 
-  const email = req.body.email.trim();
-  const password = req.body.password.trim();
-
   try {
     const user = await User.findOne({ email });
 
-    if (!user || !(await user.comparePassword(password))) {
+    if (!user) {
       return res.status(401).json({
         success: false,
         message: "Invalid credentials",
       });
     }
 
+    const isPasswordCorrect = await user.comparePassword(password);
+    if (!isPasswordCorrect) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid credentials",
+      });
+    }
+
+    const isAdmin = email === process.env.ADMIN_EMAIL;
+    const plainUser = user.toObject();
+
+    console.log("isAdmin:", isAdmin);
+    const ResponseUser = { ...plainUser, isAdmin };
+    console.log("User : ", user);
+
     res.status(200).json({
       success: true,
-      message: "User login successfull",
-      user,
+      message: "Login successful",
+      user: ResponseUser,
       token: generateToken(user._id),
     });
   } catch (error) {
-    console.error("Error in loginUser controller : ", error.message);
+    console.error("Error in loginUser controller: ", error.message);
     res.status(500).json({
       success: false,
-      message: "Server Error",
+      message: "Server error",
       error: error.message,
     });
   }
 };
+
+// export const getCurrentUser = async (req, res) => {
+//   try {
+//     const user = await User.findById(req.user._id).select("-password");
+
+//     if (!user) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "User not found",
+//       });
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       user,
+//     });
+//   } catch (error) {
+//     console.error("Error in getCurrentUser controller : ", error.message);
+//     res.status(500).json({
+//       success: false,
+//       message: "Server Error",
+//       error: error.message,
+//     });
+//   }
+// };
 
 export const getCurrentUser = async (req, res) => {
   try {
@@ -98,9 +174,12 @@ export const getCurrentUser = async (req, res) => {
       });
     }
 
+    const plainUser = user.toObject();
+    const isAdmin = user.email === process.env.ADMIN_EMAIL;
+
     res.status(200).json({
       success: true,
-      user,
+      user: { ...plainUser, isAdmin },
     });
   } catch (error) {
     console.error("Error in getCurrentUser controller : ", error.message);
@@ -152,6 +231,42 @@ export const updateUser = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error updating user profile",
+      error: error.message,
+    });
+  }
+};
+
+export const getAllUsersAdmin = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(403).json({
+        success: false,
+        message: "Invalid credentials",
+      });
+    }
+
+    if (user.email !== process.env.ADMIN_EMAIL) {
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized",
+      });
+    }
+
+    const users = await User.find({
+      email: { $ne: process.env.ADMIN_EMAIL },
+    }).select("-password -__v");
+    res.status(200).json({
+      success: true,
+      users,
+    });
+  } catch (error) {
+    console.log("Error in getAllUsersAdmin controller : ", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching users",
       error: error.message,
     });
   }

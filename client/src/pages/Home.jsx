@@ -76,7 +76,7 @@ function Home() {
 
   return (
     <div className="w-full h-full ">
-      <div className="sticky flex items-center justify-around w-full pt-12 overflow-x-scroll border-b border-gray-200 sm:pt-5">
+      <div className="sticky flex items-center justify-around w-full pt-12 overflow-x-scroll border-b border-gray-300 sm:pt-5">
         {tabItems.map((tabItem) => (
           <button
             key={tabItem.label}

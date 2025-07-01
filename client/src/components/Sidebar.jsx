@@ -1,10 +1,12 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FiHome, FiCompass, FiBell, FiUser, FiLogOut } from "react-icons/fi";
+import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { LuUsers } from "react-icons/lu";
 import { useAuth } from "../context/UserContextProvider";
 import logo from "../assets/globe.png";
 function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
   const { logout, user } = useAuth();
+  const navigate = useNavigate();
 
   const navItems = [
     {
@@ -42,16 +44,18 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
           : "sm:block md:block hidden max-sm:-translate-x-full sticky"
       }`}
     >
-      <div className="flex items-center gap-1 px-2 mb-5">
-        <img src={logo} alt="logo" className="w-10" />
-        <h2
-          className={`hidden font-medium text-xl lg:block ${
-            isMobileMenuOpen && "max-sm:block"
-          }`}
-        >
-          CSphere
-        </h2>
-      </div>
+      <Link to={"/"}>
+        <div className="flex items-center gap-1 px-2 mb-5">
+          <img src={logo} alt="logo" className="w-10" />
+          <h2
+            className={`hidden font-medium text-xl lg:block ${
+              isMobileMenuOpen && "max-sm:block"
+            }`}
+          >
+            CSphere
+          </h2>
+        </div>
+      </Link>
       <div className="flex flex-col group">
         {navItems.map(({ label, path, icon: Icon }) => (
           <div
@@ -60,6 +64,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
             key={path}
           >
             <NavLink
+              end
               to={path}
               className={({ isActive }) =>
                 `flex items-center ${
@@ -105,6 +110,21 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
           Logout
         </span>
       </button>
+      {user?.isAdmin && (
+        <button
+          onClick={() => navigate("/admin")}
+          className={`flex items-center gap-3 text-base p-4 mb-4 text-white rounded-full transition-all duration-300 bg-primary hover:scale-105 hover:bg-primary/90`}
+        >
+          <MdOutlineAdminPanelSettings className="w-5 h-5 max-xl:flex-1" />
+          <span
+            className={`${
+              isMobileMenuOpen ? "max-sm:block" : ""
+            }  hidden lg:flex-1 lg:block`}
+          >
+            Dashboard
+          </span>
+        </button>
+      )}
       <div className="hidden">
         <div className="flex items-center gap-3">
           <div className="">

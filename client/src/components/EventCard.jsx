@@ -58,7 +58,7 @@ function EventCard({ event }) {
   }, [event.attendees, user._id]);
 
   return (
-    <div className="relative flex flex-col p-3 border-b border-gray-200 md:p-4 ">
+    <div className="relative flex flex-col p-3 border-b border-gray-300 md:p-4 ">
       <div
         onClick={() => navigate(`/clubs/${event.club._id}`)}
         className="flex items-center gap-1 mb-2 ml-5 text-sm font-medium text-gray-400 cursor-pointer sm:text-base"

@@ -34,7 +34,7 @@ function HomeLayout() {
         ></div>
       )}
 
-      <div className="border-gray-200 flex-6 xl:flex-5 border-x">
+      <div className="border-gray-300 flex-6 xl:flex-5 border-x">
         <Outlet />
       </div>
       <div className="flex-4 max-md:hidden">

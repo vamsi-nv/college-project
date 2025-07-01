@@ -69,6 +69,8 @@ export const getAllEvents = async (req, res) => {
       filter.club = { $in: clubIds };
     } else if (clubId) {
       filter.club = clubId;
+    }else{
+      filter = {}
     }
 
     const events = await Event.find(filter)

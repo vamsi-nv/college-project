@@ -11,6 +11,9 @@ import Explore from "./pages/Explore";
 import Clubs from "./pages/Clubs";
 import ClubDetails from "./pages/ClubDetails";
 import { Toaster } from "react-hot-toast";
+import Admin from "./pages/Admin/Admin";
+import AdminClubsPage from "./pages/Admin/AdminClubsPage";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
 
 function App() {
   const { user, loading } = useAuth();
@@ -42,6 +45,14 @@ function App() {
           path="/login"
           element={!user ? <Login /> : <Navigate to="/" />}
         />
+        <Route path="/clubs/:id" element={<ClubDetails />} />
+        <Route
+          path="/admin"
+          element={user?.isAdmin ? <Admin /> : <Navigate to="/" />}
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="clubs" element={<AdminClubsPage />} />
+        </Route>
       </Routes>
     </div>
   );
