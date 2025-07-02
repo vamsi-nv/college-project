@@ -1,4 +1,5 @@
 import Club from "../models/clubModel.js";
+import User from "../models/userModel.js";
 
 export const createClub = async (req, res) => {
   const { name, description } = req.body;
@@ -43,9 +44,21 @@ export const createClub = async (req, res) => {
 export const getAllClubs = async (req, res) => {
   const userId = req.user._id;
   try {
-    const clubs = await Club.find({ members: { $ne: userId } })
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(403).json({
+        success: false,
+        message: "Not authorized",
+      });
+    }
+
+    const isAdmin = user.email === process.env.ADMIN_EMAIL;
+
+    const filter = isAdmin ? {} : { members: { $ne: userId } };
+
+    const clubs = await Club.find(filter)
       .populate("createdBy", "name")
-      .select("-__v");
+      .select("-__v")
 
     res.status(200).json({
       success: true,

@@ -106,7 +106,7 @@ function Profile() {
 
   return (
     <div className="w-full h-full">
-      <div className="px-6 py-20">
+      <div className="py-20 ">
         <div className="flex flex-col items-center">
           <div className="max-sm:size-30 size-32 sm:size-36 lg:size-40">
             {user.profileImageUrl ? (
@@ -116,22 +116,22 @@ function Profile() {
                 className="w-full h-full rounded-full aspect-square"
               />
             ) : (
-              <HiMiniUserCircle className="w-full h-full text-gray-300 rounded-full" />
+              <HiMiniUserCircle className="w-full h-full text-gray-300 rounded-full max-sm:text-red-500" />
             )}
           </div>
-          <h3 className="text-lg sm:text-xl md:text-2xl font-medium text-gray-700">
+          <h3 className="text-lg font-medium text-gray-700 sm:text-xl md:text-2xl">
             {user.name}
           </h3>
-          <p className="text-sm sm:text-base text-gray-500">{user.email}</p>
+          <p className="text-sm text-gray-500 sm:text-base">{user.email}</p>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="text-xs sm:text-sm flex items-center gap-1 px-3 sm:px-4 py-1 my-2 border rounded-full border-primary text-primary hover:bg-primary/30 bg-primary/20"
+            className="flex items-center gap-1 px-3 py-1 my-2 text-xs border rounded-full sm:text-sm sm:px-4 border-primary text-primary hover:bg-primary/30 bg-primary/20"
           >
             <FiEdit2 /> Edit
           </button>
         </div>
 
-        <div className="sticky flex items-center justify-around w-full pt-12 overflow-x-scroll border-b border-gray-200 sm:pt-5">
+        <div className="sticky top-0 z-10 flex items-center justify-around w-full pt-12 overflow-x-scroll border-b border-gray-300 backdrop-blur-xl bg-gray-50/60 sm:pt-5">
           {tabItems.map((tabItem) => (
             <button
               key={tabItem.label}
@@ -154,7 +154,7 @@ function Profile() {
               <Link key={club._id} to={`/clubs/${club._id}`}>
                 <div
                   title={club.name}
-                  className="hover:bg-gray-50/50 mx-auto my-3 w-[85%] sm:w-[80%] md:w-6/7 lg:w-3/5 border border-gray-300 rounded-2xl shadow-gray-300/80 hover:shadow-[0_0_10px] hover:scale-105 transition-all duration-300 cursor-pointer"
+                  className="hover:bg-gray-50/50 mx-auto my-5 w-4/5 sm:w-[80%] md:w-6/7 lg:w-4/5 xl:w-3/5 border border-gray-300 rounded-2xl shadow-gray-300/80 hover:shadow-[0_0_10px] hover:scale-105 transition-all duration-300 cursor-pointer"
                 >
                   {club.coverImage ? (
                     <img
@@ -163,18 +163,18 @@ function Profile() {
                       className="object-cover aspect-video rounded-t-2xl"
                     />
                   ) : (
-                    <PiUsersThreeThin className="mx-auto font-light text-gray-300 size-40" />
+                    <PiUsersThreeThin className="mx-auto font-light text-gray-300 max-sm:size-24 sm:size-32 size-40" />
                   )}
                   <div className="p-4">
-                    <h2 className="text-lg flex items-center justify-between font-semibold text-gray-700">
+                    <h2 className="flex items-center justify-between text-lg font-semibold text-gray-700 max-sm:text-sm">
                       {club.name}
                       {club.admins.includes(user._id) && (
-                        <span className="text-xs font-medium bg-green-500/10 px-3 py-1 text-green-500 border border-green-500 rounded-full">
+                        <span className="px-3 py-1 text-xs font-medium text-green-500 border border-green-500 rounded-full bg-green-500/10">
                           Admin
                         </span>
                       )}
                     </h2>
-                    <p className="text-sm text-gray-500">{club.description}</p>
+                    <p className="text-sm text-gray-500 max-sm:text-xs max-w-[40ch]">{club.description}</p>
                   </div>
                 </div>
               </Link>

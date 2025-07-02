@@ -10,8 +10,9 @@ import { PiUsersThreeThin } from "react-icons/pi";
 import Modal from "../components/Modal";
 import Input from "../components/Input";
 import AnnouncementCard from "../components/AnnouncementCard";
-import { LuTrash2 } from "react-icons/lu";
+import { LuPlus, LuTrash2 } from "react-icons/lu";
 import { HiMiniUserCircle } from "react-icons/hi2";
+import { MdAnnouncement, MdEvent } from "react-icons/md";
 
 function ClubDetails() {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ function ClubDetails() {
   const [currentTab, setCurrentTab] = useState("Events");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState("");
+  const [isPostMenuOpen, setIsPostMenuOpen] = useState(false);
 
   const [eventForm, setEventForm] = useState({
     title: "",
@@ -102,7 +104,7 @@ function ClubDetails() {
       } else {
         toast.error("Failed to leave club");
       }
-    } catch {
+    } catch (error) {
       toast.error("Failed to leave club");
     }
   };
@@ -137,7 +139,7 @@ function ClubDetails() {
         toast.success("Club deleted");
         navigate("/clubs");
       }
-    } catch {
+    } catch (error) {
       toast.error("Failed to delete club");
     }
   };
@@ -162,7 +164,7 @@ function ClubDetails() {
       } else {
         toast.error("Failed to post event.");
       }
-    } catch {
+    } catch (error) {
       toast.error("Failed to post event");
     }
   };
@@ -188,7 +190,7 @@ function ClubDetails() {
       } else {
         toast.error("Failed to post announcement");
       }
-    } catch {
+    } catch (error) {
       toast.error("Failed to post announcement");
     }
   };
@@ -222,9 +224,9 @@ function ClubDetails() {
   if (loading || !club || !user || !club.createdBy) return <Loader />;
 
   return (
-    <div className="w-full h-full pt-12 sm:pt-0">
+    <div className="relative w-full h-full pt-12 sm:pt-0">
       <div className="flex items-center justify-between p-4 max-sm:text-sm">
-        <h3 className="md:text-lg max-sm:text-sm">{club.name}</h3>
+        <p>Club</p>
         {club.createdBy._id === user._id && (
           <button
             onClick={handleDeleteClub}
@@ -247,7 +249,7 @@ function ClubDetails() {
 
       <div className="flex items-center justify-between p-6">
         <div>
-          <h1 className="font-medium text-gray-700 lg:text-3xl sm:text-2xl max-sm:text-xl">
+          <h1 className="font-medium text-gray-700 lg:text-xl sm:text-xl max-sm:text-lg">
             {club.name}
           </h1>
           <p className="text-gray-500 max-sm:text-sm">{club.description}</p>
@@ -258,7 +260,7 @@ function ClubDetails() {
             (club.members.some((member) => member._id === user._id) ? (
               <button
                 onClick={handleLeaveClub}
-                className="px-6 py-2 text-sm border rounded-full border-primary hover:bg-primary/30 text-primary bg-primary/20"
+                className="px-6 py-2 text-sm border rounded-full hover:bg-primary/30 text-primary bg-primary/20"
               >
                 Leave
               </button>
@@ -270,7 +272,7 @@ function ClubDetails() {
                 Join
               </button>
             ))}
-
+          {/* 
           {club.createdBy._id === user._id && (
             <button
               onClick={() => setIsModalOpen(true)}
@@ -278,47 +280,45 @@ function ClubDetails() {
             >
               + {currentTab === "Events" ? "Event" : "Announcement"}
             </button>
-          )}
+          )} */}
         </div>
       </div>
 
       <div>
-        <div className="flex items-center justify-between border-b border-gray-200 max-md:mx-5">
-          <div className="flex items-center gap-3">
-            {tabItems.map((tab) => (
-              <button
-                key={tab.label}
-                onClick={() => setCurrentTab(tab.label)}
-                className={`tab-label ${
-                  currentTab === tab.label ? "tab-selected" : "tab-not-selected"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+        <div className="sticky flex items-center justify-around w-full border-b border-gray-300 sm:pt-5 top-16">
+          {tabItems.map((tab) => (
+            <button
+              key={tab.label}
+              onClick={() => setCurrentTab(tab.label)}
+              className={`tab-label ${
+                currentTab === tab.label ? "tab-selected" : "tab-not-selected"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
 
         {currentTab === "Members" && (
           <div className="flex flex-col items-start">
             {club.members.map((member) => (
-              <div className="flex items-center justify-between w-full py-4 px-5 ">
+              <div className="flex items-center justify-between w-full px-5 py-4 ">
                 <div className="flex items-center gap-2">
                   <div className="size-8">
                     {member.profileImageUrl ? (
                       <img
                         src={member.profileImageUrl}
                         alt=""
-                        className="size-full rounded-full"
+                        className="rounded-full size-full"
                       />
                     ) : (
-                      <HiMiniUserCircle className="size-full text-gray-300" />
+                      <HiMiniUserCircle className="text-gray-300 size-full" />
                     )}
                   </div>
                   <p>{member.name}</p>
                 </div>
                 {club.admins.some((admin) => admin._id === member._id) && (
-                  <span className="text-xs font-medium bg-green-500/10 px-3 py-1 text-green-500 border border-green-500 rounded-full">
+                  <span className="px-3 py-1 text-xs font-medium text-green-500 border border-green-500 rounded-full bg-green-500/10">
                     Admin
                   </span>
                 )}
@@ -495,6 +495,47 @@ function ClubDetails() {
             )}
           </div>
         </Modal>
+      )}
+
+      {club.createdBy._id === user._id && (
+        <div
+          onClick={() => setIsPostMenuOpen((prev) => !prev)}
+          className="absolute bottom-6 right-6"
+        >
+          <div className="relative">
+            <button className="p-3 text-white transition-all duration-300 rounded-full shadow-lg bg-primary hover:scale-105 hover:bg-primary/90">
+              <LuPlus className="size-5" />
+            </button>
+            {isPostMenuOpen && (
+              <div className="absolute flex flex-col items-start gap-1 -top-24">
+                <div
+                  onClick={() => {
+                    setCurrentTab("Events");
+                    setIsModalOpen(true);
+                  }}
+                  className="relative p-3 text-white transition-all duration-300 rounded-full group bg-primary hover:scale-105 hover:bg-primary/90"
+                >
+                  <MdEvent className="size-5 " />
+                  <span className="absolute hidden p-2 text-xs text-white rounded shadow-lg mr-2 bg-primary right-full bottom-[15%] group-hover:block">
+                    Event
+                  </span>
+                </div>
+                <div
+                  onClick={() => {
+                    setCurrentTab("Announcements");
+                    setIsModalOpen(true);
+                  }}
+                  className="relative p-3 text-white transition-all duration-300 rounded-full group bg-primary hover:scale-105 hover:bg-primary/90"
+                >
+                  <MdAnnouncement className="size-5" />
+                  <span className="absolute hidden p-2 text-xs text-white rounded shadow-lg mr-2 bg-primary right-full bottom-[15%] group-hover:block">
+                    Announcement
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );

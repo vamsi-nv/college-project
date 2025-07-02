@@ -18,25 +18,25 @@ button {
 }
 
 .input-field {
-  @apply outline-none p-2 sm:p-4 border border-gray-300 focus:ring-1 focus:ring-black placeholder:text-gray-400 rounded-lg bg-neutral-50 text-sm sm:text-base;
+  @apply p-2 text-sm border border-gray-300 rounded-lg outline-none sm:p-4 focus:ring-1 focus:ring-black placeholder:text-gray-400 bg-neutral-50 sm:text-base;
 }
 
 .input-field-label {
-  @apply px-4 text-gray-600 text-sm max-sm:text-xs;
+  @apply px-4 text-sm text-gray-600 max-sm:text-xs;
 }
 
 .form-submit-btn {
-  @apply bg-primary text-white p-4 max-sm:text-sm text-base rounded-lg hover:bg-primary/95 hover:scale-105 transition-all duration-300;
+  @apply p-4 text-base text-white transition-all duration-300 rounded-lg bg-primary max-sm:text-sm hover:bg-primary/95 hover:scale-105;
 }
 
 .tab-label {
-  @apply py-1 px-2 text-sm sm:text-base sm:py-3 transition-all duration-300 sm:px-6 cursor-pointer hover:bg-gray-200 relative after:absolute after:bg-primary after:bottom-0 after:left-0 after:right-0 after:h-[2px] sm:after:h-[2.5px] after:rounded-full after:transition-all after:duration-300;
+  @apply py-3 px-4 text-sm sm:text-base sm:py-3 transition-all duration-300 sm:px-6 cursor-pointer hover:bg-gray-200 relative after:absolute after:bg-primary after:bottom-0 after:left-0 after:right-0 after:h-[2px] sm:after:h-[2.5px] after:rounded-full after:transition-all after:duration-300;
 }
 
 .tab-selected {
-  @apply after:opacity-100 after:scale-x-100 font-medium text-primary;
+  @apply font-medium after:opacity-100 after:scale-x-100 text-primary;
 }
 
 .tab-not-selected {
-  @apply after:opacity-0 after:scale-x-0 text-gray-500;
+  @apply text-gray-500 after:opacity-0 after:scale-x-0;
 }

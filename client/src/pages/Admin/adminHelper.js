@@ -41,3 +41,24 @@ export const fetchAllUsers = async () => {
     return null;
   }
 };
+
+export const handleDeleteClub = async (id) => {
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this club?"
+  );
+  if (!confirmDelete) return;
+
+  try {
+    const response = await axiosInstance.delete(
+      api_paths.clubs.delete_club(id)
+    );
+    if (response.data.success) {
+      toast.success("Club deleted");
+      return true;
+    }
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to delete club");
+    return false;
+  }
+};

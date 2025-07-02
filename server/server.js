@@ -26,6 +26,6 @@ app.use("/api/clubs", clubRouter);
 app.use("/api/events", eventRouter);
 app.use("/api/announcements", announcementRouter);
 
-app.listen(port, () => {
+app.listen(port,  () => {
   console.log("Server is up and running on port : " + port);
 });

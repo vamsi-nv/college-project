@@ -62,7 +62,7 @@ function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-2 bg-gradient-to-t from-primary/90 to-primary/10">
-      <div className="w-full max-w-md sm:max-w-lg  shadow-lg border border-gray-200 p-4 sm:p-8 bg-gray-50 rounded-lg">
+      <div className="w-full max-w-md sm:max-w-lg shadow-lg border border-gray-200 p-4 sm:p-8 bg-gray-50 rounded-lg">
         <h2 className="mx-2 sm:mx-4 my-5 font-semibold text-xl sm:text-2xl text-center text-primary">
           Login
         </h2>

@@ -97,7 +97,7 @@ function Clubs() {
   return (
     <div className="w-full min-h-screen">
       {/* Header */}
-      <div className="sticky top-0 z-10 flex items-center justify-between w-full px-5 pt-12 pb-2 border-b border-gray-200 sm:pt-2 backdrop-blur-xl bg-gray-100/60">
+      <div className="sticky top-0 z-10 flex items-center justify-between w-full px-5 pt-12 pb-2 border-b border-gray-200 sm:pt-2 backdrop-blur-xl bg-gray-50/60">
         <LuUsers className="text-gray-500 size-6" />
         <button
           onClick={() => setIsModalOpen(true)}
@@ -107,7 +107,7 @@ function Clubs() {
         </button>
       </div>
 
-      {/* Modal */}
+      
       {isModalOpen && (
         <Modal setIsModalOpen={setIsModalOpen} loading={loading}>
           <h2 className="mx-2 my-5 text-xl font-semibold text-center sm:mx-4 sm:text-2xl text-primary">
@@ -168,7 +168,7 @@ function Clubs() {
         </Modal>
       )}
 
-      {/* Club List */}
+      
       <div className="flex flex-col justify-center w-full h-full px-4 py-6">
         {clubs.length === 0 ? (
           <p className="mt-10 text-center text-gray-400">

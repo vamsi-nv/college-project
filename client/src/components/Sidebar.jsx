@@ -38,9 +38,9 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
 
   return (
     <div
-      className={`min-h-screen  top-0 lg:w-60 p-4 bg-gray-100 lg:ml-10 xl:ml-25 lg:p-8 transfrom transition-transform duration-300 ease-in-out flex flex-col items-start ${
+      className={`min-h-screen  top-0 lg:w-60 p-4 bg-gray-50 lg:ml-10 xl:ml-25 lg:p-8 flex flex-col items-start ${
         isMobileMenuOpen
-          ? "absolute z-50 translate-x-0"
+          ? "fixed z-50 translate-x-0"
           : "sm:block md:block hidden max-sm:-translate-x-full sticky"
       }`}
     >

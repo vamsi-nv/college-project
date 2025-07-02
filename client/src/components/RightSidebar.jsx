@@ -3,9 +3,11 @@ import { api_paths } from "../utils/apiPaths";
 import axiosInstance from "../utils/axiosInstance";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/UserContextProvider";
 
 function RightSidebar() {
   const [clubs, setClubs] = useState([]);
+  const { user } = useAuth();
 
   const fetchAllclubs = async () => {
     const response = await axiosInstance.get(api_paths.clubs.get_all_clubs);
@@ -22,7 +24,7 @@ function RightSidebar() {
       const data = response.data;
       if (data.success) {
         console.log("Joined club");
-        fetchAllclubs()
+        fetchAllclubs();
       }
     } catch (error) {
       setError(
@@ -39,13 +41,13 @@ function RightSidebar() {
   }, []);
 
   return (
-    <div className="p-3 mt-10 lg:p-6">
+    <div className={`p-3 mt-10 lg:p-6 ${user.isAdmin && "hidden"}`}>
       <h3 className="px-4 mb-3 text-lg font-medium text-gray-500">
         What to join
       </h3>
       <div className=" xl:w-[60%] flex flex-col">
         {clubs.map((club) => (
-          <div className="flex items-center justify-between p-4 border-b border-gray-300">
+          <div key={club._id} className="flex items-center justify-between p-4 border-b border-gray-300">
             <div className="flex items-center gap-2">
               <div>
                 {club.coverImage ? (
