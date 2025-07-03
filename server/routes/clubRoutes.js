@@ -22,7 +22,7 @@ clubRouter.route("/user").get(protect, getUserClubs);
 clubRouter
   .route("/:id")
   .get(protect, getClubById)
-  .put(protect, updateClub)
+  .put(protect, clubUpload.single("coverImage"), updateClub)
   .delete(protect, deleteClub);
 clubRouter.route("/:id/join").post(protect, joinClub);
 clubRouter.route("/:id/leave").post(protect, leaveClub);

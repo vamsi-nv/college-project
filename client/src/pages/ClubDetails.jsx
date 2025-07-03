@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Loader from "../components/Loader";
 import { useAuth } from "../context/UserContextProvider";
 import toast from "react-hot-toast";
@@ -10,9 +10,11 @@ import { PiUsersThreeThin } from "react-icons/pi";
 import Modal from "../components/Modal";
 import Input from "../components/Input";
 import AnnouncementCard from "../components/AnnouncementCard";
-import { LuPlus, LuTrash2 } from "react-icons/lu";
-import { HiMiniUserCircle } from "react-icons/hi2";
+import { LuPen, LuPlus, LuTrash2 } from "react-icons/lu";
+import { HiMiniUserCircle, HiOutlineUserGroup } from "react-icons/hi2";
 import { MdAnnouncement, MdEvent } from "react-icons/md";
+import { HiOutlineDotsVertical } from "react-icons/hi";
+import ProfilePhotoSelector from "../components/ProfilePhotoSelector";
 
 function ClubDetails() {
   const navigate = useNavigate();
@@ -26,7 +28,15 @@ function ClubDetails() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState("");
   const [isPostMenuOpen, setIsPostMenuOpen] = useState(false);
-
+  const [isClubEditMenuOpen, setIsClubEditMenuOpen] = useState(false);
+  const clubEditMenuRef = useRef(null);
+  const [formType, setFormType] = useState("");
+  const [coverImageUrl, setCoverImageUrl] = useState("");
+  const [clubForm, setClubForm] = useState({
+    name: "",
+    description: "",
+    coverImage: null,
+  });
   const [eventForm, setEventForm] = useState({
     title: "",
     description: "",
@@ -145,6 +155,7 @@ function ClubDetails() {
   };
 
   const handlePostEvent = async () => {
+    setFormType("PostEvent");
     const { title, description, date, location } = eventForm;
     if (!title) return setError("Title is required");
     if (!description) return setError("Description is required");
@@ -167,9 +178,12 @@ function ClubDetails() {
     } catch (error) {
       toast.error("Failed to post event");
     }
+
+    setFormType("");
   };
 
   const handlePostAnnouncement = async () => {
+    setFormType("PostAnnouncement");
     const { title, content } = announcementForm;
     if (!title) return setError("Title is required");
     if (!content) return setError("Content is required");
@@ -193,6 +207,55 @@ function ClubDetails() {
     } catch (error) {
       toast.error("Failed to post announcement");
     }
+
+    setFormType("");
+  };
+
+  const handleEditClub = async (e) => {
+    e.preventDefault();
+
+    const { name, description, coverImage } = clubForm;
+
+    if (!name || !description) {
+      setError(!name ? "Name is required" : "Description is required");
+      return;
+    }
+
+    setError("");
+    setLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      if (coverImage) formData.append("coverImage", coverImage);
+
+      const response = await axiosInstance.put(
+        api_paths.clubs.update_club(club?._id),
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      if (response.data.success) {
+        toast.success("Club updated successfully!");
+        setIsModalOpen(false);
+        setClubForm({ name: "", description: "", coverImage: null });
+        fetchClubDetails();
+      } else {
+        toast.error(response.data.message || "Failed to update club");
+      }
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Something went wrong. Please try again.";
+      setError(message);
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -200,9 +263,11 @@ function ClubDetails() {
   }, [id]);
 
   useEffect(() => {
-    if (club?._id) fetchClubEvents();
-    if (club?._id) fetchClubAnnouncements();
-  }, [club?._id]);
+    if (club?._id) {
+      if (currentTab === "Events") fetchClubEvents();
+      if (currentTab === "Announcements") fetchClubAnnouncements();
+    }
+  }, [club?._id, currentTab]);
 
   useEffect(() => {
     if (isModalOpen) {
@@ -218,31 +283,97 @@ function ClubDetails() {
         content: "",
         pinned: false,
       });
+      setClubForm({
+        name: club.name || "",
+        description: club.description || "",
+        coverImage: null,
+      });
+      if (club.coverImage) {
+        setCoverImageUrl(club.coverImage);
+      }
     }
   }, [isModalOpen]);
 
-  if (loading || !club || !user || !club.createdBy) return <Loader />;
+  useEffect(() => {
+    function handleOutsideClick(event) {
+      if (
+        clubEditMenuRef.current &&
+        !clubEditMenuRef.current.contains(event.target)
+      ) {
+        setIsClubEditMenuOpen(false);
+      }
+    }
+
+    if (isClubEditMenuOpen) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    } else {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isClubEditMenuOpen]);
+
+  if (loading) return <Loader />;
+  if (!club || !user || !club.createdBy)
+    return (
+      <p className="mt-20 text-center text-red-500">
+        Club not found or failed to load.
+      </p>
+    );
 
   return (
     <div className="relative w-full h-full pt-12 sm:pt-0">
       <div className="flex items-center justify-between p-4 max-sm:text-sm">
         <p>{club.name}</p>
+
         {club.createdBy._id === user._id && (
-          <button
-            onClick={handleDeleteClub}
-            className="p-2 rounded-full hover:text-red-500 hover:bg-red-500/10"
-          >
-            <LuTrash2 className="size-4 md:size-5" />
-          </button>
+          <div className="relative group">
+            <button
+              onClick={() => setIsClubEditMenuOpen((prev) => !prev)}
+              className="p-2 rounded-full hover:bg-primary/10 hover:text-primary"
+            >
+              <HiOutlineDotsVertical className="size-5" />
+            </button>
+            {isClubEditMenuOpen && (
+              <div
+                ref={clubEditMenuRef}
+                className="absolute right-0 p-2 space-y-1 border border-gray-200 rounded-lg shadow-md bg-gray-50"
+              >
+                <button
+                  onClick={() => {
+                    setFormType("EditClub");
+                    setIsModalOpen(true);
+                    setClubForm({
+                      name: club.name,
+                      description: club.description,
+                      coverImage: club.coverImage,
+                    });
+                  }}
+                  className="flex items-center gap-1 w-full px-5 py-3 text-left rounded-[6px] text-gray-700 hover:bg-primary/20 hover:text-primary transition-all duration-300 "
+                >
+                  <LuPen />
+                  Edit
+                </button>
+                <button
+                  onClick={handleDeleteClub}
+                  className="flex items-center gap-1 w-full px-5 py-3 text-left rounded-[6px] transition-all duration-300  hover:bg-red-100 text-red-500"
+                >
+                  <LuTrash2 /> Delete
+                </button>
+              </div>
+            )}
+          </div>
         )}
       </div>
 
-      <div className="w-full h-52">
+      <div className="w-full">
         {club.coverImage ? (
           <img
             src={club.coverImage}
             alt="Club Cover"
-            className="object-cover w-full h-full border-none aspect-video"
+            className="object-cover w-full h-auto aspect-auto"
           />
         ) : (
           <PiUsersThreeThin className="mx-auto font-light text-gray-300 size-42" />
@@ -252,10 +383,10 @@ function ClubDetails() {
       <div className="flex items-center justify-between p-6">
         <div>
           <div className="flex items-center justify-between">
-            <h1 className="font-medium text-gray-700 lg:text-xl sm:text-xl max-sm:text-lg">
+            <h1 className="font-semibold text-black/80 lg:text-xl sm:text-xl max-sm:text-lg">
               {club.name}
             </h1>
-            <div className="flex flex-col items-end gap-2">
+            <div className="flex flex-col">
               {club.createdBy._id !== user._id &&
                 (club.members.some((member) => member._id === user._id) ? (
                   <button
@@ -274,7 +405,7 @@ function ClubDetails() {
                 ))}
             </div>
           </div>
-          <p className="text-gray-500 max-w-5/6 max-sm:text-sm">
+          <p className="text-gray-700 max-w-5/6 max-sm:text-sm">
             {club.description}
           </p>
         </div>
@@ -300,7 +431,7 @@ function ClubDetails() {
       </div>
 
       <div>
-        <div className="sticky flex items-center justify-around w-full border-b border-gray-300 sm:pt-3 top-16">
+        <div className="sticky flex items-center justify-around w-full overflow-x-auto border-b border-gray-300 whitespace-nowrap sm:pt-3 top-16">
           {tabItems.map((tab) => (
             <button
               key={tab.label}
@@ -367,9 +498,11 @@ function ClubDetails() {
         <Modal setIsModalOpen={setIsModalOpen}>
           <div>
             <h2 className="mx-2 my-5 text-xl font-semibold text-center text-primary sm:mx-4 sm:text-2xl">
-              {currentTab === "Events" ? "Event" : "Announcement"}
+              {formType === "PostEvent" && "Event"}
+              {formType === "PostAnnouncement" && "Announcement"}
+              {formType === "EditClub" && "Edit Club"}
             </h2>
-            {currentTab === "Events" ? (
+            {formType === "PostEvent" && (
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -436,13 +569,16 @@ function ClubDetails() {
                   }
                 />
                 {error && (
-                  <p className="mb-2 ml-2 text-xs text-red-500">* {error}</p>
+                  <p className="mb-2 ml-2 text-xs text-red-500 sm:text-sm">
+                    *{error}
+                  </p>
                 )}
                 <button type="submit" className="w-full form-submit-btn">
                   Post
                 </button>
               </form>
-            ) : (
+            )}
+            {formType === "PostAnnouncement" && (
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -501,10 +637,68 @@ function ClubDetails() {
                   </label>
                 </div>
                 {error && (
-                  <p className="mb-2 ml-2 text-xs text-red-500">* {error}</p>
+                  <p className="mb-2 ml-2 text-xs text-red-500 sm:text-sm">
+                    * {error}
+                  </p>
                 )}
                 <button type="submit" className="w-full form-submit-btn">
                   Post
+                </button>
+              </form>
+            )}
+            {formType === "EditClub" && (
+              <form
+                onSubmit={handleEditClub}
+                className="flex flex-col gap-1 p-2 sm:gap-2 sm:p-4"
+              >
+                <ProfilePhotoSelector
+                  image={clubForm.coverImage}
+                  setImage={(img) =>
+                    setClubForm((prev) => ({ ...prev, coverImage: img }))
+                  }
+                  profileImageUrl={coverImageUrl}
+                  setProfileImageUrl={setCoverImageUrl}
+                  Icon={HiOutlineUserGroup}
+                />
+                <Input
+                  value={clubForm.name}
+                  id="club-name"
+                  onChange={({ target }) =>
+                    setClubForm((prev) => ({ ...prev, name: target.value }))
+                  }
+                  type="text"
+                  label="Club Name"
+                  placeholder="Enter club name"
+                />
+                <div className="flex flex-col mb-4">
+                  <label className="input-field-label" htmlFor="description">
+                    Description
+                  </label>
+                  <textarea
+                    value={clubForm.description}
+                    onChange={(e) =>
+                      setClubForm((prev) => ({
+                        ...prev,
+                        description: e.target.value,
+                      }))
+                    }
+                    placeholder="Enter club description"
+                    id="description"
+                    rows={6}
+                    className="input-field"
+                  />
+                </div>
+                {error && (
+                  <p className="mb-2 ml-2 text-xs text-red-500 sm:text-sm sm:mb-3 sm:ml-4">
+                    * {error}
+                  </p>
+                )}
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="form-submit-btn"
+                >
+                  {loading ? "Saving..." : "Save"}
                 </button>
               </form>
             )}
@@ -525,6 +719,7 @@ function ClubDetails() {
               <div className="absolute flex flex-col items-start gap-1 -top-24">
                 <div
                   onClick={() => {
+                    setFormType("PostEvent");
                     setCurrentTab("Events");
                     setIsModalOpen(true);
                   }}
@@ -537,6 +732,7 @@ function ClubDetails() {
                 </div>
                 <div
                   onClick={() => {
+                    setFormType("PostAnnouncement");
                     setCurrentTab("Announcements");
                     setIsModalOpen(true);
                   }}

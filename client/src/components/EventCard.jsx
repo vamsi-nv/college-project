@@ -1,7 +1,6 @@
 import { LuTrash2, LuUsers } from "react-icons/lu";
 import { FiClock } from "react-icons/fi";
 import moment from "moment";
-import { RxDotsHorizontal } from "react-icons/rx";
 import { api_paths } from "../utils/apiPaths";
 import axiosInstance from "../utils/axiosInstance";
 import { useAuth } from "../context/UserContextProvider";
@@ -82,7 +81,7 @@ function EventCard({ event }) {
         <div className="">
           <div className="flex items-center gap-2 mb-2">
             <div className="flex items-center gap-2">
-              <p className="text-sm sm:text-base font-[600] text-gray-700 flex items-center gap-1">
+              <p className="flex items-center gap-1 text-sm font-semibold sm:text-base text-black/80">
                 {event.createdBy.name}
               </p>
               <p className="text-xs text-gray-500">
@@ -94,7 +93,7 @@ function EventCard({ event }) {
           <Link to={`/clubs/${event.club.name}/events/${event._id}`}>
             <div className="">
               <div className="flex items-center gap-3">
-                <p className="font-medium">{event.title}</p>
+                <p className="font-semibold text-black/75">{event.title}</p>
               </div>
               <p className="text-base text-gray-700 max-sm:text-sm">
                 {event.description}

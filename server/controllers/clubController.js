@@ -56,7 +56,7 @@ export const getAllClubs = async (req, res) => {
 
     const clubs = await Club.find(filter)
       .populate("createdBy", "name")
-      .select("-__v")
+      .select("-__v");
 
     res.status(200).json({
       success: true,
@@ -224,7 +224,8 @@ export const updateClub = async (req, res) => {
       });
     }
 
-    const { name, description, coverImage } = req.body;
+    const { name, description } = req.body;
+    const coverImage = req.file?.path;
 
     const updateFields = {};
     if (name) updateFields.name = name.trim();

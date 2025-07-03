@@ -187,7 +187,7 @@ function Profile() {
         <Modal setIsModalOpen={setIsModalOpen}>
           <div>
             <h2 className="mx-2 my-5 text-xl font-semibold text-center sm:mx-4 sm:text-2xl text-primary">
-              Update Profile
+              Edit Profile
             </h2>
             <form onSubmit={handleUpdate}>
               <ProfilePhotoSelector

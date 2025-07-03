@@ -89,7 +89,7 @@ function EventDetails() {
           <div>
             <p className="font-medium">
               {event?.createdBy?.name}{" "}
-              <span className="text-xs text-gray-600 font-normal">
+              <span className="text-xs font-normal text-gray-600">
                 • {moment(event?.createdAt).fromNow()}
               </span>
             </p>
@@ -97,9 +97,9 @@ function EventDetails() {
           </div>
         </div>
         <div className="my-4">
-          <p className="px-2 text-xl font-semibold">{event?.title}</p>
-          <p className="px-2 my-2 text-gray-700">{event?.description}</p>
-          <p className="flex items-center px-2 gap-4 text-gray-600 pt-6">
+          <p className="px-2 text-xl font-semibold text-black/80 max-sm:text-lg">{event?.title}</p>
+          <p className="px-2 my-2 text-gray-700 max-sm:text-sm">{event?.description}</p>
+          <p className="flex items-center gap-4 px-2 pt-6 text-sm text-gray-600 max-sm">
             <span className="flex items-center gap-1">
               <FaCalendarDay />
               {moment(event?.date).format("MMM Do, YYYY")}
@@ -109,14 +109,14 @@ function EventDetails() {
               {moment(event?.date).format("hh:mm A")}
             </span>
           </p>
-          <p className="flex items-center px-1.5 gap-1 text-gray-600 pt-4">
+          <p className="flex items-center px-1.5 gap-1 text-gray-600 max-sm text-sm pt-4">
             <MdLocationOn className="size-5" />
             {event?.location}
           </p>
         </div>
         <div className="flex items-center w-full px-1 ">
-          {/* <p className="text-gray-500 flex items-center gap-2">
-            <span className="bg-primary/10 p-1 rounded-full">
+          {/* <p className="flex items-center gap-2 text-gray-500">
+            <span className="p-1 rounded-full bg-primary/10">
               <LuUser className="text-primary" />
             </span>
             {event?.attendees?.length} member(s) attending

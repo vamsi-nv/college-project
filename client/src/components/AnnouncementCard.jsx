@@ -49,16 +49,16 @@ function AnnouncementCard({ announcement, fetchAnnouncements }) {
   };
 
   return (
-    <div className="relative flex flex-col p-3 border-b border-gray-200 md:p-4">
+    <div className="relative flex flex-col p-3 border-b border-gray-300 md:p-4">
       <div
         onClick={() => navigate(`/clubs/${announcement.club._id}`)}
-        className="flex items-center gap-1 mb-2 ml-5 text-sm font-medium text-gray-400 cursor-pointer sm:text-base"
+        className="flex items-center gap-1 mb-3 text-sm text-gray-400 cursor-pointer sm:text-base"
       >
         <LuUsers />
         <p>{announcement.club.name}</p>
       </div>
       <div className="flex gap-1">
-        <div className="">
+        <div className="shrink-0">
           {announcement.postedBy.profileImageUrl ? (
             <img
               src={announcement.postedBy.profileImageUrl}
@@ -72,7 +72,7 @@ function AnnouncementCard({ announcement, fetchAnnouncements }) {
         <div className="">
           <div className="flex items-center gap-2 mb-2">
             <div className="flex items-center gap-2">
-              <p className="text-sm sm:text-base font-[600] text-gray-700 flex items-center gap-1">
+              <p className="flex items-center gap-1 text-sm font-semibold sm:text-base text-black/80">
                 {announcement.postedBy.name}
               </p>
               <p className="text-xs text-gray-500">
@@ -83,8 +83,8 @@ function AnnouncementCard({ announcement, fetchAnnouncements }) {
           </div>
           <div className="">
             <div className="flex items-center gap-3">
-              <p className="text-sm sm:text-[17px] text-neutral-900">
-                {announcement.title}
+              <p className="font-semibold text-black/75">
+                📢 {announcement.title}
               </p>
               {/* <div className="text-xs flex items-center justify-center gap-1 text-gray-500 group-hover:text-primary group-hover:bg-primary/10 py-1 px-1.5 rounded-full transition-all duration-300 ">
                 <FiClock className="transition-opacity duration-300 opacity-0 group-hover:opacity-100" />
@@ -97,7 +97,7 @@ function AnnouncementCard({ announcement, fetchAnnouncements }) {
                 </div>
               </div> */}
             </div>
-            <p className="text-base text-gray-500 max-sm:text-sm">
+            <p className="text-base text-gray-700 max-sm:text-sm">
               {announcement.content}
             </p>
           </div>

@@ -49,12 +49,12 @@ function RightSidebar() {
         {clubs.map((club) => (
           <div key={club._id} className="flex items-center justify-between p-4 border-b border-gray-300">
             <div className="flex items-center gap-2">
-              <div>
+              <div className="size-12">
                 {club.coverImage ? (
                   <img
                     src={club.coverImage}
                     alt="club cover image"
-                    className="bg-contain rounded-full w-14 h-14"
+                    className="object-cover rounded-full shrink-0 size-full"
                   />
                 ) : (
                   <HiOutlineUserGroup className="w-12 h-12 p-2 text-gray-400 bg-contain border border-gray-300 rounded-full" />
