@@ -8,7 +8,7 @@ function Modal({ setIsModalOpen, children, loading }) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-sm p-4 border border-gray-200 rounded-lg shadow-lg sm:max-w-lg sm:p-8 bg-gray-50"
+        className="relative w-full mx-auto max-w-sm p-4 border border-gray-200 rounded-lg shadow-lg sm:max-w-lg sm:p-8 bg-gray-50"
       >
         {children}
         <button

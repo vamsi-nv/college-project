@@ -14,8 +14,6 @@ export const createClub = async (req, res) => {
       });
     }
 
-    console.log(name, description);
-
     const newClub = await Club.create({
       name,
       description,

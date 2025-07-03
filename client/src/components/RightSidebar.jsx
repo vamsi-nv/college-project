@@ -41,7 +41,7 @@ function RightSidebar() {
   }, []);
 
   return (
-    <div className={`p-3 mt-10 lg:p-6 ${user.isAdmin && "hidden"}`}>
+    <div className={`p-3 mt-10 lg:p-6 `}>
       <h3 className="px-4 mb-3 text-lg font-medium text-gray-500">
         What to join
       </h3>

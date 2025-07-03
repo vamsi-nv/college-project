@@ -118,9 +118,9 @@ export const loginUser = async (req, res) => {
     const isAdmin = email === process.env.ADMIN_EMAIL;
     const plainUser = user.toObject();
 
-    console.log("isAdmin:", isAdmin);
+    
     const ResponseUser = { ...plainUser, isAdmin };
-    console.log("User : ", user);
+    
 
     res.status(200).json({
       success: true,

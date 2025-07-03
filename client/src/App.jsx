@@ -14,6 +14,7 @@ import { Toaster } from "react-hot-toast";
 import Admin from "./pages/Admin/Admin";
 import AdminClubsPage from "./pages/Admin/AdminClubsPage";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
+import EventDetails from "./pages/EventDetails";
 
 function App() {
   const { user, loading } = useAuth();
@@ -36,6 +37,7 @@ function App() {
           <Route path="clubs" element={<Clubs />} />
           <Route path="profile" element={<Profile />} />
           <Route path="clubs/:id" element={<ClubDetails />} />
+          <Route path="clubs/:clubName/events/:id" element={<EventDetails />} />
         </Route>
         <Route
           path="/register"

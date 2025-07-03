@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "../../assets/globe.png";
 import { LuUsers } from "react-icons/lu";
 import { TbPresentationAnalytics } from "react-icons/tb";
@@ -20,17 +20,24 @@ function Admin() {
     },
   ];
 
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isMobileMenuOpen]);
+
   return (
-    <div
-      className={`min-h-screen relative flex bg-gray-50 ${
-        isMobileMenuOpen && "overflow-y-hidden"
-      }`}
-    >
-      <div>
+    <div className={`min-h-screen relative flex bg-gray-50 `}>
+      <div className="relative">
         <div
-          className={`min-h-screen  top-0 lg:w-60 p-4 bg-gray-50 lg:ml-10 xl:ml-25 lg:p-8 transfrom transition-transform duration-300 ease-in-out flex flex-col items-start ${
+          className={`min-h-screen top-0 lg:w-60 p-4 bg-gray-50 lg:ml-10 xl:ml-25 lg:p-8 flex flex-col items-start ${
             isMobileMenuOpen
-              ? "absolute z-50 translate-x-0"
+              ? "fixed z-50 translate-x-0"
               : "sm:block md:block hidden max-sm:-translate-x-full sticky"
           }`}
         >
@@ -46,7 +53,7 @@ function Admin() {
               </h2>
             </div>
           </Link>
-          <div className="flex flex-col group">
+          <div className="flex flex-col">
             {navItems.map(({ label, path, icon: Icon }) => (
               <div
                 className="relative"
@@ -88,15 +95,17 @@ function Admin() {
               </div>
             ))}
           </div>
+          <p className="fixed p-4 text-sm font-medium text-center text-transparent bottom-10 bg-gradient-to-b from-blue-500 to-blue-700 bg-clip-text">
+            Made by NV
+          </p>
         </div>
       </div>
 
-      <button
-        onClick={() => setIsMobileMenuOpen(true)}
-        className="fixed z-30 text-gray-800 top-4 left-4 sm:hidden"
-      >
-        <RiMenu2Fill className="text-2xl" />
-      </button>
+      <div className="fixed top-0 left-0 right-0 z-30 w-full p-4 text-gray-800 border-b border-gray-300 shadow-xs backdrop-blur-2xl sm:hidden ">
+        <button onClick={() => setIsMobileMenuOpen(true)} className="">
+          <RiMenu2Fill className="text-2xl" />
+        </button>
+      </div>
 
       {isMobileMenuOpen && (
         <div

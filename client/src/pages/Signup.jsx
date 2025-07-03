@@ -85,7 +85,7 @@ function Signup() {
 
   return (
     <div className="flex items-center justify-center min-h-screen px-2 bg-gradient-to-t from-primary/90 to-primary/10">
-      <div className="w-full max-w-sm p-4 border border-gray-200 rounded-lg shadow-lg sm:max-w-lg sm:p-8 bg-gray-50">
+      <div className="w-full max-w-sm p-4 mx-auto border border-gray-200 rounded-lg shadow-lg sm:max-w-lg sm:p-8 bg-gray-50">
         <h2 className="mx-2 my-5 text-xl font-semibold text-center sm:mx-4 sm:text-2xl text-primary ">
           Sign Up
         </h2>

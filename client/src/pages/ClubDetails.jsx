@@ -226,7 +226,7 @@ function ClubDetails() {
   return (
     <div className="relative w-full h-full pt-12 sm:pt-0">
       <div className="flex items-center justify-between p-4 max-sm:text-sm">
-        <p>Club</p>
+        <p>{club.name}</p>
         {club.createdBy._id === user._id && (
           <button
             onClick={handleDeleteClub}
@@ -237,25 +237,49 @@ function ClubDetails() {
         )}
       </div>
 
-      {club.coverImage ? (
-        <img
-          src={club.coverImage}
-          alt="Club Cover"
-          className="object-cover w-full h-auto border-none aspect-video"
-        />
-      ) : (
-        <PiUsersThreeThin className="mx-auto font-light text-gray-300 size-42" />
-      )}
+      <div className="w-full h-52">
+        {club.coverImage ? (
+          <img
+            src={club.coverImage}
+            alt="Club Cover"
+            className="object-cover w-full h-full border-none aspect-video"
+          />
+        ) : (
+          <PiUsersThreeThin className="mx-auto font-light text-gray-300 size-42" />
+        )}
+      </div>
 
       <div className="flex items-center justify-between p-6">
         <div>
-          <h1 className="font-medium text-gray-700 lg:text-xl sm:text-xl max-sm:text-lg">
-            {club.name}
-          </h1>
-          <p className="text-gray-500 max-sm:text-sm">{club.description}</p>
+          <div className="flex items-center justify-between">
+            <h1 className="font-medium text-gray-700 lg:text-xl sm:text-xl max-sm:text-lg">
+              {club.name}
+            </h1>
+            <div className="flex flex-col items-end gap-2">
+              {club.createdBy._id !== user._id &&
+                (club.members.some((member) => member._id === user._id) ? (
+                  <button
+                    onClick={handleLeaveClub}
+                    className="px-6 py-2 text-sm border rounded-full hover:bg-primary/30 text-primary bg-primary/20"
+                  >
+                    Leave
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleJoinClub}
+                    className="px-8 py-2 text-sm text-white rounded-full bg-primary hover:bg-primary/90"
+                  >
+                    Join
+                  </button>
+                ))}
+            </div>
+          </div>
+          <p className="text-gray-500 max-w-5/6 max-sm:text-sm">
+            {club.description}
+          </p>
         </div>
 
-        <div className="flex flex-col items-end gap-2">
+        {/* <div className="flex flex-col items-end gap-2">
           {club.createdBy._id !== user._id &&
             (club.members.some((member) => member._id === user._id) ? (
               <button
@@ -272,20 +296,11 @@ function ClubDetails() {
                 Join
               </button>
             ))}
-          {/* 
-          {club.createdBy._id === user._id && (
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="px-4 py-2 text-xs text-white rounded-full bg-primary"
-            >
-              + {currentTab === "Events" ? "Event" : "Announcement"}
-            </button>
-          )} */}
-        </div>
+        </div> */}
       </div>
 
       <div>
-        <div className="sticky flex items-center justify-around w-full border-b border-gray-300 sm:pt-5 top-16">
+        <div className="sticky flex items-center justify-around w-full border-b border-gray-300 sm:pt-3 top-16">
           {tabItems.map((tab) => (
             <button
               key={tab.label}

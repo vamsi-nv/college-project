@@ -5,14 +5,14 @@ import { RxDotsHorizontal } from "react-icons/rx";
 import { api_paths } from "../utils/apiPaths";
 import axiosInstance from "../utils/axiosInstance";
 import { useAuth } from "../context/UserContextProvider";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { HiMiniUserCircle } from "react-icons/hi2";
 import toast from "react-hot-toast";
 import { MdEventAvailable, MdEventBusy } from "react-icons/md";
 import { useEffect, useState } from "react";
 
 function EventCard({ event }) {
-  const [isAttending, setIsAttending] = useState();
+  const [isAttending, setIsAttending] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
   const handleDelete = async (id) => {
@@ -52,32 +52,33 @@ function EventCard({ event }) {
   };
 
   useEffect(() => {
-    if (event.attendees && Array.isArray(event.attendees)) {
-      setIsAttending(event.attendees.includes(user._id));
+    if (event?.attendees) {
+      if (event?.attendees?.includes(user._id)) {
+        setIsAttending(true);
+      }
     }
-  }, [event.attendees, user._id]);
+  }, [event, user._id]);
 
   return (
     <div className="relative flex flex-col p-3 border-b border-gray-300 md:p-4 ">
       <div
         onClick={() => navigate(`/clubs/${event.club._id}`)}
-        className="flex items-center gap-1 mb-2 ml-5 text-sm font-medium text-gray-400 cursor-pointer sm:text-base"
+        className="flex items-center gap-1 mb-3 text-sm text-gray-400 cursor-pointer sm:text-base"
       >
         <LuUsers />
         <p className="hover:underline underline-offset-1">{event.club.name}</p>
       </div>
-      <div className="flex gap-1">
-        <div className="">
+      <div className="flex items-start gap-1">
+        <div className="shrink-0">
           {event.createdBy.profileImageUrl ? (
             <img
               src={event.createdBy.profileImageUrl}
-              className="w-8 h-8 rounded-full"
+              className="object-cover h-8 rounded-full aspect-square-8 s"
             />
           ) : (
             <HiMiniUserCircle className="text-gray-300 rounded-full size-8" />
           )}
         </div>
-
         <div className="">
           <div className="flex items-center gap-2 mb-2">
             <div className="flex items-center gap-2">
@@ -90,27 +91,19 @@ function EventCard({ event }) {
               </p>
             </div>
           </div>
-          <div className="">
-            <div className="flex items-center gap-3">
-              <p className="text-sm sm:text-[17px] text-neutral-900">
-                {event.title}
+          <Link to={`/clubs/${event.club.name}/events/${event._id}`}>
+            <div className="">
+              <div className="flex items-center gap-3">
+                <p className="font-medium">{event.title}</p>
+              </div>
+              <p className="text-base text-gray-700 max-sm:text-sm">
+                {event.description}
               </p>
-              {/* <div className="text-xs flex items-center justify-center gap-1 text-gray-500 group-hover:text-primary group-hover:bg-primary/10 py-1 px-1.5 rounded-full transition-all duration-300 ">
-                <FiClock className="transition-opacity duration-300 opacity-0 group-hover:opacity-100" />
-                <div className="transition-opacity duration-300 opacity-0 group-hover:opacity-100 whitespace-nowrap">
-                  <span>{moment(event.date).format("MMM Do, YYYY")}</span>
-                  <span className="mx-1">•</span>
-                  <span>{moment(event.date).format("hh:mm A")}</span>
-                </div>
-              </div> */}
             </div>
-            <p className="text-base text-gray-500 max-sm:text-sm">
-              {event.description}
-            </p>
-          </div>
+          </Link>
         </div>
       </div>
-      <div className="absolute top-4 right-4 flex items-center  gap-1">
+      <div className="absolute flex items-center gap-1 max-sm:hidden top-4 right-4">
         <div className="group text-xs flex items-center justify-center gap-1 text-gray-500 hover:text-primary hover:bg-primary/10 py-1 px-1.5 rounded-full transition-all duration-300 ">
           <FiClock className="size-4" />
           <div className="block group-hover:block whitespace-nowrap">
@@ -123,42 +116,32 @@ function EventCard({ event }) {
           <button
             onClick={() => handleDelete(event._id)}
             title="Delete Event"
-            className="flex items-center justify-center gap-1 p-2 rounded-full cursor-pointer  text-md hover:bg-red-500/10 hover:text-red-500"
+            className="flex items-center justify-center gap-1 p-2 rounded-full cursor-pointer text-md hover:bg-red-500/10 hover:text-red-500"
           >
             <LuTrash2 />
           </button>
         )}
       </div>
 
-      <div className="flex items-center px-1 w-full">
+      <div className="flex items-center w-full px-1">
         <button
           onClick={async () => {
             const success = await handleRsvp(event._id);
             if (success) setIsAttending((prev) => !prev);
           }}
-          className={`ml-auto p-1 hover:${
-            isAttending ? "bg-red-500/10" : "bg-primary/10"
-          } hover:px-1 hover:rounded-full text-gray-500 relative group flex items-center gap-0.5`}
+          className={`ml-auto flex items-center gap-2 px-3 py-1.5 rounded-full transition ${
+            isAttending
+              ? "bg-red-100 text-red-500 hover:bg-red-200"
+              : "bg-primary/10 text-primary hover:bg-primary/20"
+          }`}
         >
           {isAttending ? (
-            <MdEventBusy className="size-5 text-red-500" />
+            <MdEventBusy className="size-4" />
           ) : (
-            <MdEventAvailable className="size-5 group-hover:text-primary" />
+            <MdEventAvailable className="size-4" />
           )}
-
-          {/* <span
-            className={`text-xs hidden group-hover:block ${
-              isAttending ? "text-red-500" : "text-primary"
-            }`}
-          >
-            {isAttending ? "Cancel RSVP" : "Attend Event"}
-          </span> */}
-          <span
-            className={`absolute top-full left-1/2 translate-x-[-50%] mt-1 px-2 py-0.5 rounded text-xs bg-gray-50 shadow-md ${
-              isAttending ? "text-red-500" : "text-primary"
-            } hidden group-hover:block whitespace-nowrap`}
-          >
-            {isAttending ? "Cancel RSVP" : "Confirm RSVP"}
+          <span className="text-xs sm:text-sm">
+            {isAttending ? "Cancel RSVP" : "RSVP"}
           </span>
         </button>
       </div>

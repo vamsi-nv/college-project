@@ -116,7 +116,7 @@ function Profile() {
                 className="w-full h-full rounded-full aspect-square"
               />
             ) : (
-              <HiMiniUserCircle className="w-full h-full text-gray-300 rounded-full max-sm:text-red-500" />
+              <HiMiniUserCircle className="w-full h-full text-gray-300 rounded-full" />
             )}
           </div>
           <h3 className="text-lg font-medium text-gray-700 sm:text-xl md:text-2xl">
@@ -131,7 +131,7 @@ function Profile() {
           </button>
         </div>
 
-        <div className="sticky top-0 z-10 flex items-center justify-around w-full pt-12 overflow-x-scroll border-b border-gray-300 backdrop-blur-xl bg-gray-50/60 sm:pt-5">
+        <div className="sticky z-10 flex items-center justify-around w-full overflow-x-scroll border-b border-gray-300 backdrop-blur-2xl">
           {tabItems.map((tabItem) => (
             <button
               key={tabItem.label}

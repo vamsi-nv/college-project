@@ -8,6 +8,8 @@ function AdminDashboard() {
   const [clubs, setClubs] = useState([]);
   const [events, setEvents] = useState([]);
   const [users, setUsers] = useState([]);
+  const [sortedClubs, setSortedClubs] = useState([]);
+  const [sortedEvents, setSortedEvents] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,8 +19,22 @@ function AdminDashboard() {
         fetchAllUsers(),
       ]);
 
-      if (clubsData) setClubs(clubsData);
-      if (eventsData) setEvents(eventsData);
+      if (clubsData) {
+        setClubs(clubsData);
+        const sortedClubs = [...clubsData].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
+        setSortedClubs(sortedClubs);
+      }
+      if (eventsData) {
+        setEvents(eventsData);
+        const sortedEvents = [...eventsData].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
+        setSortedEvents(sortedEvents);
+      }
       if (usersData) setUsers(usersData);
     };
 
@@ -26,7 +42,7 @@ function AdminDashboard() {
   }, []);
 
   return (
-    <div className="flex flex-col w-full h-full gap-10 px-8 py-8 max-sm:py-16 md:p-8 lg:p-10">
+    <div className="flex flex-col w-full h-full gap-10 px-4 py-8 max-sm:py-16 md:p-8 lg:p-10">
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 ">
         <div className="inline-block px-8 py-6 border border-gray-200 rounded-lg shadow-md hover:bg-gray-50/80 hover:shadow-lg">
           <div className="flex items-center gap-1 mb-2">
@@ -60,6 +76,75 @@ function AdminDashboard() {
           <p className="px-2 text-xl font-medium text-gray-700">
             {events.length} Events
           </p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div className="py-3 px-5 flex flex-col  h-full shadow-md border border-gray-200 rounded-lg">
+          <h3 className="text-lg font-medium text-gray-800 mb-4">
+            Recently Created Clubs
+          </h3>
+          <div className="max-sm:text-sm">
+            <div className="grid grid-cols-[2.5fr_2fr_1.5fr] border-b border-dashed mb-2 bg-primary/10 p-2">
+              <p className="font-medium">Club Name</p>
+              <p className="font-medium">Club Creator</p>
+              <p className="font-medium text-center">No.of Members</p>
+            </div>
+            <div className="divide-y divide-dashed divide-gray-300 p-2">
+              {sortedClubs.slice(0, 8).map((club) => (
+                <div key={club._id}>
+                  <div className="grid grid-cols-[2.5fr_2fr_1.5fr] py-2 ">
+                    <p>{club.name}</p>
+                    <p className="">{club.createdBy.name}</p>
+                    <p className="text-center">{club.members.length}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="py-3 px-5 flex flex-col  h-full shadow-md border border-gray-200 rounded-lg">
+          <h3 className="text-lg font-medium text-gray-800 mb-4">
+            Recent Events
+          </h3>
+          {/* <div className="max-sm:text-xs">
+            <div className="grid grid-cols-[2fr_2fr_0.5fr] border-b border-dashed mb-2 bg-primary/10 p-2">
+              <p className="font-medium">Event</p>
+              <p className="font-medium">Club</p>
+              <p className="font-medium">Attendees</p>
+            </div>
+            <div className="divide-y divide-dashed divide-gray-300 p-2">
+              {sortedEvents.slice(0, 8).map((event) => (
+                <div key={event._id}>
+                  <div className="grid grid-cols-[2fr_2fr_0.5fr] py-2 ">
+                    <p className="">{event.title}</p>
+                    <p className="">{event.club.name}</p>
+                    <p className="text-center w-full">{event.attendees.length}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div> */}
+          <div className="max-sm:text-sm">
+            <div className="grid grid-cols-[2fr_2fr_1fr] max-sm:grid-cols-[1.5fr_1.5fr_1fr] border-b border-dashed mb-2 bg-primary/10 p-2">
+              <p className="font-medium">Event</p>
+              <p className="font-medium">Club</p>
+              <p className="font-medium text-center">Attendees</p>
+            </div>
+            <div className="divide-y divide-dashed divide-gray-300 p-2">
+              {sortedEvents.slice(0, 8).map((event) => (
+                <div key={event._id}>
+                  <div className="grid grid-cols-[2fr_2fr_1fr] max-sm:grid-cols-[1.5fr_1.5fr_1fr] py-2">
+                    <p className="truncate">{event.title}</p>
+                    <p className="truncate">{event.club.name}</p>
+                    <p className="text-center w-full">
+                      {event.attendees.length}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
