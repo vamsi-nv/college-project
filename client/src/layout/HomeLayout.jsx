@@ -27,21 +27,20 @@ function HomeLayout() {
         />
       </div>
 
-      <button
-        onClick={() => setIsMobileMenuOpen(true)}
-        className="fixed z-30 text-gray-800 top-4 left-4 sm:hidden"
-      >
-        <RiMenu2Fill className="text-2xl" />
-      </button>
+      <div className="fixed top-0 left-0 right-0 z-30 p-3 text-gray-800 bg-gray-50/90 sm:hidden backdrop-blur-xl ">
+        <button onClick={() => setIsMobileMenuOpen(true)} className="">
+          <RiMenu2Fill className="text-xl sm:text-2xl" />
+        </button>
+      </div>
 
       {isMobileMenuOpen && (
         <div
-          className="absolute inset-0 z-20 bg-neutral-300/20 backdrop-blur-xl"
+          className="absolute inset-0 z-40 bg-neutral-300/20 backdrop-blur-xl"
           onClick={() => setIsMobileMenuOpen(false)}
         ></div>
       )}
 
-      <div className={`border-gray-300 flex-6 xl:flex-5 border-x`}>
+      <div className={`border-gray-300 flex-6 xl:flex-5 sm:border-x`}>
         <Outlet />
       </div>
       <div className="flex-4 max-md:hidden">

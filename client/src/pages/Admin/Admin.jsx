@@ -101,7 +101,7 @@ function Admin() {
         </div>
       </div>
 
-      <div className="fixed top-0 left-0 right-0 z-30 w-full p-4 text-gray-800 border-b border-gray-300 shadow-xs backdrop-blur-2xl sm:hidden ">
+      <div className="fixed top-0 left-0 right-0 z-30 p-3 text-gray-800 bg-gray-50/90 sm:hidden backdrop-blur-xl ">
         <button onClick={() => setIsMobileMenuOpen(true)} className="">
           <RiMenu2Fill className="text-2xl" />
         </button>
@@ -109,7 +109,7 @@ function Admin() {
 
       {isMobileMenuOpen && (
         <div
-          className="absolute inset-0 z-20 bg-neutral-300/20 backdrop-blur-xl"
+          className="absolute inset-0 z-40 bg-neutral-300/20 backdrop-blur-xl"
           onClick={() => setIsMobileMenuOpen(false)}
         ></div>
       )}

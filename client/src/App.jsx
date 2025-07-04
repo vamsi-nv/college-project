@@ -24,7 +24,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 max-sm:overflow-x-hidden">
       <Toaster position="top-center" reverseOrder={false} />
       <Routes>
         <Route

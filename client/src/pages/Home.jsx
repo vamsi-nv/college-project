@@ -9,6 +9,7 @@ function Home() {
   const [currentTab, setCurrentTab] = useState("For You");
   const [events, setEvents] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
+  const [feed, setFeed] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -72,11 +73,31 @@ function Home() {
     if (currentTab === "Announcements") {
       fetchAnnouncements();
     }
+
+    if (currentTab === "For You") {
+      if (events.length === 0) fetchEvents();
+      if (announcements.length === 0) fetchAnnouncements();
+    }
   }, [currentTab]);
+
+  useEffect(() => {
+    if (events.length || announcements.length) {
+      const eventItems = events.map((e) => ({ ...e, type: "event" }));
+      const announcementItems = announcements.map((a) => ({
+        ...a,
+        type: "announcement",
+      }));
+
+      const mergedFeed = [...eventItems, ...announcementItems].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setFeed(mergedFeed);
+    }
+  }, [events, announcements]);
 
   return (
     <div className="h-full max-w-full ">
-      <div className="sticky flex items-center justify-around w-full pt-12 overflow-x-scroll border-b border-gray-300 sm:pt-5">
+      <div className="sticky flex items-center justify-around w-full sm:pt-4 pt-[50px] overflow-x-scroll border-b border-gray-300">
         {tabItems.map((tabItem) => (
           <button
             key={tabItem.label}
@@ -90,6 +111,22 @@ function Home() {
           </button>
         ))}
       </div>
+
+      {currentTab === "For You" && (
+        <div className="">
+          {feed.map((item) =>
+            item.type === "event" ? (
+              <EventCard key={item._id} event={item} />
+            ) : (
+              <AnnouncementCard
+                key={item._id}
+                announcement={item}
+                fetchAnnouncements={fetchAnnouncements}
+              />
+            )
+          )}
+        </div>
+      )}
 
       {currentTab === "Events" && (
         <div className="">

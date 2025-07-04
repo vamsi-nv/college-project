@@ -49,7 +49,7 @@ function RightSidebar() {
         {clubs.map((club) => (
           <div key={club._id} className="flex items-center justify-between p-4 border-b border-gray-300">
             <div className="flex items-center gap-2">
-              <div className="size-12">
+              <div className="size-12 shrink-0">
                 {club.coverImage ? (
                   <img
                     src={club.coverImage}

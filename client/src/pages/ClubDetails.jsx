@@ -156,7 +156,6 @@ function ClubDetails() {
   };
 
   const handlePostEvent = async () => {
-    setFormType("PostEvent");
     const { title, description, date, location } = eventForm;
     if (!title) return setError("Title is required");
     if (!description) return setError("Description is required");
@@ -178,13 +177,11 @@ function ClubDetails() {
       }
     } catch (error) {
       toast.error("Failed to post event");
+    } finally {
     }
-
-    setFormType("");
   };
 
   const handlePostAnnouncement = async () => {
-    setFormType("PostAnnouncement");
     const { title, content } = announcementForm;
     if (!title) return setError("Title is required");
     if (!content) return setError("Content is required");
@@ -207,9 +204,8 @@ function ClubDetails() {
       }
     } catch (error) {
       toast.error("Failed to post announcement");
+    } finally {
     }
-
-    setFormType("");
   };
 
   const handleEditClub = async (e) => {
@@ -310,7 +306,7 @@ function ClubDetails() {
         postMenuRef.current &&
         !postMenuRef.current.contains(event.target)
       ) {
-        setIsPostMenuOpen(false);
+        // setIsPostMenuOpen(false);
       }
     }
 
@@ -359,14 +355,14 @@ function ClubDetails() {
                       coverImage: club.coverImage,
                     });
                   }}
-                  className="flex items-center gap-1 w-full px-5 py-3 text-left rounded-[6px] text-gray-700 hover:bg-primary/20 hover:text-primary transition-all duration-300 "
+                  className="flex items-center gap-1 w-full px-4 py-2 max-sm:text-sm text-left rounded-[6px] text-gray-700 hover:bg-primary/20 hover:text-primary transition-all duration-300 "
                 >
                   <LuPen />
                   Edit
                 </button>
                 <button
                   onClick={handleDeleteClub}
-                  className="flex items-center gap-1 w-full px-5 py-3 text-left rounded-[6px] transition-all duration-300  hover:bg-red-100 text-red-500"
+                  className="flex items-center gap-1 w-full px-4 py-2 max-sm:text-sm text-left rounded-[6px] transition-all duration-300  hover:bg-red-100 text-red-500"
                 >
                   <LuTrash2 /> Delete
                 </button>
@@ -376,12 +372,12 @@ function ClubDetails() {
         )}
       </div>
 
-      <div className="w-full">
+      <div className="w-full ">
         {club?.coverImage ? (
           <img
             src={club?.coverImage}
             alt="Club Cover"
-            className="object-cover w-full h-auto aspect-auto"
+            className="object-cover w-full h-auto aspect-video"
           />
         ) : (
           <PiUsersThreeThin className="mx-auto font-light text-gray-300 size-42" />
@@ -414,16 +410,18 @@ function ClubDetails() {
             </div>
             {club?.createdBy?._id === user._id && (
               <div
-                ref={postMenuRef}
                 onClick={() => setIsPostMenuOpen((prev) => !prev)}
                 className=""
               >
-                <div className="relative">
+                <div ref={postMenuRef} className="relative">
                   <button className="p-3 text-white transition-all duration-300 rounded-full shadow-lg bg-primary hover:scale-105 hover:bg-primary/90">
-                    <LuPlus className="size-5" />
+                    <LuPlus className="size-5 max-sm:size-4" />
                   </button>
                   {isPostMenuOpen && (
-                    <div className="absolute flex flex-col items-start gap-1 -bottom-25">
+                    <div
+                      ref={postMenuRef}
+                      className="absolute flex flex-col items-start gap-1 max-sm:-bottom-22 -bottom-25"
+                    >
                       <div
                         onClick={() => {
                           setFormType("PostEvent");
@@ -432,7 +430,7 @@ function ClubDetails() {
                         }}
                         className="relative p-3 text-white transition-all duration-300 rounded-full group bg-primary hover:scale-105 hover:bg-primary/90"
                       >
-                        <MdEvent className="size-5 " />
+                        <MdEvent className="size-5 max-sm:size-4" />
                         <span className="absolute hidden p-2 text-xs text-white rounded shadow-lg mr-2 bg-primary right-full bottom-[15%] group-hover:block">
                           Event
                         </span>
@@ -445,7 +443,7 @@ function ClubDetails() {
                         }}
                         className="relative p-3 text-white transition-all duration-300 rounded-full group bg-primary hover:scale-105 hover:bg-primary/90"
                       >
-                        <MdAnnouncement className="size-5" />
+                        <MdAnnouncement className="size-5 max-sm:size-4" />
                         <span className="absolute hidden p-2 text-xs text-white rounded shadow-lg mr-2 bg-primary right-full bottom-[15%] group-hover:block">
                           Announcement
                         </span>
