@@ -11,6 +11,7 @@ import { FiEdit2 } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { PiUsersThreeThin } from "react-icons/pi";
 import { Link } from "react-router-dom";
+import { LuUser } from "react-icons/lu";
 
 function Profile() {
   const { fetchCurrentUser, user } = useAuth();
@@ -195,7 +196,7 @@ function Profile() {
                 profileImageUrl={profileImageUrl}
                 setProfileImageUrl={setProfileImageUrl}
                 setImage={setImage}
-                Icon={HiMiniUserCircle}
+                Icon={LuUser}
               />
               <Input
                 type={"text"}

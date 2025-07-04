@@ -30,6 +30,7 @@ function ClubDetails() {
   const [isPostMenuOpen, setIsPostMenuOpen] = useState(false);
   const [isClubEditMenuOpen, setIsClubEditMenuOpen] = useState(false);
   const clubEditMenuRef = useRef(null);
+  const postMenuRef = useRef(null);
   const [formType, setFormType] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
   const [clubForm, setClubForm] = useState({
@@ -297,38 +298,45 @@ function ClubDetails() {
   useEffect(() => {
     function handleOutsideClick(event) {
       if (
+        isClubEditMenuOpen &&
         clubEditMenuRef.current &&
         !clubEditMenuRef.current.contains(event.target)
       ) {
         setIsClubEditMenuOpen(false);
       }
+
+      if (
+        isPostMenuOpen &&
+        postMenuRef.current &&
+        !postMenuRef.current.contains(event.target)
+      ) {
+        setIsPostMenuOpen(false);
+      }
     }
 
-    if (isClubEditMenuOpen) {
+    if (isClubEditMenuOpen || isPostMenuOpen) {
       document.addEventListener("mousedown", handleOutsideClick);
-    } else {
-      document.removeEventListener("mousedown", handleOutsideClick);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleOutsideClick);
     };
-  }, [isClubEditMenuOpen]);
+  }, [isClubEditMenuOpen, isPostMenuOpen]);
 
   if (loading) return <Loader />;
-  if (!club || !user || !club.createdBy)
-    return (
-      <p className="mt-20 text-center text-red-500">
-        Club not found or failed to load.
-      </p>
-    );
+  // if (!club || !user || !club.createdBy)
+  //   return (
+  //     <p className="mt-20 text-center text-red-500">
+  //       Club not found or failed to load.
+  //     </p>
+  //   );
 
   return (
     <div className="relative w-full h-full pt-12 sm:pt-0">
       <div className="flex items-center justify-between p-4 max-sm:text-sm">
-        <p>{club.name}</p>
+        <p>{club?.name}</p>
 
-        {club.createdBy._id === user._id && (
+        {club?.createdBy?._id === user._id && (
           <div className="relative group">
             <button
               onClick={() => setIsClubEditMenuOpen((prev) => !prev)}
@@ -369,9 +377,9 @@ function ClubDetails() {
       </div>
 
       <div className="w-full">
-        {club.coverImage ? (
+        {club?.coverImage ? (
           <img
-            src={club.coverImage}
+            src={club?.coverImage}
             alt="Club Cover"
             className="object-cover w-full h-auto aspect-auto"
           />
@@ -384,11 +392,11 @@ function ClubDetails() {
         <div>
           <div className="flex items-center justify-between">
             <h1 className="font-semibold text-black/80 lg:text-xl sm:text-xl max-sm:text-lg">
-              {club.name}
+              {club?.name}
             </h1>
             <div className="flex flex-col">
-              {club.createdBy._id !== user._id &&
-                (club.members.some((member) => member._id === user._id) ? (
+              {club?.createdBy?._id !== user._id &&
+                (club?.members?.some((member) => member._id === user._id) ? (
                   <button
                     onClick={handleLeaveClub}
                     className="px-6 py-2 text-sm border rounded-full hover:bg-primary/30 text-primary bg-primary/20"
@@ -404,9 +412,52 @@ function ClubDetails() {
                   </button>
                 ))}
             </div>
+            {club?.createdBy?._id === user._id && (
+              <div
+                ref={postMenuRef}
+                onClick={() => setIsPostMenuOpen((prev) => !prev)}
+                className=""
+              >
+                <div className="relative">
+                  <button className="p-3 text-white transition-all duration-300 rounded-full shadow-lg bg-primary hover:scale-105 hover:bg-primary/90">
+                    <LuPlus className="size-5" />
+                  </button>
+                  {isPostMenuOpen && (
+                    <div className="absolute flex flex-col items-start gap-1 -bottom-25">
+                      <div
+                        onClick={() => {
+                          setFormType("PostEvent");
+                          setCurrentTab("Events");
+                          setIsModalOpen(true);
+                        }}
+                        className="relative p-3 text-white transition-all duration-300 rounded-full group bg-primary hover:scale-105 hover:bg-primary/90"
+                      >
+                        <MdEvent className="size-5 " />
+                        <span className="absolute hidden p-2 text-xs text-white rounded shadow-lg mr-2 bg-primary right-full bottom-[15%] group-hover:block">
+                          Event
+                        </span>
+                      </div>
+                      <div
+                        onClick={() => {
+                          setFormType("PostAnnouncement");
+                          setCurrentTab("Announcements");
+                          setIsModalOpen(true);
+                        }}
+                        className="relative p-3 text-white transition-all duration-300 rounded-full group bg-primary hover:scale-105 hover:bg-primary/90"
+                      >
+                        <MdAnnouncement className="size-5" />
+                        <span className="absolute hidden p-2 text-xs text-white rounded shadow-lg mr-2 bg-primary right-full bottom-[15%] group-hover:block">
+                          Announcement
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
           <p className="text-gray-700 max-w-5/6 max-sm:text-sm">
-            {club.description}
+            {club?.description}
           </p>
         </div>
 
@@ -448,7 +499,10 @@ function ClubDetails() {
         {currentTab === "Members" && (
           <div className="flex flex-col items-start">
             {club.members.map((member) => (
-              <div className="flex items-center justify-between w-full px-5 py-4 ">
+              <div
+                key={member._id}
+                className="flex items-center justify-between w-full px-5 py-4 "
+              >
                 <div className="flex items-center gap-2">
                   <div className="size-8">
                     {member.profileImageUrl ? (
@@ -706,7 +760,7 @@ function ClubDetails() {
         </Modal>
       )}
 
-      {club.createdBy._id === user._id && (
+      {/* {club?.createdBy?._id === user._id && (
         <div
           onClick={() => setIsPostMenuOpen((prev) => !prev)}
           className="absolute bottom-6 right-6"
@@ -747,7 +801,7 @@ function ClubDetails() {
             )}
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

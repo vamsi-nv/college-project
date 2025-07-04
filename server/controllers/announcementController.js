@@ -59,8 +59,6 @@ export const getAllAnnouncements = async (req, res) => {
       const userClubs = await Club.find({ members: userId }).select("_id");
       const clubIds = userClubs.map((club) => club._id);
 
-      console.log("User Clubs:", clubIds);
-
       if (clubIds.length === 0) {
         return res.status(200).json({
           success: true,
