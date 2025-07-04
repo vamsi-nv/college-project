@@ -638,7 +638,7 @@ function ClubDetails() {
                 </div>
                 {error && (
                   <p className="mb-2 ml-2 text-xs text-red-500 sm:text-sm">
-                    * {error}
+                    *{error}
                   </p>
                 )}
                 <button type="submit" className="w-full form-submit-btn">

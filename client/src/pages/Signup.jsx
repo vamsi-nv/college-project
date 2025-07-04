@@ -96,7 +96,7 @@ function Signup() {
           <ProfilePhotoSelector
             image={image}
             setImage={setImage}
-            Icon={HiMiniUserCircle}
+            Icon={LuUser}
           />
           <Input
             value={name}

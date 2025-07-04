@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { LuUser, LuUpload, LuTrash } from "react-icons/lu";
+import { LuUpload, LuTrash } from "react-icons/lu";
 
 function ProfilePhotoSelector({
   image,
@@ -49,7 +49,7 @@ function ProfilePhotoSelector({
               alt="Profile Photo"
             />
           ) : (
-            <Icon className=" text-4xl text-primary/90 size-full" />
+            <Icon className=" text-4xl text-primary/90 size-full p-4" />
           )}
           {profileImageUrl ? (
             <button
