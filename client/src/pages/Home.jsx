@@ -4,6 +4,7 @@ import { api_paths } from "../utils/apiPaths";
 import { useEffect } from "react";
 import EventCard from "../components/EventCard";
 import AnnouncementCard from "../components/AnnouncementCard";
+import { motion } from "motion/react";
 
 function Home() {
   const [currentTab, setCurrentTab] = useState("For You");
@@ -97,7 +98,12 @@ function Home() {
 
   return (
     <div className="h-full max-w-full ">
-      <div className="sticky flex items-center justify-around w-full sm:pt-4 pt-[50px] overflow-x-scroll border-b border-gray-300">
+      <motion.div
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: "easeInOut" }}
+        className="sticky flex items-center justify-around w-full sm:pt-4 pt-[50px] overflow-x-scroll border-b border-gray-300"
+      >
         {tabItems.map((tabItem) => (
           <button
             key={tabItem.label}
@@ -110,7 +116,7 @@ function Home() {
             {tabItem.label}
           </button>
         ))}
-      </div>
+      </motion.div>
 
       {currentTab === "For You" && (
         <div className="">

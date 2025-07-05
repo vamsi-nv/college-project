@@ -50,7 +50,7 @@ export const createAnnoucement = async (req, res) => {
 
 export const getAllAnnouncements = async (req, res) => {
   const userId = req.user?._id;
-  const { clubId, userOnly } = req.query;
+  const { clubId, userOnly, postedByMe } = req.query;
 
   try {
     let filter = {};
@@ -70,6 +70,10 @@ export const getAllAnnouncements = async (req, res) => {
       filter.club = { $in: clubIds };
     } else if (clubId) {
       filter.club = clubId;
+    }else if(postedByMe === "true" && userId){
+      filter.postedBy = userId;
+    }else{
+      filter = {}
     }
 
     const announcements = await Announcement.find(filter)

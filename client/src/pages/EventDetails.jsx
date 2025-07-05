@@ -16,7 +16,6 @@ function EventDetails() {
   const [event, setEvent] = useState(null);
   const [isAttending, setIsAttending] = useState(false);
 
-  const navigate = useNavigate();
 
   const fetchEventDetails = async () => {
     try {

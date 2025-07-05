@@ -8,10 +8,13 @@ import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
 import Loader from "../components/Loader";
 import { FiEdit2 } from "react-icons/fi";
-import toast from "react-hot-toast";
 import { PiUsersThreeThin } from "react-icons/pi";
 import { Link } from "react-router-dom";
 import { LuUser } from "react-icons/lu";
+import { fetchUserClubs } from "../utils/services";
+import toast from "react-hot-toast";
+import EventCard from "../components/EventCard";
+import AnnouncementCard from "../components/AnnouncementCard";
 
 function Profile() {
   const { fetchCurrentUser, user } = useAuth();
@@ -23,6 +26,8 @@ function Profile() {
   const [profileImageUrl, setProfileImageUrl] = useState("");
   const [currentTab, setCurrentTab] = useState("Clubs");
   const [clubs, setClubs] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
 
   const tabItems = [
     {
@@ -35,6 +40,34 @@ function Profile() {
       label: "Announcements",
     },
   ];
+
+  const fetchUserEvents = async () => {
+    try {
+      const response = await axiosInstance.get(
+        api_paths.events.get_events_createdBy_me
+      );
+      const data = response.data;
+      if (data.success) {
+        setEvents(data.events);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch events");
+    }
+  };
+
+  const fetchUserAnnouncements = async () => {
+    try {
+      const response = await axiosInstance.get(
+        api_paths.announcements.get_announcements_createdBy_me
+      );
+      const data = response.data;
+      if (data.success) {
+        setAnnouncements(data.announcements);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch announcements");
+    }
+  };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -77,31 +110,33 @@ function Profile() {
     }
   };
 
-  const fetchUserClubs = async () => {
-    try {
-      const response = await axiosInstance.get(api_paths.clubs.get_user_clubs);
-      const data = response.data;
-      if (data.success) {
-        setClubs(data.clubs);
-      } else {
-        toast.error("Error fetching clubs");
-      }
-    } catch (error) {
-      toast.error("Error fetching clubs");
-      console.log(error.response?.data?.message || error.message);
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      const clubData = await fetchUserClubs();
+
+      if (clubData) {
+        setClubs(clubData);
+      }
+    };
+
     if (user) {
-      setName(user.name);
-      fetchUserClubs();
+      fetchData();
     }
 
     if (user.profileImageUrl) {
       setProfileImageUrl(user.profileImageUrl);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (currentTab === "Events") {
+      fetchUserEvents();
+    }
+
+    if (currentTab === "Announcements") {
+      fetchUserAnnouncements();
+    }
+  }, [currentTab]);
 
   if (!user) return <Loader />;
 
@@ -175,10 +210,31 @@ function Profile() {
                         </span>
                       )}
                     </h2>
-                    <p className="text-sm text-gray-500 max-sm:text-xs max-w-[40ch]">{club.description}</p>
+                    <p className="text-sm text-gray-500 max-sm:text-xs max-w-[40ch]">
+                      {club.description}
+                    </p>
                   </div>
                 </div>
               </Link>
+            ))}
+          </div>
+        )}
+
+        {currentTab === "Events" && (
+          <div>
+            {events?.map((event) => (
+              <EventCard event={event} key={event?._id} />
+            ))}
+          </div>
+        )}
+
+        {currentTab === "Announcements" && (
+          <div>
+            {announcements?.map((announcement) => (
+              <AnnouncementCard
+                announcement={announcement}
+                key={announcement._id}
+              />
             ))}
           </div>
         )}

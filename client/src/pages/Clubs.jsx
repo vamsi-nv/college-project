@@ -9,6 +9,7 @@ import ClubCard from "../components/ClubCard";
 import Modal from "../components/Modal";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import { fetchUserClubs } from "../utils/services";
 
 function Clubs() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,22 +23,16 @@ function Clubs() {
     coverImage: null,
   });
 
-  const fetchUserClubs = async () => {
-    try {
-      const response = await axiosInstance(api_paths.clubs.get_user_clubs);
-      if (response.data.success) {
-        setClubs(response.data.clubs);
-      }
-    } catch (error) {
-      console.error(
-        "Error fetching clubs:",
-        error.response?.data?.message || error.message
-      );
-    }
-  };
-
   useEffect(() => {
-    fetchUserClubs();
+    const fetchData = async () => {
+      const clubData = await fetchUserClubs();
+
+      if (clubData) {
+        setClubs(clubData);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleCreateClub = async (e) => {
@@ -106,7 +101,6 @@ function Clubs() {
         </button>
       </div>
 
-      
       {isModalOpen && (
         <Modal setIsModalOpen={setIsModalOpen} loading={loading}>
           <h2 className="mx-2 my-5 text-xl font-semibold text-center sm:mx-4 sm:text-2xl text-primary">
@@ -167,7 +161,6 @@ function Clubs() {
         </Modal>
       )}
 
-      
       <div className="flex flex-col justify-center w-full h-full px-4 py-6">
         {clubs.length === 0 ? (
           <p className="mt-10 text-center text-gray-400">

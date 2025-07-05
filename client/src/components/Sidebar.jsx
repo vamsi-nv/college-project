@@ -4,6 +4,8 @@ import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { LuUsers } from "react-icons/lu";
 import { useAuth } from "../context/UserContextProvider";
 import logo from "../assets/globe.png";
+import { motion, scale } from "motion/react";
+
 function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
   const { logout, user } = useAuth();
   const navigate = useNavigate();
@@ -37,7 +39,10 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
   ];
 
   return (
-    <div
+    <motion.div
+      initial={{ x: -300, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: "easeInOut" }}
       className={`min-h-screen top-0 lg:w-60 p-4 bg-gray-50 lg:ml-10 xl:ml-25 lg:p-8 flex flex-col items-start ${
         isMobileMenuOpen ? "fixed z-50" : "sm:block sticky hidden"
       }`}
@@ -143,7 +148,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

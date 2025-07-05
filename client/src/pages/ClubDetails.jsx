@@ -15,6 +15,7 @@ import { HiMiniUserCircle, HiOutlineUserGroup } from "react-icons/hi2";
 import { MdAnnouncement, MdEvent } from "react-icons/md";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import ProfilePhotoSelector from "../components/ProfilePhotoSelector";
+import { AnimatePresence, motion } from "motion/react";
 
 function ClubDetails() {
   const navigate = useNavigate();
@@ -341,9 +342,12 @@ function ClubDetails() {
               <HiOutlineDotsVertical className="size-5" />
             </button>
             {isClubEditMenuOpen && (
-              <div
+              <motion.div
+                initial={{ x: 10, y: -10, opacity: 0 }}
+                animate={{ x: 0, y: 0, opacity: 1 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
                 ref={clubEditMenuRef}
-                className="absolute right-0 p-2 space-y-1 border border-gray-200 rounded-lg shadow-md bg-gray-50"
+                className="absolute right-0  p-2 space-y-1 border border-gray-200 rounded-lg shadow-md bg-gray-50"
               >
                 <button
                   onClick={() => {
@@ -366,7 +370,7 @@ function ClubDetails() {
                 >
                   <LuTrash2 /> Delete
                 </button>
-              </div>
+              </motion.div>
             )}
           </div>
         )}
@@ -384,72 +388,75 @@ function ClubDetails() {
         )}
       </div>
 
-      <div className="flex items-center justify-between p-6">
-        <div>
-          <div className="flex items-center justify-between">
-            <h1 className="font-semibold text-black/80 lg:text-xl sm:text-xl max-sm:text-lg">
+      <div className="flex items-center justify-between p-6 w-full">
+        <div className="w-full">
+          <div className="flex items-center justify-between w-full">
+            <h1 className="font-semibold flex-1 text-black/80 lg:text-xl sm:text-xl max-sm:text-lg">
               {club?.name}
             </h1>
-            <div className="flex flex-col">
-              {club?.createdBy?._id !== user._id &&
-                (club?.members?.some((member) => member._id === user._id) ? (
-                  <button
-                    onClick={handleLeaveClub}
-                    className="px-6 py-2 text-sm border rounded-full hover:bg-primary/30 text-primary bg-primary/20"
-                  >
-                    Leave
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleJoinClub}
-                    className="px-8 py-2 text-sm text-white rounded-full bg-primary hover:bg-primary/90"
-                  >
-                    Join
-                  </button>
-                ))}
-            </div>
+
+            {club?.createdBy?._id !== user._id &&
+              (club?.members?.some((member) => member._id === user._id) ? (
+                <button
+                  onClick={handleLeaveClub}
+                  className="px-6 py-2 text-sm border rounded-full hover:bg-primary/30 text-primary bg-primary/20"
+                >
+                  Leave
+                </button>
+              ) : (
+                <button
+                  onClick={handleJoinClub}
+                  className="px-8 py-2 text-sm text-white rounded-full bg-primary hover:bg-primary/90"
+                >
+                  Join
+                </button>
+              ))}
+
             {club?.createdBy?._id === user._id && (
               <div
                 onClick={() => setIsPostMenuOpen((prev) => !prev)}
                 className=""
               >
-                <div ref={postMenuRef} className="relative">
-                  <button className="p-3 text-white transition-all duration-300 rounded-full shadow-lg bg-primary hover:scale-105 hover:bg-primary/90">
+                <div className="relative">
+                  <button className="p-2 text-white transition-all duration-300 rounded-full shadow-lg bg-primary hover:scale-105 hover:bg-primary/90">
                     <LuPlus className="size-5 max-sm:size-4" />
                   </button>
-                  {isPostMenuOpen && (
-                    <div
-                      ref={postMenuRef}
-                      className="absolute flex flex-col items-start gap-1 max-sm:-bottom-22 -bottom-25"
-                    >
-                      <div
+                  <AnimatePresence>
+                    {isPostMenuOpen && (
+                      <motion.button
+                        initial={{ x: 35, y: 35, opacity: 0 }}
+                        animate={{ x: 0, y: 0, opacity: 1 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        exit={{ opacity: 0, scale: 0 }}
                         onClick={() => {
                           setFormType("PostEvent");
                           setCurrentTab("Events");
                           setIsModalOpen(true);
                         }}
-                        className="relative p-3 text-white transition-all duration-300 rounded-full group bg-primary hover:scale-105 hover:bg-primary/90"
+                        className="absolute right-8 bottom-8 p-3 text-white transition-all duration-300 rounded-full shadow-lg bg-primary hover:scale-105 hover:bg-primary/90"
                       >
-                        <MdEvent className="size-5 max-sm:size-4" />
-                        <span className="absolute hidden p-2 text-xs text-white rounded shadow-lg mr-2 bg-primary right-full bottom-[15%] group-hover:block">
-                          Event
-                        </span>
-                      </div>
-                      <div
+                        <MdEvent className="size-5 max-sm:size-4 " />
+                      </motion.button>
+                    )}
+                  </AnimatePresence>
+                  <AnimatePresence>
+                    {isPostMenuOpen && (
+                      <motion.button
+                        initial={{ x: 35, y: -35, opacity: 0 }}
+                        animate={{ x: 0, y: 0, opacity: 1 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        exit={{ opacity: 0, scale: 0 }}
                         onClick={() => {
                           setFormType("PostAnnouncement");
                           setCurrentTab("Announcements");
                           setIsModalOpen(true);
                         }}
-                        className="relative p-3 text-white transition-all duration-300 rounded-full group bg-primary hover:scale-105 hover:bg-primary/90"
+                        className="absolute top-8 right-8 p-3 text-white transition-all duration-300 rounded-full shadow-lg bg-primary hover:scale-105 hover:bg-primary/90"
                       >
                         <MdAnnouncement className="size-5 max-sm:size-4" />
-                        <span className="absolute hidden p-2 text-xs text-white rounded shadow-lg mr-2 bg-primary right-full bottom-[15%] group-hover:block">
-                          Announcement
-                        </span>
-                      </div>
-                    </div>
-                  )}
+                      </motion.button>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
             )}
@@ -458,25 +465,6 @@ function ClubDetails() {
             {club?.description}
           </p>
         </div>
-
-        {/* <div className="flex flex-col items-end gap-2">
-          {club.createdBy._id !== user._id &&
-            (club.members.some((member) => member._id === user._id) ? (
-              <button
-                onClick={handleLeaveClub}
-                className="px-6 py-2 text-sm border rounded-full hover:bg-primary/30 text-primary bg-primary/20"
-              >
-                Leave
-              </button>
-            ) : (
-              <button
-                onClick={handleJoinClub}
-                className="px-8 py-2 text-sm text-white rounded-full bg-primary hover:bg-primary/90"
-              >
-                Join
-              </button>
-            ))}
-        </div> */}
       </div>
 
       <div>
@@ -757,49 +745,6 @@ function ClubDetails() {
           </div>
         </Modal>
       )}
-
-      {/* {club?.createdBy?._id === user._id && (
-        <div
-          onClick={() => setIsPostMenuOpen((prev) => !prev)}
-          className="absolute bottom-6 right-6"
-        >
-          <div className="relative">
-            <button className="p-3 text-white transition-all duration-300 rounded-full shadow-lg bg-primary hover:scale-105 hover:bg-primary/90">
-              <LuPlus className="size-5" />
-            </button>
-            {isPostMenuOpen && (
-              <div className="absolute flex flex-col items-start gap-1 -top-24">
-                <div
-                  onClick={() => {
-                    setFormType("PostEvent");
-                    setCurrentTab("Events");
-                    setIsModalOpen(true);
-                  }}
-                  className="relative p-3 text-white transition-all duration-300 rounded-full group bg-primary hover:scale-105 hover:bg-primary/90"
-                >
-                  <MdEvent className="size-5 " />
-                  <span className="absolute hidden p-2 text-xs text-white rounded shadow-lg mr-2 bg-primary right-full bottom-[15%] group-hover:block">
-                    Event
-                  </span>
-                </div>
-                <div
-                  onClick={() => {
-                    setFormType("PostAnnouncement");
-                    setCurrentTab("Announcements");
-                    setIsModalOpen(true);
-                  }}
-                  className="relative p-3 text-white transition-all duration-300 rounded-full group bg-primary hover:scale-105 hover:bg-primary/90"
-                >
-                  <MdAnnouncement className="size-5" />
-                  <span className="absolute hidden p-2 text-xs text-white rounded shadow-lg mr-2 bg-primary right-full bottom-[15%] group-hover:block">
-                    Announcement
-                  </span>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }

@@ -49,7 +49,7 @@ export const createEvent = async (req, res) => {
 
 export const getAllEvents = async (req, res) => {
   const userId = req.user?._id;
-  const { clubId, userOnly } = req.query;
+  const { clubId, userOnly, createdByMe } = req.query;
 
   try {
     let filter = {};
@@ -69,6 +69,8 @@ export const getAllEvents = async (req, res) => {
       filter.club = { $in: clubIds };
     } else if (clubId) {
       filter.club = clubId;
+    } else if (createdByMe === "true" && userId) {
+      filter.createdBy = userId;
     } else {
       filter = {};
     }
@@ -76,7 +78,7 @@ export const getAllEvents = async (req, res) => {
     const events = await Event.find(filter)
       .populate("club", "name")
       .populate("createdBy", "name email profileImageUrl")
-      .sort({ date: -1 });
+      
 
     res.status(200).json({
       success: true,
@@ -96,7 +98,7 @@ export const getEventById = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id.toString())
       .populate("club", "name")
-      .populate("createdBy", "name email profileImageUrl")
+      .populate("createdBy", "name email profileImageUrl");
 
     if (!event) {
       return res.status(404).json({
