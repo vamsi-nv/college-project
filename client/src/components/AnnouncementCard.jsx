@@ -52,7 +52,7 @@ function AnnouncementCard({ announcement, fetchAnnouncements }) {
     <div className="relative flex flex-col p-3 border-b border-gray-300 md:p-4">
       <div
         onClick={() => navigate(`/clubs/${announcement.club._id}`)}
-        className="flex hover:underline items-center gap-1 mb-3 text-sm text-gray-400 cursor-pointer sm:text-base"
+        className="flex w-fit hover:underline items-center gap-1 mb-3 text-sm text-gray-400 cursor-pointer sm:text-base"
       >
         <LuUsers />
         <p>{announcement.club.name}</p>

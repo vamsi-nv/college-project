@@ -4,7 +4,8 @@ import { api_paths } from "../utils/apiPaths";
 import { useEffect } from "react";
 import EventCard from "../components/EventCard";
 import AnnouncementCard from "../components/AnnouncementCard";
-import { motion } from "motion/react";
+import toast from "react-hot-toast";
+import Loader from "../components/Loader";
 
 function Home() {
   const [currentTab, setCurrentTab] = useState("For You");
@@ -12,7 +13,6 @@ function Home() {
   const [announcements, setAnnouncements] = useState([]);
   const [feed, setFeed] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const tabItems = [
     {
@@ -28,7 +28,7 @@ function Home() {
 
   const fetchEvents = async () => {
     try {
-      setLoading(true), setError("");
+      setLoading(true);
       const response = await axiosInstance.get(
         api_paths.events.get_user_club_events
       );
@@ -36,11 +36,9 @@ function Home() {
 
       if (data.success) {
         setEvents(data.events);
-      } else {
-        setError("No events found");
       }
     } catch (error) {
-      setError(error.response?.data?.message);
+      toast.error("Error fetching events");
     } finally {
       setLoading(false);
     }
@@ -49,18 +47,15 @@ function Home() {
   const fetchAnnouncements = async () => {
     try {
       setLoading(true);
-      setError("");
       const response = await axiosInstance.get(
         api_paths.announcements.get_user_club_announcements
       );
       const data = response.data;
       if (data.success) {
         setAnnouncements(data.announcements);
-      } else {
-        setError("No announcements found");
       }
     } catch (error) {
-      setError(error.response.data?.message);
+      toast.error("Error fetching announcements");
     } finally {
       setLoading(false);
     }
@@ -96,14 +91,11 @@ function Home() {
     }
   }, [events, announcements]);
 
+  if (loading) return <Loader />;
+
   return (
     <div className="h-full max-w-full ">
-      <motion.div
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: "easeInOut" }}
-        className="sticky flex items-center justify-around w-full sm:pt-4 pt-[50px] overflow-x-scroll border-b border-gray-300"
-      >
+      <div className="sticky flex items-center justify-around w-full sm:pt-4 pt-[50px] overflow-x-scroll border-b border-gray-300">
         {tabItems.map((tabItem) => (
           <button
             key={tabItem.label}
@@ -116,7 +108,7 @@ function Home() {
             {tabItem.label}
           </button>
         ))}
-      </motion.div>
+      </div>
 
       {currentTab === "For You" && (
         <div className="">
