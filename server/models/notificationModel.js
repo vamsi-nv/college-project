@@ -8,6 +8,10 @@ const notificationSchema = new mongoose.Schema(
       required: true,
     },
 
+    title: {
+      type: String,
+    },
+
     type: {
       type: String,
       enum: ["event", "announcement", "general"],

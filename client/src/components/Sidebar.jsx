@@ -15,16 +15,16 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
       path: "/",
       icon: FiHome,
     },
-    {
-      label: "Explore",
-      path: "/explore",
-      icon: FiCompass,
-    },
-    {
-      label: "Notifications",
-      path: "/notifications",
-      icon: FiBell,
-    },
+    // {
+    //   label: "Explore",
+    //   path: "/explore",
+    //   icon: FiCompass,
+    // },
+    // {
+    //   label: "Notifications",
+    //   path: "/notifications",
+    //   icon: FiBell,
+    // },
     {
       label: "Clubs",
       path: "/clubs",

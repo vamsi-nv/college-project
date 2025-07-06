@@ -5,14 +5,14 @@ function Modal({ setIsModalOpen, children, loading }) {
   return (
     <div
       onClick={() => !loading && setIsModalOpen(false)}
-      className="fixed inset-0 z-60 flex items-center justify-center w-full px-2 bg-gray-700/50 backdrop-blur-xl"
+      className="fixed inset-0 flex items-center justify-center w-full px-2 z-60 bg-gray-700/50 backdrop-blur-xl"
     >
       <motion.div
-        initial={{ y: -200, opacity: 0 }}
+        initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeInOut" }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full mx-auto max-w-sm p-4 border border-gray-200 rounded-lg shadow-lg sm:max-w-lg sm:p-8 bg-gray-50"
+        className="relative w-full max-w-sm p-4 mx-auto border border-gray-200 rounded-lg shadow-lg sm:max-w-lg sm:p-8 bg-gray-50"
       >
         {children}
         <button

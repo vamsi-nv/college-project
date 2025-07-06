@@ -35,7 +35,7 @@ axiosInstance.interceptors.response.use(
       if (error.response.status === 401) {
         const isOnLoginPage = window.location.pathname === "/login";
         if (!isOnLoginPage) {
-          window.location.href = "/login";
+          // window.location.href = "/login";
         }
       } else if (error.response.status === 500) {
         console.error("Server error!. Please try again later");

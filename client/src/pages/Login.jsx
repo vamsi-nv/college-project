@@ -61,14 +61,14 @@ function Login() {
   if (loading) return <Loader />;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-t from-primary/90 to-primary/10">
-      <div className="w-7/8 max-w-md sm:max-w-lg shadow-lg border border-gray-200 p-4 sm:p-8 bg-gray-50 rounded-lg">
-        <h2 className="mx-2 sm:mx-4 my-5 font-semibold text-xl sm:text-2xl text-center text-primary">
+    <div className="relative z-0 flex items-center justify-center min-h-screen">
+      <div className="max-w-md p-4 border border-gray-200 rounded-lg shadow-lg w-7/8 sm:max-w-lg sm:p-8 bg-gray-50">
+        <h2 className="mx-2 my-5 text-xl font-semibold text-center sm:mx-4 sm:text-2xl text-primary">
           Login
         </h2>
         <form
           onSubmit={handleLogin}
-          className="flex flex-col gap-1 sm:gap-4 p-2 sm:p-4"
+          className="flex flex-col gap-1 p-2 sm:gap-4 sm:p-4"
         >
           <Input
             value={email}
@@ -87,26 +87,27 @@ function Login() {
             placeholder="Enter your password"
           />
           {error && (
-            <p className="text-xs sm:text-sm text-red-500 mb-2 sm:mb-3 ml-2 sm:ml-4">
+            <p className="mb-2 ml-2 text-xs text-red-500 sm:text-sm sm:mb-3 sm:ml-4">
               *{error}
             </p>
           )}
 
-          <p className="text-xs sm:text-sm mb-2 sm:mb-4 ml-2 sm:ml-4 text-gray-400">
+          <p className="mb-2 ml-2 text-xs text-gray-400 sm:text-sm sm:mb-4 sm:ml-4">
             Don't have an account?{" "}
             <span
               onClick={() => navigate("/register")}
-              className="cursor-pointer text-neutral-800 underline"
+              className="underline cursor-pointer text-neutral-800"
             >
               signup
             </span>
           </p>
 
-          <button type="submit" className="form-submit-btn w-full">
+          <button type="submit" className="w-full form-submit-btn">
             Login
           </button>
         </form>
       </div>
+
     </div>
   );
 }

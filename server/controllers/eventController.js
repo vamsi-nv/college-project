@@ -31,6 +31,18 @@ export const createEvent = async (req, res) => {
       createdBy: userId,
     });
 
+    const io = req.app.get("io");
+    foundClub.members.forEach((member) => {
+      if (member._id.toString() !== userId.toString()) {
+        io.sendNotification(member._id.toString(), {
+          title: "",
+          message: `${newEvent.title} has been posted!`,
+          type: "event",
+          club : foundClub.name
+        });
+      }
+    });
+
     res.status(201).json({
       success: true,
       message: "Event created successfully",
@@ -77,8 +89,7 @@ export const getAllEvents = async (req, res) => {
 
     const events = await Event.find(filter)
       .populate("club", "name")
-      .populate("createdBy", "name email profileImageUrl")
-      
+      .populate("createdBy", "name email profileImageUrl");
 
     res.status(200).json({
       success: true,

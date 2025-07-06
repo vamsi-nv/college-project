@@ -23,6 +23,9 @@ function UserContextProvider({ children }) {
         "User fetch failed : ",
         error.response?.data?.message || error.message
       );
+      if(error.response?.status === 401){
+        setUser(null)
+      }
       setUser(null);
     } finally {
       setLoading(false);
