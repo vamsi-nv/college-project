@@ -1,7 +1,10 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
 import http from "http";
+import rateLimit from "express-rate-limit";
+import sanitize from "express-mongo-sanitize";
 import { Server } from "socket.io";
 import connectDB from "./config/dbConfig.js";
 import clubRouter from "./routes/clubRoutes.js";
@@ -16,8 +19,13 @@ const port = process.env.PORT || 4000;
 connectDB();
 
 // middleware
-app.use(express.json({ limit: "16kb" }));
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+
+app.use(limiter);
+app.use(helmet());
+app.use(sanitize());
 app.use(cors({ credentials: true }));
+app.use(express.json({ limit: "16kb" }));
 
 const server = http.createServer(app);
 
@@ -38,7 +46,6 @@ app.use("/api/user", userRouter);
 app.use("/api/clubs", clubRouter);
 app.use("/api/events", eventRouter);
 app.use("/api/announcements", announcementRouter);
-
 
 server.listen(port, () => {
   console.log("Server is up and running on port : " + port);
