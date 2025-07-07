@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const notificationSchema = new mongoose.Schema(
   {
-    user: {
+    recipient: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -10,17 +10,17 @@ const notificationSchema = new mongoose.Schema(
 
     title: {
       type: String,
+      required: true,
     },
 
     type: {
       type: String,
-      enum: ["event", "announcement", "general"],
+      enum: ["event", "announcement"],
       required: true,
     },
 
     message: {
       type: String,
-      required: true,
     },
 
     relatedClub: {

@@ -1,5 +1,6 @@
 import Event from "../models/eventModel.js";
 import Club from "../models/clubModel.js";
+import Notification from "../models/notificationModel.js";
 
 export const createEvent = async (req, res) => {
   const userId = req.user?._id;
@@ -17,7 +18,7 @@ export const createEvent = async (req, res) => {
     if (!foundClub.admins.includes(userId)) {
       return res.status(403).json({
         success: false,
-        message: "Not authorized to create the club",
+        message: "Not authorized to perform this action",
       });
     }
 
@@ -38,10 +39,20 @@ export const createEvent = async (req, res) => {
           title: "",
           message: `${newEvent.title} has been posted!`,
           type: "event",
-          club : foundClub.name
+          club: foundClub.name,
         });
       }
     });
+
+    const notifications = foundClub.members.map((member) => ({
+      recipient: member._id,
+      relatedClub: foundClub._id,
+      type: "event",
+      title: `New Event in ${foundClub.name}`,
+      relatedEvent: newEvent._id,
+    }));
+
+    await Notification.insertMany(notifications);
 
     res.status(201).json({
       success: true,

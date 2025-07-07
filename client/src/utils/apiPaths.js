@@ -51,4 +51,9 @@ export const api_paths = {
     delete_announcement: (id) => `/api/announcements/${id}`,
     toggle_pin: (id) => `/api/announcements/${id}/pin`,
   },
+
+  notifications: {
+    get_all_notifications: "/api/notifications",
+    get_unread_count: "/api/notifications/unread-count",
+  },
 };

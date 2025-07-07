@@ -4,10 +4,15 @@ import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { LuUsers } from "react-icons/lu";
 import { useAuth } from "../context/UserContextProvider";
 import logo from "../assets/globe.png";
+import { useEffect, useState } from "react";
+import axiosInstance from "../utils/axiosInstance";
+import { api_paths } from "../utils/apiPaths";
+import toast from "react-hot-toast";
 
-function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
-  const { logout, user } = useAuth();
+function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen = () => {} }) {
+  const { logout, user, unreadCount } = useAuth();
   const navigate = useNavigate();
+
 
   const navItems = [
     {
@@ -20,11 +25,11 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
     //   path: "/explore",
     //   icon: FiCompass,
     // },
-    // {
-    //   label: "Notifications",
-    //   path: "/notifications",
-    //   icon: FiBell,
-    // },
+    {
+      label: "Notifications",
+      path: "/notifications",
+      icon: FiBell,
+    },
     {
       label: "Clubs",
       path: "/clubs",
@@ -73,11 +78,18 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
             >
               {({ isActive }) => (
                 <>
-                  <Icon
-                    className={`size-5  lg:size-6 transition-all duration-200 ${
-                      isActive ? "stroke-2 text-primary" : "stroke-gray-500"
-                    }`}
-                  />
+                  <span className="relative">
+                    <Icon
+                      className={`size-5 lg:size-6 transition-all duration-200 ${
+                        isActive ? "stroke-2 text-primary" : "stroke-gray-500"
+                      }`}
+                    />
+                    {label === "Notifications" && unreadCount > 0 && (
+                      <span className="absolute -right-2 text-[12px] text-white rounded-full -top-2 bg-primary w-5 h-5 flex items-center justify-center">
+                        {unreadCount}
+                      </span>
+                    )}
+                  </span>
                   <span
                     className={`${
                       isMobileMenuOpen ? "max-sm:block" : ""

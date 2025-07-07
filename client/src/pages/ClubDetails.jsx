@@ -1,26 +1,28 @@
-import { useNavigate, useParams } from "react-router-dom";
-import axiosInstance from "../utils/axiosInstance";
-import { api_paths } from "../utils/apiPaths";
 import { useEffect, useRef, useState } from "react";
-import Loader from "../components/Loader";
-import { useAuth } from "../context/UserContextProvider";
-import toast from "react-hot-toast";
-import EventCard from "../components/EventCard";
 import { PiUsersThreeThin } from "react-icons/pi";
+import { HiOutlineDotsVertical } from "react-icons/hi";
+import { AnimatePresence, motion } from "motion/react";
+import { LuPen, LuPlus, LuTrash2 } from "react-icons/lu";
+import { MdAnnouncement, MdEvent } from "react-icons/md";
+import { useNavigate, useParams } from "react-router-dom";
+import { HiMiniUserCircle, HiOutlineUserGroup } from "react-icons/hi2";
+import toast from "react-hot-toast";
+import Loader from "../components/Loader";
 import Modal from "../components/Modal";
 import Input from "../components/Input";
+import EventCard from "../components/EventCard";
 import AnnouncementCard from "../components/AnnouncementCard";
-import { LuPen, LuPlus, LuTrash2 } from "react-icons/lu";
-import { HiMiniUserCircle, HiOutlineUserGroup } from "react-icons/hi2";
-import { MdAnnouncement, MdEvent } from "react-icons/md";
-import { HiOutlineDotsVertical } from "react-icons/hi";
 import ProfilePhotoSelector from "../components/ProfilePhotoSelector";
-import { AnimatePresence, motion } from "motion/react";
+import axiosInstance from "../utils/axiosInstance";
+import { api_paths } from "../utils/apiPaths";
+import { useAuth } from "../context/UserContextProvider";
 
 function ClubDetails() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { user } = useAuth();
+  const postMenuRef = useRef(null);
+  const clubEditMenuRef = useRef(null);
   const [club, setClub] = useState(null);
   const [events, setEvents] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
@@ -30,8 +32,6 @@ function ClubDetails() {
   const [error, setError] = useState("");
   const [isPostMenuOpen, setIsPostMenuOpen] = useState(false);
   const [isClubEditMenuOpen, setIsClubEditMenuOpen] = useState(false);
-  const clubEditMenuRef = useRef(null);
-  const postMenuRef = useRef(null);
   const [formType, setFormType] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
   const [clubForm, setClubForm] = useState({
