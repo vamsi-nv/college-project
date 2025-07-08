@@ -289,3 +289,121 @@ export const deleteClub = async (req, res) => {
     });
   }
 };
+
+export const toggleAdmin = async (req, res) => {
+  const userId = req.user._id;
+  const { userToToggle } = req.body;
+
+  try {
+    const club = await Club.findById(req.params.id);
+
+    if (!club) {
+      return res.status(404).json({
+        success: false,
+        message: "Club not found",
+      });
+    }
+
+    const isClubAdmin = club.admins.includes(userId.toString());
+
+    if (!isClubAdmin) {
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized to perform this action",
+      });
+    }
+
+    const isUserMember = club.members.includes(userToToggle);
+
+    if (!isUserMember) {
+      return res.status(400).json({
+        success: false,
+        message: "User is not a member of the club",
+      });
+    }
+
+    const isAlreadyAdmin = club.admins.includes(userToToggle);
+
+    if (isAlreadyAdmin) {
+      club.admins = club.admins.filter(
+        (adminId) => adminId.toString() !== userToToggle.toString()
+      );
+    } else {
+      club.admins.push(userToToggle);
+    }
+
+    await club.save();
+
+    res.status(200).json({
+      success: true,
+      message: `User ${
+        isAlreadyAdmin ? "removed from" : "added as"
+      } admin successfully`,
+      admins: club.admins,
+    });
+  } catch (error) {
+    console.error("Error in toggleAdmin controller:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Error toggling admin status",
+      error: error.message,
+    });
+  }
+};
+
+export const removeMemberFromClub = async (req, res) => {
+  const adminId = req.user._id;
+  const { userToRemove } = req.body;
+
+  try {
+    const club = await Club.findById(req.params.id);
+    if (!club) {
+      return res.status(404).json({
+        success: false,
+        message: "Club not found",
+      });
+    }
+
+    const isAdmin = club.admins.some(
+      (admin) => admin.toString() === adminId.toString()
+    );
+
+    if (!isAdmin) {
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized to perform this action",
+      });
+    }
+
+    if (!club.members.some((member) => member.toString() === userToRemove)) {
+      return res.status(400).json({
+        success: false,
+        message: "User is not a member of the club",
+      });
+    }
+
+    club.members = club.members.filter(
+      (id) => id.toString() !== userToRemove
+    );
+
+    club.admins = club.admins.filter(
+      (id) => id.toString() !== userToRemove
+    );
+
+    await club.save();
+
+    res.status(200).json({
+      success: true,
+      message: "User removed from club successfully",
+      club,
+    });
+  } catch (error) {
+    console.error("Error in handleRemoveMemberFromClub:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+

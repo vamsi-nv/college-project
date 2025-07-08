@@ -8,6 +8,8 @@ import {
   getUserClubs,
   joinClub,
   leaveClub,
+  removeMemberFromClub,
+  toggleAdmin,
   updateClub,
 } from "../controllers/clubController.js";
 import { clubUpload } from "../middleware/clubUploadMiddleware.js";
@@ -26,4 +28,6 @@ clubRouter
   .delete(protect, deleteClub);
 clubRouter.route("/:id/join").post(protect, joinClub);
 clubRouter.route("/:id/leave").post(protect, leaveClub);
+clubRouter.route("/:id/admin/toggle").patch(protect, toggleAdmin);
+clubRouter.route("/:id/members").patch(protect, removeMemberFromClub);
 export default clubRouter;

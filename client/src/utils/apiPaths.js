@@ -22,6 +22,8 @@ export const api_paths = {
     get_club: (id) => `/api/clubs/${id}`,
     update_club: (id) => `/api/clubs/${id}`,
     delete_club: (id) => `/api/clubs/${id}`,
+    toggle_admin: (id) => `/api/clubs/${id}/admin/toggle`,
+    remover_member_from_club: (id) => `/api/clubs/${id}/members`,
   },
 
   events: {

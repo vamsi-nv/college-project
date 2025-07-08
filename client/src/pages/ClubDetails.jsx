@@ -16,6 +16,7 @@ import ProfilePhotoSelector from "../components/ProfilePhotoSelector";
 import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
 import { useAuth } from "../context/UserContextProvider";
+import { RxDotsHorizontal } from "react-icons/rx";
 
 function ClubDetails() {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ function ClubDetails() {
   const { user } = useAuth();
   const postMenuRef = useRef(null);
   const clubEditMenuRef = useRef(null);
+  const memberMenuRef = useRef(null);
   const [club, setClub] = useState(null);
   const [events, setEvents] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
@@ -32,6 +34,7 @@ function ClubDetails() {
   const [error, setError] = useState("");
   const [isPostMenuOpen, setIsPostMenuOpen] = useState(false);
   const [isClubEditMenuOpen, setIsClubEditMenuOpen] = useState(false);
+  const [openMenuMemberId, setOpenMenuMemberId] = useState(null);
   const [formType, setFormType] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
   const [clubForm, setClubForm] = useState({
@@ -57,6 +60,10 @@ function ClubDetails() {
     { label: "Events" },
     { label: "Announcements" },
   ];
+
+  const toggleMemberMenu = (memberId) => {
+    setOpenMenuMemberId((prev) => (prev === memberId ? null : memberId));
+  };
 
   const fetchClubDetails = async () => {
     try {
@@ -256,6 +263,36 @@ function ClubDetails() {
     }
   };
 
+  const handleRemoveMemberFromClub = async (userToRemove) => {
+    try {
+      const response = await axiosInstance.patch(
+        api_paths.clubs.remover_member_from_club(club._id),
+        { userToRemove }
+      );
+      if (response.data.success) {
+        fetchClubDetails();
+        setCurrentTab("Members");
+      }
+    } catch (error) {
+      toast.error(error.response?.data.message || "Something went wrong");
+    }
+  };
+
+  const handleToggleAdmin = async (userToToggle) => {
+    try {
+      const response = await axiosInstance.patch(
+        api_paths.clubs.toggle_admin(club._id),
+        { userToToggle }
+      );
+      if (response.data.success) {
+        fetchClubDetails();
+        setCurrentTab("Members");
+      }
+    } catch (error) {
+      toast.error("Error setting admin status");
+    }
+  };
+
   useEffect(() => {
     fetchClubDetails();
   }, [id]);
@@ -294,6 +331,7 @@ function ClubDetails() {
 
   useEffect(() => {
     function handleOutsideClick(event) {
+      // Club Edit Menu
       if (
         isClubEditMenuOpen &&
         clubEditMenuRef.current &&
@@ -302,23 +340,36 @@ function ClubDetails() {
         setIsClubEditMenuOpen(false);
       }
 
+      // Post Menu
       if (
         isPostMenuOpen &&
         postMenuRef.current &&
         !postMenuRef.current.contains(event.target)
       ) {
-        // setIsPostMenuOpen(false);
+        setIsPostMenuOpen(false);
+      }
+
+      // Member Menu
+      if (
+        openMenuMemberId !== null &&
+        memberMenuRef.current &&
+        !memberMenuRef.current.contains(event.target)
+      ) {
+        setOpenMenuMemberId(null);
       }
     }
 
-    if (isClubEditMenuOpen || isPostMenuOpen) {
+    const shouldListen =
+      isClubEditMenuOpen || isPostMenuOpen || openMenuMemberId !== null;
+
+    if (shouldListen) {
       document.addEventListener("mousedown", handleOutsideClick);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleOutsideClick);
     };
-  }, [isClubEditMenuOpen, isPostMenuOpen]);
+  }, [isClubEditMenuOpen, isPostMenuOpen, openMenuMemberId]);
 
   if (loading) return <Loader />;
   // if (!club || !user || !club.createdBy)
@@ -347,7 +398,7 @@ function ClubDetails() {
                 animate={{ x: 0, y: 0, opacity: 1 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 ref={clubEditMenuRef}
-                className="absolute right-0  p-2 space-y-1 border border-gray-200 rounded-lg shadow-md bg-gray-50"
+                className="absolute right-0 p-2 space-y-1 border border-gray-200 rounded-lg shadow-md bg-gray-50"
               >
                 <button
                   onClick={() => {
@@ -388,10 +439,10 @@ function ClubDetails() {
         )}
       </div>
 
-      <div className="flex items-center justify-between p-6 w-full">
+      <div className="flex items-center justify-between w-full p-6">
         <div className="w-full">
           <div className="flex items-center justify-between w-full">
-            <h1 className="font-semibold flex-1 text-black/80 lg:text-xl sm:text-xl max-sm:text-lg">
+            <h1 className="flex-1 font-semibold text-black/80 lg:text-xl sm:text-xl max-sm:text-lg">
               {club?.name}
             </h1>
 
@@ -412,7 +463,7 @@ function ClubDetails() {
                 </button>
               ))}
 
-            {club?.createdBy?._id === user._id && (
+            {club?.admins?.some((admin) => admin?._id === user?._id) && (
               <div
                 onClick={() => setIsPostMenuOpen((prev) => !prev)}
                 className=""
@@ -421,42 +472,42 @@ function ClubDetails() {
                   <button className="p-2 text-white transition-all duration-300 rounded-full shadow-lg bg-primary hover:scale-105 hover:bg-primary/90">
                     <LuPlus className="size-5 max-sm:size-4" />
                   </button>
-                  <AnimatePresence>
-                    {isPostMenuOpen && (
-                      <motion.button
-                        initial={{ x: 35, y: 35, opacity: 0 }}
-                        animate={{ x: 0, y: 0, opacity: 1 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        exit={{ opacity: 0, scale: 0 }}
-                        onClick={() => {
-                          setFormType("PostEvent");
-                          setCurrentTab("Events");
-                          setIsModalOpen(true);
-                        }}
-                        className="absolute right-8 bottom-8 p-3 text-white transition-all duration-300 rounded-full shadow-lg bg-primary hover:scale-105 hover:bg-primary/90"
-                      >
-                        <MdEvent className="size-5 max-sm:size-4 " />
-                      </motion.button>
-                    )}
-                  </AnimatePresence>
-                  <AnimatePresence>
-                    {isPostMenuOpen && (
-                      <motion.button
-                        initial={{ x: 35, y: -35, opacity: 0 }}
-                        animate={{ x: 0, y: 0, opacity: 1 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        exit={{ opacity: 0, scale: 0 }}
-                        onClick={() => {
-                          setFormType("PostAnnouncement");
-                          setCurrentTab("Announcements");
-                          setIsModalOpen(true);
-                        }}
-                        className="absolute top-8 right-8 p-3 text-white transition-all duration-300 rounded-full shadow-lg bg-primary hover:scale-105 hover:bg-primary/90"
-                      >
-                        <MdAnnouncement className="size-5 max-sm:size-4" />
-                      </motion.button>
-                    )}
-                  </AnimatePresence>
+                  {isPostMenuOpen && (
+                    <div ref={postMenuRef}>
+                      <AnimatePresence>
+                        <motion.button
+                          initial={{ x: 35, y: 35, opacity: 0 }}
+                          animate={{ x: 0, y: 0, opacity: 1 }}
+                          transition={{ duration: 0.3, ease: "easeInOut" }}
+                          exit={{ opacity: 0, scale: 0 }}
+                          onClick={() => {
+                            setFormType("PostEvent");
+                            setCurrentTab("Events");
+                            setIsModalOpen(true);
+                          }}
+                          className="absolute p-3 text-white transition-all duration-300 rounded-full shadow-lg right-8 bottom-8 bg-primary hover:scale-105 hover:bg-primary/90"
+                        >
+                          <MdEvent className="size-5 max-sm:size-4 " />
+                        </motion.button>
+                      </AnimatePresence>
+                      <AnimatePresence>
+                        <motion.button
+                          initial={{ x: 35, y: -35, opacity: 0 }}
+                          animate={{ x: 0, y: 0, opacity: 1 }}
+                          transition={{ duration: 0.3, ease: "easeInOut" }}
+                          exit={{ opacity: 0, scale: 0 }}
+                          onClick={() => {
+                            setFormType("PostAnnouncement");
+                            setCurrentTab("Announcements");
+                            setIsModalOpen(true);
+                          }}
+                          className="absolute p-3 text-white transition-all duration-300 rounded-full shadow-lg top-8 right-8 bg-primary hover:scale-105 hover:bg-primary/90"
+                        >
+                          <MdAnnouncement className="size-5 max-sm:size-4" />
+                        </motion.button>
+                      </AnimatePresence>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -487,8 +538,48 @@ function ClubDetails() {
             {club.members.map((member) => (
               <div
                 key={member._id}
-                className="flex items-center justify-between w-full px-5 py-4 "
+                className="relative flex items-center justify-between w-full px-5 py-5"
               >
+                {club.admins.some((admin) => admin._id === user._id) &&
+                  user._id !== member._id && (
+                    <div className="absolute right-1 top-1">
+                      <button
+                        className="p-2 rounded-full hover:bg-gray-200"
+                        onClick={() => toggleMemberMenu(member._id)}
+                      >
+                        <RxDotsHorizontal className="text-gray-500" />
+                      </button>
+                      {openMenuMemberId === member._id && (
+                        <div className="relative z-20 " ref={memberMenuRef}>
+                          <div className="absolute flex flex-col p-2 text-xs bg-white border border-gray-200 rounded-lg shadow-lg -left-32 whitespace-nowrap">
+                            <button
+                              onClick={() => {
+                                handleToggleAdmin(member._id);
+                                setOpenMenuMemberId(null);
+                              }}
+                              className="px-4 py-4 rounded-md hover:bg-gray-200/50"
+                            >
+                              {club.admins.some(
+                                (admin) => admin._id === member._id
+                              )
+                                ? "Remove as admin"
+                                : "Make club admin"}
+                            </button>
+                            <button
+                              onClick={() => {
+                                handleRemoveMemberFromClub(member._id);
+                                setOpenMenuMemberId(null);
+                              }}
+                              className="p-4 py-4 rounded-md hover:bg-gray-200/50"
+                            >
+                              Remove From club
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                 <div className="flex items-center gap-2">
                   <div className="size-8">
                     {member.profileImageUrl ? (
@@ -504,7 +595,7 @@ function ClubDetails() {
                   <p>{member.name}</p>
                 </div>
                 {club.admins.some((admin) => admin._id === member._id) && (
-                  <span className="px-3 py-1 text-xs font-medium text-green-500 border border-green-500 rounded-full bg-green-500/10">
+                  <span className="px-3 py-1 mr-10 text-xs font-medium text-green-500 border border-green-500 rounded-full bg-green-500/10">
                     Admin
                   </span>
                 )}
