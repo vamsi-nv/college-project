@@ -54,6 +54,9 @@ export const api_paths = {
 
   notifications: {
     get_all_notifications: "/api/notifications",
+    delete_notification: (notificationId) =>
+      `/api/notifications/${notificationId}`,
+    delete_all_notifications: `/api/notifications`,
     get_unread_count: "/api/notifications/unread-count",
   },
 };

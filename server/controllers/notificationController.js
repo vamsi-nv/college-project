@@ -58,3 +58,56 @@ export const getUnreadNotificationCount = async (req, res) => {
     });
   }
 };
+
+export const deleteNotification = async (req, res) => {
+  const userId = req.user._id;
+  try {
+    if (!userId) {
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized to perform this action",
+      });
+    }
+
+    const notificationId = req.params.notificationId;
+    await Notification.findByIdAndDelete(notificationId);
+    res.status(200).json({
+      success: true,
+      message: "Notification deleted",
+    });
+  } catch (error) {
+    console.log("Error in deleteNotification controller : ", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Error deleting notification",
+      error: error.message,
+    });
+  }
+};
+
+export const deleteAllNotifications = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    if (!userId) {
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized to perform this action",
+      });
+    }
+
+    await Notification.deleteMany({ recipient: userId });
+
+    res.status(200).json({
+      success: true,
+      message: "Notifications deleted",
+    });
+  } catch (error) {
+    console.log("Error in deleteNotifications controller : ", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Error deleting notifications",
+      error: error.message,
+    });
+  }
+};

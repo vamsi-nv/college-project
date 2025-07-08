@@ -7,6 +7,7 @@ import Loader from "../components/Loader";
 import { Link } from "react-router-dom";
 import { FaUserGroup } from "react-icons/fa6";
 import { useAuth } from "../context/UserContextProvider";
+import { LuTrash2 } from "react-icons/lu";
 
 function Notifications() {
   const [loading, setLoading] = useState(false);
@@ -31,6 +32,48 @@ function Notifications() {
     }
   };
 
+  const handleDeleteNotification = async (id) => {
+    try {
+      const confirm = window.confirm(
+        "Are you sure you want to delete this notification?"
+      );
+      if (!confirm) {
+        return;
+      }
+
+      const response = await axiosInstance.delete(
+        api_paths.notifications.delete_notification(id)
+      );
+
+      if (response.data.success) {
+        toast.success("Notification deleted");
+        fetchNotifications();
+      }
+    } catch (error) {
+      toast.error("Error deleting notification");
+    }
+  };
+
+  const handleDeleteAllNotifications = async () => {
+    try {
+      const confirm = window.confirm("Are you sure you want to delete all?");
+      if (!confirm) {
+        return;
+      }
+
+      const response = await axiosInstance.delete(
+        api_paths.notifications.delete_all_notifications
+      );
+
+      if (response.data.success) {
+        toast.success("Notifications Deleted");
+        fetchNotifications();
+      }
+    } catch (error) {
+      toast.error("Error deleting  notifications");
+    }
+  };
+
   useEffect(() => {
     fetchNotifications();
     fetchUnreadCount();
@@ -40,11 +83,20 @@ function Notifications() {
 
   return (
     <div className="w-full min-h-screen">
-      <div className="flex flex-col items-start">
+      <div className="flex items-center justify-between w-full p-6 border-b border-gray-300">
+        <p className="font-medium text-gray-800">Notifications</p>
+        <button
+          onClick={handleDeleteAllNotifications}
+          className="px-3 py-1 text-xs transition-all duration-300 border rounded-full text-red-500/90 hover:text-red-500 hover:bg-red-500/10"
+        >
+          Delete All
+        </button>
+      </div>
+      <div className="flex flex-col items-start max-sm:mt-[51px]">
         {notifications.map((notification) => (
           <div
             key={notification?._id}
-            className="flex items-center w-full p-6 py-8 border-b border-gray-300"
+            className="relative flex items-center w-full px-6 py-8 border-b border-gray-300"
           >
             <div className="self-start px-2 text-primary">
               <FaUserGroup className="size-6" />
@@ -58,6 +110,13 @@ function Notifications() {
                   {notification?.relatedEvent?.title}
                 </p>
               </Link>
+
+              <button
+                onClick={() => handleDeleteNotification(notification._id)}
+                className="absolute text-gray-500 top-4 right-4"
+              >
+                <LuTrash2 />
+              </button>
             </div>
           </div>
         ))}
