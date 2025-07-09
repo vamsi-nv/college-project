@@ -199,13 +199,13 @@ function Profile() {
                       className="object-cover aspect-video rounded-t-2xl"
                     />
                   ) : (
-                    <PiUsersThreeThin className="mx-auto font-light text-gray-300 max-sm:size-24 sm:size-32 size-40" />
+                    <PiUsersThreeThin className="mx-auto font-light min-h-[190px] text-gray-300 max-sm:size-24 sm:size-32 size-40" />
                   )}
                   <div className="p-4">
                     <h2 className="flex items-center justify-between text-lg font-semibold text-gray-700 max-sm:text-sm">
                       {club.name}
                       {club.admins.includes(user._id) && (
-                        <span className="px-3 py-1 text-xs font-medium text-green-500 border border-green-500 rounded-full bg-green-500/10">
+                        <span className="px-2 py-0.5 text-xs font-medium text-green-500 border border-green-500 rounded-full bg-green-500/10">
                           Admin
                         </span>
                       )}

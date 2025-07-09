@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { LuUsers } from "react-icons/lu";
+import { LuPlus, LuUsers } from "react-icons/lu";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
@@ -91,13 +91,13 @@ function Clubs() {
 
   return (
     <div className="w-full min-h-screen">
-      <div className="sticky top-0 z-10 flex items-center justify-between w-full px-5 pt-[50px] pb-2 border-b border-gray-200 sm:pt-2 backdrop-blur-xl bg-gray-50/60">
+      <div className="sticky top-0 z-10 flex items-center justify-between w-full px-5 pt-[50px] pb-2 border-b border-gray-200 sm:pt-5 backdrop-blur-xl bg-gray-50/60">
         <LuUsers className="text-gray-500 size-6" />
         <button
           onClick={() => setIsModalOpen(true)}
-          className="px-4 py-2 text-sm font-medium transition-all duration-300 ease-in-out border rounded-full hover:bg-primary/20 bg-primary/10 text-primary border-primary"
-        >
-          + Create Club
+          className="flex items-center gap-1 px-3 py-2 text-xs font-medium transition-all duration-300 ease-in-out border rounded-full hover:bg-primary/20 bg-primary/10 text-primary border-primary"
+        >  
+          <LuPlus className="stroke-2 size-4"/>Create Club
         </button>
       </div>
 

@@ -80,12 +80,13 @@ function Notifications() {
   }, []);
 
   if (loading) return <Loader />;
-
+  
   return (
     <div className="w-full min-h-screen">
-      <div className="flex items-center justify-between w-full p-6 border-b border-gray-300">
+      <div className="flex items-center justify-between w-full p-6 border-b border-gray-300 pt-[50px] sm:pt-5">
         <p className="font-medium text-gray-800">Notifications</p>
         <button
+          disabled={notifications.length === 0}
           onClick={handleDeleteAllNotifications}
           className="px-3 py-1 text-xs transition-all duration-300 border rounded-full text-red-500/90 hover:text-red-500 hover:bg-red-500/10"
         >
@@ -93,6 +94,7 @@ function Notifications() {
         </button>
       </div>
       <div className="flex flex-col items-start max-sm:mt-[51px]">
+        {notifications.length < 1 && <p className="text-gray-500 mx-auto mt-10">No Notifications yet.</p>}
         {notifications.map((notification) => (
           <div
             key={notification?._id}

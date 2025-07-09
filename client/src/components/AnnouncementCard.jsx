@@ -84,7 +84,7 @@ function AnnouncementCard({ announcement, fetchAnnouncements }) {
           <div className="">
             <div className="flex items-center gap-3">
               <p className="font-semibold text-black/75">
-                📢 {announcement.title}
+                {announcement.title}
               </p>
               {/* <div className="text-xs flex items-center justify-center gap-1 text-gray-500 group-hover:text-primary group-hover:bg-primary/10 py-1 px-1.5 rounded-full transition-all duration-300 ">
                 <FiClock className="transition-opacity duration-300 opacity-0 group-hover:opacity-100" />
