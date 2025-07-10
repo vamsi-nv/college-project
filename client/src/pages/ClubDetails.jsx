@@ -534,7 +534,7 @@ function ClubDetails() {
         </div>
 
         {currentTab === "Members" && (
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col items-start last:mb-10">
             {club.members.map((member) => (
               <div
                 key={member._id}

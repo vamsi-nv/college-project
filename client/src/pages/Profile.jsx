@@ -20,6 +20,7 @@ function Profile() {
   const { fetchCurrentUser, user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [image, setImage] = useState(null);
   const [name, setName] = useState();
@@ -75,7 +76,7 @@ function Profile() {
     if (!name.trim()) return setError("Name is required");
 
     try {
-      setLoading(true);
+      setSaving(true);
       const formData = new FormData();
       formData.append("name", name);
       if (image) {
@@ -272,7 +273,7 @@ function Profile() {
                 type="submit"
                 className="w-full form-submit-btn"
               >
-                {loading ? "Saving..." : "Save"}
+                {saving ? "Saving..." : "Save"}
               </button>
             </form>
           </div>

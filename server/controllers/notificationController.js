@@ -38,6 +38,12 @@ export const getAllNotifications = async (req, res) => {
 };
 
 export const getUnreadNotificationCount = async (req, res) => {
+  if (!req.user || !req.user._id) {
+    return res.status(401).json({
+      success: false,
+      message: "Not authorized",
+    });
+  }
   const userId = req.user._id;
   try {
     const count = await Notification.countDocuments({

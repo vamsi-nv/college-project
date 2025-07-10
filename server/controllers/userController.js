@@ -118,9 +118,7 @@ export const loginUser = async (req, res) => {
     const isAdmin = email === process.env.ADMIN_EMAIL;
     const plainUser = user.toObject();
 
-    
     const ResponseUser = { ...plainUser, isAdmin };
-    
 
     res.status(200).json({
       success: true,
@@ -164,6 +162,12 @@ export const loginUser = async (req, res) => {
 // };
 
 export const getCurrentUser = async (req, res) => {
+  if (!req.user || !req.user._id) {
+    return res.status(401).json({
+      success: false,
+      message: "Not authorized",
+    });
+  }
   try {
     const user = await User.findById(req.user._id).select("-password");
 

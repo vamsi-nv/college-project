@@ -112,7 +112,7 @@ export const getClubById = async (req, res) => {
       club,
     });
   } catch (error) {
-    console.log("Error in getClubId controller : ", error.message);
+    console.log("Error in getClubById controller : ", error.message);
     res.status(500).json({
       success: false,
       message: "Error fetching club",

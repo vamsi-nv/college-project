@@ -91,7 +91,7 @@ function Clubs() {
 
   return (
     <div className="w-full min-h-screen">
-      <div className="sticky top-0 z-10 flex items-center justify-between w-full px-5 pt-[50px] pb-2 border-b border-gray-200 sm:pt-5 backdrop-blur-xl bg-gray-50/60">
+      <div className="sticky top-0 z-10 flex items-center justify-between w-full px-5 pt-[52px] pb-2 border-b border-gray-200 sm:pt-5 backdrop-blur-xl bg-gray-50/60">
         <LuUsers className="text-gray-500 size-6" />
         <button
           onClick={() => setIsModalOpen(true)}

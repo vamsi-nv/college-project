@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const UserContext = createContext();
 
@@ -63,7 +64,9 @@ function UserContextProvider({ children }) {
 
   useEffect(() => {
     fetchCurrentUser();
-    fetchUnreadCount()
+    if (user) {
+      fetchUnreadCount();
+    }
   }, []);
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

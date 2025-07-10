@@ -83,7 +83,7 @@ function Notifications() {
   
   return (
     <div className="w-full min-h-screen">
-      <div className="flex items-center justify-between w-full p-6 border-b border-gray-300 pt-[50px] sm:pt-5">
+      <div className="flex items-center justify-between w-full p-6 border-b border-gray-300 pt-[52px] sm:pt-5">
         <p className="font-medium text-gray-800">Notifications</p>
         <button
           disabled={notifications.length === 0}
@@ -94,7 +94,7 @@ function Notifications() {
         </button>
       </div>
       <div className="flex flex-col items-start max-sm:mt-[51px]">
-        {notifications.length < 1 && <p className="text-gray-500 mx-auto mt-10">No Notifications yet.</p>}
+        {notifications.length < 1 && <p className="text-gray-500 mx-auto mt-10">No notifications yet.</p>}
         {notifications.map((notification) => (
           <div
             key={notification?._id}
