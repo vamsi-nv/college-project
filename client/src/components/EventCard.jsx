@@ -62,7 +62,7 @@ function EventCard({ event }) {
     <div className="relative flex flex-col p-3 border-b border-gray-300 md:p-4 ">
       <div
         onClick={() => navigate(`/clubs/${event.club._id}`)}
-        className="flex w-fit items-center gap-1 mb-3 text-sm text-gray-400 cursor-pointer sm:text-base"
+        className="flex w-fit items-center gap-1 mb-2 text-sm text-gray-400 cursor-pointer sm:text-base"
       >
         <LuUsers />
         <p className="hover:underline underline-offset-1">{event.club.name}</p>

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { PiUsersThreeThin } from "react-icons/pi";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { AnimatePresence, motion } from "motion/react";
-import { LuPen, LuPlus, LuTrash2 } from "react-icons/lu";
+import { LuPen, LuPlus, LuTrash2, LuUserMinus } from "react-icons/lu";
 import { MdAnnouncement, MdEvent } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import { HiMiniUserCircle, HiOutlineUserGroup } from "react-icons/hi2";
@@ -534,7 +534,7 @@ function ClubDetails() {
         </div>
 
         {currentTab === "Members" && (
-          <div className="flex flex-col items-start last:mb-10">
+          <div className="flex flex-col items-start last:mb-30">
             {club.members.map((member) => (
               <div
                 key={member._id}
@@ -544,14 +544,14 @@ function ClubDetails() {
                   user._id !== member._id && (
                     <div className="absolute right-1 top-1">
                       <button
-                        className="p-2 rounded-full hover:bg-gray-200"
+                        className="p-2 rounded-full hover:bg-primary/10 hover:text-primary"
                         onClick={() => toggleMemberMenu(member._id)}
                       >
-                        <RxDotsHorizontal className="text-gray-500" />
+                        <RxDotsHorizontal className="" />
                       </button>
                       {openMenuMemberId === member._id && (
                         <div className="relative z-20 " ref={memberMenuRef}>
-                          <div className="absolute flex flex-col p-2 text-xs bg-white border border-gray-200 rounded-lg shadow-lg -left-32 whitespace-nowrap">
+                          <div className="absolute flex text-sm flex-col p-2 bg-white border border-gray-200 rounded-lg shadow-lg -left-38 whitespace-nowrap">
                             <button
                               onClick={() => {
                                 handleToggleAdmin(member._id);
@@ -570,9 +570,9 @@ function ClubDetails() {
                                 handleRemoveMemberFromClub(member._id);
                                 setOpenMenuMemberId(null);
                               }}
-                              className="p-4 py-4 rounded-md hover:bg-gray-200/50"
+                              className="px-4 py-4 flex items-center gap-1 hover:bg-red-500/10 rounded-md text-red-500"
                             >
-                              Remove From club
+                              <LuUserMinus/>Remove User
                             </button>
                           </div>
                         </div>

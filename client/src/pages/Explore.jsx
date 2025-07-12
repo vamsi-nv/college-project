@@ -3,7 +3,7 @@ import axiosInstance from "../utils/axiosInstance";
 import EventCard from "../components/EventCard";
 import { PiUsersThreeThin } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
-import { LuSearch } from "react-icons/lu";
+import { LuSearch, LuX } from "react-icons/lu";
 
 function Explore() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -43,6 +43,14 @@ function Explore() {
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search clubs, events, announcements..."
         />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery("")}
+            className="text-gray-600 hover:bg-gray-200 p-1 rounded"
+          >
+            <LuX />
+          </button>
+        )}
       </div>
 
       {clubs.length > 0 && (
@@ -50,6 +58,7 @@ function Explore() {
           <h2 className="font-medium text-lg text-gray-800">Clubs</h2>
           {clubs.map((club) => (
             <div
+              key={club._id}
               onClick={() => navigate(`/clubs/${club._id}`)}
               className="flex items-center gap-2 py-4 px-2 hover:bg-gray-100 w-full rounded-lg"
             >
@@ -60,7 +69,7 @@ function Explore() {
                     className="h-14 w-14 rounded-full"
                   />
                 ) : (
-                  <PiUsersThreeThin className="w-14 h-14 text-gray-500 p-1 border rounded-full" />
+                  <PiUsersThreeThin className="w-14 h-14 text-gray-500 p-2 border rounded-full" />
                 )}
               </div>
               <div>
@@ -80,7 +89,7 @@ function Explore() {
             Events
           </h2>
           {events.map((event) => (
-            <EventCard event={event} />
+            <EventCard key={event._id} event={event} />
           ))}
         </div>
       )}
