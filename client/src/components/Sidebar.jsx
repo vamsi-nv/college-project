@@ -13,18 +13,17 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen = () => {} }) {
   const { logout, user, unreadCount } = useAuth();
   const navigate = useNavigate();
 
-
   const navItems = [
     {
       label: "Home",
       path: "/",
       icon: FiHome,
     },
-    // {
-    //   label: "Explore",
-    //   path: "/explore",
-    //   icon: FiCompass,
-    // },
+    {
+      label: "Explore",
+      path: "/explore",
+      icon: FiCompass,
+    },
     {
       label: "Notifications",
       path: "/notifications",

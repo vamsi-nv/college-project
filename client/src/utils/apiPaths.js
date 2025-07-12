@@ -6,7 +6,6 @@ export const api_paths = {
     login: "/api/user/login",
     get_current_user: "/api/user/current-user",
     update_current_user: "/api/user/current-user",
-    // logout: "/api/auth/logout",
   },
 
   admin: {
@@ -61,4 +60,5 @@ export const api_paths = {
     delete_all_notifications: `/api/notifications`,
     get_unread_count: "/api/notifications/unread-count",
   },
+
 };
