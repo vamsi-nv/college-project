@@ -72,7 +72,7 @@ function EventCard({ event }) {
           {event.createdBy.profileImageUrl ? (
             <img
               src={event.createdBy.profileImageUrl}
-              className="object-cover h-8 rounded-full aspect-square-8 s"
+              className="object-cover h-8 rounded-full aspect-square w-8"
             />
           ) : (
             <HiMiniUserCircle className="text-gray-300 rounded-full size-8" />

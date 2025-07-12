@@ -78,7 +78,7 @@ function EventDetails() {
             {event?.createdBy?.profileImageUrl ? (
               <img
                 src={event?.createdBy?.profileImageUrl}
-                className="object-cover max-w-full max-h-full rounded-full"
+                className="object-cover w-12 h-12 max-w-full max-h-full rounded-full"
               />
             ) : (
               <HiMiniUserCircle className="text-gray-300 rounded-full size-12" />
