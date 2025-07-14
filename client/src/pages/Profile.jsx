@@ -23,23 +23,18 @@ function Profile() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [image, setImage] = useState(null);
-  const [name, setName] = useState();
+  const [name, setName] = useState("");
   const [profileImageUrl, setProfileImageUrl] = useState("");
   const [currentTab, setCurrentTab] = useState("Clubs");
   const [clubs, setClubs] = useState([]);
   const [events, setEvents] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
+  const [removeProfileImage, setRemoveProfileImage] = useState(false);
 
   const tabItems = [
-    {
-      label: "Clubs",
-    },
-    {
-      label: "Events",
-    },
-    {
-      label: "Announcements",
-    },
+    { label: "Clubs" },
+    { label: "Events" },
+    { label: "Announcements" },
   ];
 
   const fetchUserEvents = async () => {
@@ -72,15 +67,17 @@ function Profile() {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-
     if (!name.trim()) return setError("Name is required");
 
     try {
       setSaving(true);
       const formData = new FormData();
       formData.append("name", name);
+
       if (image) {
         formData.append("image", image);
+      } else if (removeProfileImage) {
+        formData.append("removeProfileImage", true);
       }
 
       const response = await axiosInstance.put(
@@ -107,43 +104,48 @@ function Profile() {
       );
       console.log(error);
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
   useEffect(() => {
     const fetchData = async () => {
       const clubData = await fetchUserClubs();
-
-      if (clubData) {
-        setClubs(clubData);
-      }
+      if (clubData) setClubs(clubData);
     };
 
     if (user) {
       fetchData();
-    }
-
-    if (user.profileImageUrl) {
-      setProfileImageUrl(user.profileImageUrl);
+      setProfileImageUrl(user.profileImageUrl || "");
     }
   }, [user]);
 
   useEffect(() => {
-    if (currentTab === "Events") {
-      fetchUserEvents();
-    }
-
-    if (currentTab === "Announcements") {
-      fetchUserAnnouncements();
-    }
+    if (currentTab === "Events") fetchUserEvents();
+    if (currentTab === "Announcements") fetchUserAnnouncements();
   }, [currentTab]);
+
+  // ✅ Prefill name when modal opens
+  useEffect(() => {
+    if (isModalOpen && user) {
+      setName(user.name);
+    }
+  }, [isModalOpen, user]);
+
+  // ✅ Reset modal state when closed
+  useEffect(() => {
+    if (!isModalOpen) {
+      setRemoveProfileImage(false);
+      setImage(null);
+      setError("");
+    }
+  }, [isModalOpen]);
 
   if (!user) return <Loader />;
 
   return (
     <div className="w-full h-full">
-      <div className="py-20 ">
+      <div className="py-20">
         <div className="flex flex-col items-center">
           <div className="max-sm:size-30 size-32 sm:size-36 lg:size-40">
             {user.profileImageUrl ? (
@@ -254,13 +256,14 @@ function Profile() {
                 setProfileImageUrl={setProfileImageUrl}
                 setImage={setImage}
                 Icon={LuUser}
+                removeImage={setRemoveProfileImage}
               />
               <Input
-                type={"text"}
-                placeholder={"Enter your name"}
+                type="text"
+                placeholder="Enter your name"
                 value={name}
-                id={"name"}
-                label={"Name"}
+                id="name"
+                label="Name"
                 onChange={({ target }) => setName(target.value)}
               />
               {error && (
@@ -269,7 +272,7 @@ function Profile() {
                 </p>
               )}
               <button
-                disabled={loading}
+                disabled={saving}
                 type="submit"
                 className="w-full form-submit-btn"
               >

@@ -29,6 +29,7 @@ function ClubDetails() {
   const [events, setEvents] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [currentTab, setCurrentTab] = useState("Events");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState("");
@@ -37,6 +38,7 @@ function ClubDetails() {
   const [openMenuMemberId, setOpenMenuMemberId] = useState(null);
   const [formType, setFormType] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
+  const [removeCoverImage, setRemoveCoverImage] = useState(false);
   const [clubForm, setClubForm] = useState({
     name: "",
     description: "",
@@ -227,13 +229,17 @@ function ClubDetails() {
     }
 
     setError("");
-    setLoading(true);
+    setSaving(true);
 
     try {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("description", description);
-      if (coverImage) formData.append("coverImage", coverImage);
+      if (coverImage) {
+        formData.append("coverImage", coverImage);
+      } else if (removeCoverImage) {
+        formData.append("removeCoverImage", true);
+      }
 
       const response = await axiosInstance.put(
         api_paths.clubs.update_club(club?._id),
@@ -259,7 +265,7 @@ function ClubDetails() {
       setError(message);
       console.error(error);
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -779,13 +785,14 @@ function ClubDetails() {
                 </button>
               </form>
             )}
-            {formType === "EditClub" && (
+            {formType === "EditClub" && (  
               <form
                 onSubmit={handleEditClub}
                 className="flex flex-col gap-1 p-2 sm:gap-2 sm:p-4"
               >
                 <ProfilePhotoSelector
                   image={clubForm.coverImage}
+                  removeImage={setRemoveCoverImage}
                   setImage={(img) =>
                     setClubForm((prev) => ({ ...prev, coverImage: img }))
                   }
@@ -828,10 +835,10 @@ function ClubDetails() {
                 )}
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={saving}
                   className="form-submit-btn"
                 >
-                  {loading ? "Saving..." : "Save"}
+                  {saving ? "Saving..." : "Save"}
                 </button>
               </form>
             )}

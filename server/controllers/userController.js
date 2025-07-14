@@ -134,7 +134,7 @@ export const getCurrentUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  const { name } = req.body;
+  const { name, removeProfileImage } = req.body;
   const profileImageUrl = req.file?.path;
   const userId = req.user?._id;
 
@@ -149,6 +149,7 @@ export const updateUser = async (req, res) => {
     const updateFields = {};
     if (name) updateFields.name = name;
     if (profileImageUrl) updateFields.profileImageUrl = profileImageUrl;
+    if (removeProfileImage) updateFields.profileImageUrl = "";
 
     // if (Object.keys(updateFields).length === 0) {
     //   return res.status(400).json({

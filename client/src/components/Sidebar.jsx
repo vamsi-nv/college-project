@@ -4,10 +4,6 @@ import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { LuUsers } from "react-icons/lu";
 import { useAuth } from "../context/UserContextProvider";
 import logo from "../assets/globe.png";
-import { useEffect, useState } from "react";
-import axiosInstance from "../utils/axiosInstance";
-import { api_paths } from "../utils/apiPaths";
-import toast from "react-hot-toast";
 
 function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen = () => {} }) {
   const { logout, user, unreadCount } = useAuth();

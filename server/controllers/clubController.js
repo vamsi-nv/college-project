@@ -224,13 +224,14 @@ export const updateClub = async (req, res) => {
       });
     }
 
-    const { name, description } = req.body;
+    const { name, description, removeCoverImage } = req.body;
     const coverImage = req.file?.path;
 
     const updateFields = {};
     if (name) updateFields.name = name.trim();
     if (description !== undefined) updateFields.description = description;
     if (coverImage !== undefined) updateFields.coverImage = coverImage;
+    if (removeCoverImage) updateFields.coverImage = "";
 
     const updatedClub = await Club.findByIdAndUpdate(
       req.params.id,
@@ -382,13 +383,9 @@ export const removeMemberFromClub = async (req, res) => {
       });
     }
 
-    club.members = club.members.filter(
-      (id) => id.toString() !== userToRemove
-    );
+    club.members = club.members.filter((id) => id.toString() !== userToRemove);
 
-    club.admins = club.admins.filter(
-      (id) => id.toString() !== userToRemove
-    );
+    club.admins = club.admins.filter((id) => id.toString() !== userToRemove);
 
     await club.save();
 
@@ -406,4 +403,3 @@ export const removeMemberFromClub = async (req, res) => {
     });
   }
 };
-

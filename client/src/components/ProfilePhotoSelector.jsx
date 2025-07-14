@@ -7,6 +7,7 @@ function ProfilePhotoSelector({
   Icon,
   profileImageUrl,
   setProfileImageUrl,
+  removeImage,
 }) {
   const inputRef = useRef();
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -53,7 +54,10 @@ function ProfilePhotoSelector({
           )}
           {profileImageUrl ? (
             <button
-              onClick={() => setProfileImageUrl("")}
+              onClick={() => {
+                setProfileImageUrl("");
+                removeImage(true);
+              }}
               className="size-8 flex items-center justify-center bg-red-500 text-white rounded-full absolute -bottom-1 -right-1"
             >
               <LuTrash />
