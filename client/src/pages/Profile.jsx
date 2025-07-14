@@ -125,14 +125,12 @@ function Profile() {
     if (currentTab === "Announcements") fetchUserAnnouncements();
   }, [currentTab]);
 
-  // ✅ Prefill name when modal opens
   useEffect(() => {
     if (isModalOpen && user) {
       setName(user.name);
     }
   }, [isModalOpen, user]);
 
-  // ✅ Reset modal state when closed
   useEffect(() => {
     if (!isModalOpen) {
       setRemoveProfileImage(false);
