@@ -265,6 +265,10 @@ function ClubDetails() {
 
   const handleRemoveMemberFromClub = async (userToRemove) => {
     try {
+      const confirm = window.confirm(
+        "Are you sure you want to remove this user?"
+      );
+      if (!confirm) return;
       const response = await axiosInstance.patch(
         api_paths.clubs.remover_member_from_club(club._id),
         { userToRemove }
@@ -331,7 +335,6 @@ function ClubDetails() {
 
   useEffect(() => {
     function handleOutsideClick(event) {
-      // Club Edit Menu
       if (
         isClubEditMenuOpen &&
         clubEditMenuRef.current &&
@@ -340,7 +343,6 @@ function ClubDetails() {
         setIsClubEditMenuOpen(false);
       }
 
-      // Post Menu
       if (
         isPostMenuOpen &&
         postMenuRef.current &&
@@ -349,7 +351,6 @@ function ClubDetails() {
         setIsPostMenuOpen(false);
       }
 
-      // Member Menu
       if (
         openMenuMemberId !== null &&
         memberMenuRef.current &&
@@ -572,7 +573,8 @@ function ClubDetails() {
                               }}
                               className="px-4 py-4 flex items-center gap-1 hover:bg-red-500/10 rounded-md text-red-500"
                             >
-                              <LuUserMinus/>Remove User
+                              <LuUserMinus />
+                              Remove User
                             </button>
                           </div>
                         </div>

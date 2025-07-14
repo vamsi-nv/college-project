@@ -95,9 +95,6 @@ function Admin() {
               </div>
             ))}
           </div>
-          <p className="fixed p-4 text-sm font-medium text-center text-transparent bottom-10 bg-gradient-to-b from-blue-500 to-blue-700 bg-clip-text">
-            Made by NV
-          </p>
         </div>
       </div>
 
