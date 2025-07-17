@@ -12,7 +12,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen = () => {} }) {
   const navItems = [
     {
       label: "Home",
-      path: "/",
+      path: "/home",
       icon: FiHome,
     },
     {
@@ -41,7 +41,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen = () => {} }) {
     <div
       className={`min-h-screen sticky top-0 lg:w-60 p-4 bg-gray-50 lg:ml-10 xl:ml-25 lg:p-8 flex flex-col items-start`}
     >
-      <Link to={"/"}>
+      <Link to={"/home"}>
         <div className="flex items-center gap-1 px-2 mb-5">
           <img src={logo} alt="logo" className="w-10" />
           <h2

@@ -61,7 +61,6 @@ function EventDetails() {
   return (
     <div className="w-full h-full">
       <div className="sticky top-0 flex items-center gap-2 p-4 text-gray-800 border-b border-gray-300 max-sm:pt-12 backdrop-blur-2xl bg-gray-50/50">
-        {/* <LuArrowLeft onClick={() => navigate("/")} className="size-6 " /> */}
         <p className="text-lg font-medium">Event</p>
       </div>
       <div className="p-4">

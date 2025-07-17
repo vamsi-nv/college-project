@@ -49,27 +49,37 @@ function App() {
         )}
 
         {user && (
-          <Route path="/" element={<HomeLayout />}>
-            <Route index element={<Home />} />
-            <Route path="explore" element={<Explore />} />
-            <Route path="notifications" element={<Notifications />} />
-            <Route path="clubs" element={<Clubs />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="clubs/:id" element={<ClubDetails />} />
-            <Route
-              path="clubs/:clubName/events/:id"
-              element={<EventDetails />}
-            />
-          </Route>
+          <>
+            <Route path="/" element={<Navigate to="/home" replace />} />
+            <Route path="/" element={<HomeLayout />}>
+              <Route path="home" element={<Home />} />
+              <Route path="explore" element={<Explore />} />
+              <Route path="notifications" element={<Notifications />} />
+              <Route path="clubs" element={<Clubs />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="clubs/:id" element={<ClubDetails />} />
+              <Route
+                path="clubs/:clubName/events/:id"
+                element={<EventDetails />}
+              />
+            </Route>
+          </>
         )}
 
-        <Route
-          path="/admin"
-          element={user?.isAdmin ? <Admin /> : <Navigate to="/" />}
-        >
-          <Route index element={<AdminDashboard />} />
-          <Route path="clubs" element={<AdminClubsPage />} />
-        </Route>
+        {user?.isAdmin ? (
+          <>
+            <Route
+              path="/admin"
+              element={<Navigate to="/admin/dashboard" replace />}
+            />
+            <Route path="/admin" element={<Admin />}>
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="clubs" element={<AdminClubsPage />} />
+            </Route>
+          </>
+        ) : (
+          <Route path="/admin/*" element={<Navigate to="/" replace />} />
+        )}
 
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

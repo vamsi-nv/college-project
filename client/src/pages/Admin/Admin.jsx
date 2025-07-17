@@ -10,7 +10,7 @@ function Admin() {
   const navItems = [
     {
       label: "Dashboard",
-      path: "",
+      path: "dashboard",
       icon: TbPresentationAnalytics,
     },
     {
@@ -41,7 +41,7 @@ function Admin() {
               : "sm:block md:block hidden max-sm:-translate-x-full sticky"
           }`}
         >
-          <Link to={"/"}>
+          <Link to={"/home"}>
             <div className="flex items-center gap-1 px-2 mb-5">
               <img src={logo} alt="logo" className="w-10" />
               <h2

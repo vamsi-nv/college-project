@@ -44,7 +44,7 @@ function Login() {
       if (data.success) {
         localStorage.setItem("college-token", response.data.token);
         await fetchCurrentUser();
-        navigate("/");
+        navigate("/home");
       }
     } catch (error) {
       setError(
