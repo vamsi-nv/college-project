@@ -60,6 +60,7 @@ function UserContextProvider({ children }) {
     fetchCurrentUser,
     fetchUnreadCount,
     unreadCount,
+    setUser
   };
 
   useEffect(() => {

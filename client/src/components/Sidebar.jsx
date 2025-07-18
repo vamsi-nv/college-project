@@ -3,11 +3,27 @@ import { FiHome, FiCompass, FiBell, FiUser, FiLogOut } from "react-icons/fi";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { LuUsers } from "react-icons/lu";
 import { useAuth } from "../context/UserContextProvider";
+import { useAuth0 } from "@auth0/auth0-react";
 import logo from "../assets/globe.png";
 
 function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen = () => {} }) {
   const { logout, user, unreadCount } = useAuth();
   const navigate = useNavigate();
+  const { logout: auth0Logout } = useAuth0();
+
+  const handleLogout = async () => {
+    try {
+      logout();
+      auth0Logout({
+        logoutParams: {
+          returnTo: window.location.origin,
+          federated: true,
+        },
+      });
+    } catch (error) {
+      console.error("error : ", error);
+    }
+  };
 
   const navItems = [
     {
@@ -41,7 +57,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen = () => {} }) {
     <div
       className={`min-h-screen sticky top-0 lg:w-60 p-4 bg-gray-50 lg:ml-10 xl:ml-25 lg:p-8 flex flex-col items-start`}
     >
-      <Link to={"/home"}>
+      <Link to={"/"}>
         <div className="flex items-center gap-1 px-2 mb-5">
           <img src={logo} alt="logo" className="w-10" />
           <h2
@@ -102,7 +118,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen = () => {} }) {
       </div>
 
       <button
-        onClick={logout}
+        onClick={handleLogout}
         className={`flex items-center gap-3 text-base p-4 mb-4 text-gray-500 hover:gap-4 hover:text-neutral-950 transition-all duration-200`}
       >
         <FiLogOut className="w-5 h-5 max-xl:flex-1" />

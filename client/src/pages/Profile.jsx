@@ -146,10 +146,14 @@ function Profile() {
       <div className="py-20">
         <div className="flex flex-col items-center">
           <div className="max-sm:size-30 size-32 sm:size-36 lg:size-40">
-            {user.profileImageUrl ? (
+            {profileImageUrl && !loading ? (
               <img
-                src={user.profileImageUrl}
-                alt=""
+                src={profileImageUrl}
+                alt="Profile"
+                onError={(e) => {
+                  e.target.onerror = null; 
+                  setProfileImageUrl(""); 
+                }}
                 className="w-full h-full rounded-full aspect-square"
               />
             ) : (
