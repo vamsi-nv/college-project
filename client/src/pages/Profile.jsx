@@ -151,13 +151,25 @@ function Profile() {
                 src={profileImageUrl}
                 alt="Profile"
                 onError={(e) => {
-                  e.target.onerror = null; 
-                  setProfileImageUrl(""); 
+                  e.target.onerror = null;
+                  setProfileImageUrl("");
                 }}
                 className="w-full h-full rounded-full aspect-square"
               />
             ) : (
-              <HiMiniUserCircle className="w-full h-full text-gray-300 rounded-full" />
+              // <HiMiniUserCircle className="w-full h-full text-gray-300 rounded-full" />
+              <div className="size-full bg-gray-400 grid place-content-center rounded-full">
+                <div className="flex items-center justify-center">
+                  {"N V".split(" ").map((word, index) => (
+                    <span
+                      className="text-5xl max-sm:text-4xl text-white"
+                      key={index}
+                    >
+                      {word.charAt(0)}
+                    </span>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
           <h3 className="text-lg font-medium text-gray-700 sm:text-xl md:text-2xl">

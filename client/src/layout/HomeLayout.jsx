@@ -1,13 +1,16 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { RiMenu2Fill } from "react-icons/ri";
 import { useEffect, useState } from "react";
 import RightSidebar from "../components/RightSidebar";
 import { motion, AnimatePresence } from "motion/react";
+import { useAuth } from "../context/UserContextProvider";
+import { HiMiniUserCircle } from "react-icons/hi2";
 
 function HomeLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  const { user } = useAuth();
+  const navigate = useNavigate();
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -21,10 +24,12 @@ function HomeLayout() {
 
   return (
     <div className={`min-h-screen relative flex bg-gray-50`}>
-
-      <div className="fixed top-0 left-0 right-0 z-30 p-3 text-gray-800 bg-gray-50/90 sm:hidden backdrop-blur-xl ">
+      <div className="fixed top-0 left-0 right-0 flex items-center justify-between z-30 p-3 text-gray-800 bg-gray-50/90 sm:hidden backdrop-blur-xl ">
         <button onClick={() => setIsMobileMenuOpen(true)} className="">
           <RiMenu2Fill className="text-xl sm:text-2xl" />
+        </button>
+        <button onClick={() => navigate("/profile")} className="">
+         {user.profileImageUrl ? <img src={user.profileImageUrl} className="w-6 rounded-full" alt="" /> : <HiMiniUserCircle className="w-6 text-gray-300"/>}
         </button>
       </div>
 
@@ -32,7 +37,6 @@ function HomeLayout() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
-           
             <motion.div
               key="sidebar-overlay"
               className="fixed inset-0 z-40 bg-neutral-300/20 backdrop-blur-xl"

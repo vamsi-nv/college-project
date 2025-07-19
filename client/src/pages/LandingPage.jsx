@@ -2,6 +2,7 @@ import Logo from "../assets/globe.svg?react";
 import { motion } from "motion/react";
 import { BsStars } from "react-icons/bs";
 import { LuArrowRight } from "react-icons/lu";
+import { IoIosArrowForward } from "react-icons/io";
 import { Link } from "react-router-dom";
 function LandingPage() {
   return (
@@ -32,10 +33,10 @@ function LandingPage() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0 }}
         >
-          <Link to={"/register"}>
+          <Link to={"/auth"}>
             <button className="px-3 py-2 text-white flex items-center gap-1 hover:gap-1.5 transition-all duration-300 rounded-full shadow-sm max-sm:text-xs sm:text-sm bg-gradient-to-r from-primary to-blue-600 hover:scale-105 shadow-blue-600/40 hover:shadow-lg hover:shadow-blue-500/30 relative">
               Get Started <LuArrowRight />
-              <span className="absolute inset-x-0 bottom-0 bg-gradient-to-r from-transparent via-blue-100 to-transparent h-0.5 w-[85%] place-self-center"></span>
+              <span className="absolute inset-x-0 bottom-0 bg-gradient-to-r from-transparent via-blue-100 to-transparent h-[1px] w-[80%] place-self-center"></span>
             </button>
           </Link>
         </motion.div>
@@ -64,15 +65,9 @@ function LandingPage() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="flex items-center gap-6 mt-12"
         >
-          <Link to={"/login"}>
-            <button className="px-6 py-2.5 font-medium text-white transition-all duration-300 rounded-full shadow-sm max-sm:text-xs sm:py-2 hover:scale-105 bg-gradient-to-r from-primary to-blue-600 shadow-blue-600/40 hover:shadow-md hover:shadow-blue-600/30">
-              Login
-            </button>
-          </Link>
-
-          <Link to={"/register"}>
-            <button className="px-5 py-2 font-medium transition-all rounded-full shadow-sm max-sm:text-xs sm:py-2 bg-primary/20 outline-2 text-primary outline-primary hover:bg-gradient-to-r from-primary to-blue-600 hover:text-white hover:outline-none">
-              Sign Up
+          <Link to={"/auth"}>
+            <button className=" flex items-center justify-center gap-1 px-5 py-2 font-medium transition-all rounded-full shadow-sm max-sm:text-xs sm:py-2 bg-primary/20 outline-2 text-primary outline-primary hover:bg-gradient-to-r from-primary to-blue-600 hover:text-white hover:outline-none">
+              Join now<IoIosArrowForward/>
             </button>
           </Link>
         </motion.div>

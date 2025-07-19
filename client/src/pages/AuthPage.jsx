@@ -5,7 +5,8 @@ import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
 import { FcGoogle } from "react-icons/fc";
 import { useEffect, useState } from "react";
-
+import logo from "../assets/globe.png";
+import { CiLocationArrow1 } from "react-icons/ci";
 function AuthPage() {
   const {
     loginWithPopup,
@@ -77,22 +78,22 @@ function AuthPage() {
       <div className="min-h-screen w-full grid place-content-center bg-gray-100">
         <div className="flex items-center gap-2">
           <span className="border-2 border-gray-200 border-t-primary animate-spin rounded-full size-10"></span>
-          <span>Logging in...</span>
+          <span>Please wait...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen w-full grid place-content-center bg-gray-100">
+    <div className="min-h-screen w-full grid place-content-center bg-gray-50">
       {error && <div className="mb-4 text-red-500 text-center">{error}</div>}
       <button
         onClick={handleLogin}
-        className="shadow-md p-10 rounded-xl bg-gray-50 flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="rounded-lg border border-blue-300 p-4 bg-primary flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed text-white hover:bg-primary/92 transition-all duration-300"
         disabled={loading}
         aria-label="Login with Google"
       >
-        <FcGoogle className="size-5" /> Login with Google
+        Let's get started <CiLocationArrow1 className="stroke-1" />
       </button>
     </div>
   );

@@ -176,14 +176,6 @@ export const updateUser = async (req, res) => {
     if (name) updateFields.name = name;
     if (profileImageUrl) updateFields.profileImageUrl = profileImageUrl;
     if (removeProfileImage) updateFields.profileImageUrl = "";
-
-    // if (Object.keys(updateFields).length === 0) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: "No fields to update",
-    //   });
-    // }
-
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $set: updateFields },
