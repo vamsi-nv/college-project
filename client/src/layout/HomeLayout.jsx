@@ -29,7 +29,15 @@ function HomeLayout() {
           <RiMenu2Fill className="text-xl sm:text-2xl" />
         </button>
         <button onClick={() => navigate("/profile")} className="">
-         {user.profileImageUrl ? <img src={user.profileImageUrl} className="w-6 rounded-full" alt="" /> : <HiMiniUserCircle className="w-6 text-gray-300"/>}
+          {user.profileImageUrl ? (
+            <img
+              src={user.profileImageUrl}
+              className="w-6 h-6 rounded-full"
+              alt=""
+            />
+          ) : (
+            <HiMiniUserCircle className="w-6 text-gray-300" />
+          )}
         </button>
       </div>
 
