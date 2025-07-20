@@ -6,6 +6,7 @@ import { api_paths } from "../utils/apiPaths";
 import { FcGoogle } from "react-icons/fc";
 import { useEffect, useState } from "react";
 import logo from "../assets/globe.png";
+import { motion } from "motion/react";
 import { CiLocationArrow1 } from "react-icons/ci";
 function AuthPage() {
   const {
@@ -75,9 +76,9 @@ function AuthPage() {
 
   if (loading || auth0Loading) {
     return (
-      <div className="min-h-screen w-full grid place-content-center bg-gray-100">
+      <div className="grid w-full min-h-screen bg-gray-100 place-content-center">
         <div className="flex items-center gap-2">
-          <span className="border-2 border-gray-200 border-t-primary animate-spin rounded-full size-10"></span>
+          <span className="border-2 border-gray-200 rounded-full border-t-primary animate-spin size-10"></span>
           <span>Please wait...</span>
         </div>
       </div>
@@ -85,15 +86,16 @@ function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen w-full grid place-content-center bg-gray-50">
-      {error && <div className="mb-4 text-red-500 text-center">{error}</div>}
+    <div className="grid w-full min-h-screen place-content-center bg-gray-50">
+      {error && <div className="mb-4 text-center text-red-500">{error}</div>}
       <button
         onClick={handleLogin}
-        className="rounded-xl hover:border-4 border-blue-200 p-4 bg-primary flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed text-white hover:bg-primary/92 transition-all duration-300"
+        className="flex z-10 items-center relative group hover:text-white gap-1 p-4 overflow-auto shadow-[0_0_0_1px] shadow-primary outline-primary text-primary rounded-lg"
         disabled={loading}
         aria-label="Login with Google"
       >
         Let's get started <CiLocationArrow1 className="stroke-1" />
+        <span className="absolute inset-0 duration-300 ease-in-out origin-left -translate-x-full bg-primary group-hover:translate-x-0 trasnition-all -z-10"></span>
       </button>
     </div>
   );
