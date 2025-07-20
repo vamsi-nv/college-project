@@ -8,9 +8,11 @@ import { useNavigate } from "react-router-dom";
 import { HiMiniUserCircle } from "react-icons/hi2";
 import toast from "react-hot-toast";
 import { BsFillPinFill } from "react-icons/bs";
+import { useState } from "react";
 
 function AnnouncementCard({ announcement, fetchAnnouncements }) {
   const navigate = useNavigate();
+  const [isImageBroken, setIsImageBroken] = useState(false);
   const { user } = useAuth();
   const handleDelete = async (id) => {
     try {
@@ -59,10 +61,11 @@ function AnnouncementCard({ announcement, fetchAnnouncements }) {
       </div>
       <div className="flex gap-1">
         <div className="shrink-0">
-          {announcement.postedBy.profileImageUrl ? (
+          {announcement.postedBy.profileImageUrl && !isImageBroken ? (
             <img
               src={announcement.postedBy.profileImageUrl}
               className="w-8 h-8 rounded-full"
+              onError={() => setIsImageBroken(true)}
             />
           ) : (
             <HiMiniUserCircle className="text-gray-300 rounded-full size-8" />

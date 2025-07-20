@@ -80,72 +80,58 @@ function AdminDashboard() {
       </div>
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-        <div className="flex flex-col h-full px-5 py-3 border border-gray-200 rounded-lg shadow-md">
-          <h3 className="mb-4 text-lg font-medium text-gray-800">
-            Recently Created Clubs
-          </h3>
-          <div className="max-sm:text-sm">
-            <div className="grid grid-cols-[2.5fr_2fr_1.5fr] border-b border-dashed mb-2 bg-primary/10 p-2">
-              <p className="font-medium">Club Name</p>
-              <p className="font-medium">Club Creator</p>
-              <p className="font-medium text-center">No.of Members</p>
-            </div>
-            <div className="p-2 divide-y divide-gray-300 divide-dashed">
-              {sortedClubs.slice(0, 8).map((club) => (
-                <div key={club._id}>
-                  <div className="grid grid-cols-[2.5fr_2fr_1.5fr] py-2 ">
-                    <p>{club.name}</p>
-                    <p className="">{club.createdBy.name}</p>
-                    <p className="text-center">{club.members.length}</p>
+        {sortedClubs.length > 0 && (
+          <div className="flex flex-col h-full px-5 py-3 border border-gray-200 rounded-lg shadow-md">
+            <h3 className="mb-4 text-lg font-medium text-gray-800">
+              Recently Created Clubs
+            </h3>
+            <div className="max-sm:text-sm">
+              <div className="grid grid-cols-[2.5fr_2fr_1.5fr] border-b border-dashed mb-2 bg-primary/10 p-2">
+                <p className="font-medium">Club Name</p>
+                <p className="font-medium">Club Creator</p>
+                <p className="font-medium text-center">No.of Members</p>
+              </div>
+              <div className="p-2 divide-y divide-gray-300 divide-dashed">
+                {sortedClubs.slice(0, 8).map((club) => (
+                  <div key={club._id}>
+                    <div className="grid grid-cols-[2.5fr_2fr_1.5fr] py-2 ">
+                      <p>{club.name}</p>
+                      <p className="">{club.createdBy.name}</p>
+                      <p className="text-center">{club.members.length}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex flex-col h-full px-5 py-3 border border-gray-200 rounded-lg shadow-md">
-          <h3 className="mb-4 text-lg font-medium text-gray-800">
-            Recent Events
-          </h3>
-          {/* <div className="max-sm:text-xs">
-            <div className="grid grid-cols-[2fr_2fr_0.5fr] border-b border-dashed mb-2 bg-primary/10 p-2">
-              <p className="font-medium">Event</p>
-              <p className="font-medium">Club</p>
-              <p className="font-medium">Attendees</p>
-            </div>
-            <div className="p-2 divide-y divide-gray-300 divide-dashed">
-              {sortedEvents.slice(0, 8).map((event) => (
-                <div key={event._id}>
-                  <div className="grid grid-cols-[2fr_2fr_0.5fr] py-2 ">
-                    <p className="">{event.title}</p>
-                    <p className="">{event.club.name}</p>
-                    <p className="w-full text-center">{event.attendees.length}</p>
+        )}
+        {sortedEvents.length > 0 && (
+          <div className="flex flex-col h-full px-5 py-3 border border-gray-200 rounded-lg shadow-md">
+            <h3 className="mb-4 text-lg font-medium text-gray-800">
+              Recent Events
+            </h3>
+            <div className="max-sm:text-sm">
+              <div className="grid grid-cols-[2fr_2fr_1fr] max-sm:grid-cols-[1.5fr_1.5fr_1fr] border-b border-dashed mb-2 bg-primary/10 p-2">
+                <p className="font-medium">Event</p>
+                <p className="font-medium">Club</p>
+                <p className="font-medium text-center">Attendees</p>
+              </div>
+              <div className="p-2 divide-y divide-gray-300 divide-dashed">
+                {sortedEvents.slice(0, 8).map((event) => (
+                  <div key={event._id}>
+                    <div className="grid grid-cols-[2fr_2fr_1fr] max-sm:grid-cols-[1.5fr_1.5fr_1fr] py-2">
+                      <p className="truncate">{event.title}</p>
+                      <p className="truncate">{event.club.name}</p>
+                      <p className="w-full text-center">
+                        {event.attendees.length}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div> */}
-          <div className="max-sm:text-sm">
-            <div className="grid grid-cols-[2fr_2fr_1fr] max-sm:grid-cols-[1.5fr_1.5fr_1fr] border-b border-dashed mb-2 bg-primary/10 p-2">
-              <p className="font-medium">Event</p>
-              <p className="font-medium">Club</p>
-              <p className="font-medium text-center">Attendees</p>
-            </div>
-            <div className="p-2 divide-y divide-gray-300 divide-dashed">
-              {sortedEvents.slice(0, 8).map((event) => (
-                <div key={event._id}>
-                  <div className="grid grid-cols-[2fr_2fr_1fr] max-sm:grid-cols-[1.5fr_1.5fr_1fr] py-2">
-                    <p className="truncate">{event.title}</p>
-                    <p className="truncate">{event.club.name}</p>
-                    <p className="w-full text-center">
-                      {event.attendees.length}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

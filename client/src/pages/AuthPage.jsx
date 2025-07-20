@@ -89,7 +89,7 @@ function AuthPage() {
       {error && <div className="mb-4 text-red-500 text-center">{error}</div>}
       <button
         onClick={handleLogin}
-        className="rounded-lg border border-blue-300 p-4 bg-primary flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed text-white hover:bg-primary/92 transition-all duration-300"
+        className="rounded-xl hover:border-4 border-blue-200 p-4 bg-primary flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed text-white hover:bg-primary/92 transition-all duration-300"
         disabled={loading}
         aria-label="Login with Google"
       >

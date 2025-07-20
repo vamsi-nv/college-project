@@ -39,6 +39,7 @@ function ClubDetails() {
   const [formType, setFormType] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
   const [removeCoverImage, setRemoveCoverImage] = useState(false);
+  const [isImageBroken, setIsImageBroken] = useState(false);
   const [clubForm, setClubForm] = useState({
     name: "",
     description: "",
@@ -590,10 +591,11 @@ function ClubDetails() {
 
                 <div className="flex items-center gap-2">
                   <div className="size-8">
-                    {member.profileImageUrl ? (
+                    {member.profileImageUrl && !isImageBroken? (
                       <img
                         src={member.profileImageUrl}
                         alt=""
+                        onError={() => setIsImageBroken(true)}
                         className="rounded-full size-full"
                       />
                     ) : (

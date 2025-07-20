@@ -157,12 +157,11 @@ function Profile() {
                 className="w-full h-full rounded-full aspect-square"
               />
             ) : (
-              // <HiMiniUserCircle className="w-full h-full text-gray-300 rounded-full" />
               <div className="size-full bg-gray-400 grid place-content-center rounded-full">
                 <div className="flex items-center justify-center">
-                  {"N V".split(" ").map((word, index) => (
+                  {user.name.split(" ").map((word, index) => (
                     <span
-                      className="text-5xl max-sm:text-4xl text-white"
+                      className="pt-1 text-5xl max-sm:text-4xl text-white"
                       key={index}
                     >
                       {word.charAt(0)}

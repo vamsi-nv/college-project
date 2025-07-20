@@ -15,7 +15,7 @@ function EventDetails() {
   const { user } = useAuth();
   const [event, setEvent] = useState(null);
   const [isAttending, setIsAttending] = useState(false);
-
+  const [isImageBroken, setIsImageBroken] = useState(false);
 
   const fetchEventDetails = async () => {
     try {
@@ -74,9 +74,10 @@ function EventDetails() {
         </div>
         <div className="flex items-center gap-2 px-2">
           <div className="rounded-full max-w-12 shrink-0">
-            {event?.createdBy?.profileImageUrl ? (
+            {event?.createdBy?.profileImageUrl && !isImageBroken ? (
               <img
                 src={event?.createdBy?.profileImageUrl}
+                onError={() => setIsImageBroken(true)}
                 className="object-cover w-12 h-12 max-w-full max-h-full rounded-full"
               />
             ) : (
@@ -95,8 +96,12 @@ function EventDetails() {
           </div>
         </div>
         <div className="my-4">
-          <p className="px-2 text-xl font-semibold text-black/80 max-sm:text-lg">{event?.title}</p>
-          <p className="px-2 my-2 text-gray-700 max-sm:text-sm">{event?.description}</p>
+          <p className="px-2 text-xl font-semibold text-black/80 max-sm:text-lg">
+            {event?.title}
+          </p>
+          <p className="px-2 my-2 text-gray-700 max-sm:text-sm">
+            {event?.description}
+          </p>
           <p className="flex items-center gap-4 px-2 pt-6 text-sm text-gray-600 max-sm">
             <span className="flex items-center gap-1">
               <FaCalendarDay />

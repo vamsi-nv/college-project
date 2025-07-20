@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 
 function EventCard({ event }) {
   const [isAttending, setIsAttending] = useState(false);
+  const [isImageBroken, setIsImageBroken] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
   const handleDelete = async (id) => {
@@ -69,9 +70,10 @@ function EventCard({ event }) {
       </div>
       <div className="flex items-start gap-1">
         <div className="shrink-0">
-          {event.createdBy.profileImageUrl ? (
+          {event.createdBy.profileImageUrl && !isImageBroken ? (
             <img
               src={event.createdBy.profileImageUrl}
+              onError={() => setIsImageBroken(true)}
               className="object-cover h-8 rounded-full aspect-square w-8"
             />
           ) : (
