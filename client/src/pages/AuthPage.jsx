@@ -3,10 +3,8 @@ import { useAuth } from "../context/UserContextProvider";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
-import { FcGoogle } from "react-icons/fc";
 import { useEffect, useState } from "react";
 import logo from "../assets/globe.png";
-import { motion } from "motion/react";
 import { CiLocationArrow1 } from "react-icons/ci";
 function AuthPage() {
   const {

@@ -6,14 +6,17 @@ function LandingPage() {
   const navigate = useNavigate();
   return (
     <div className="relative flex flex-col items-center w-full h-screen bg-gray-50">
-      <header className="z-20 flex items-center justify-between w-full max-w-5xl p-4 mx-auto">
+      <header className="z-20 flex items-center justify-between w-full max-w-5xl px-4 py-8 mx-auto">
         <div className="flex items-center justify-center gap-1">
-          {/* <Logo className="text-blue-600 size-10" /> */}
+          <Logo className="text-blue-600 size-10" />
           <h4 className="text-2xl font-semibold text-transparent max-sm:text-xl bg-clip-text bg-gradient-to-r from-blue-600 to-blue-500">
             CSphere
           </h4>
         </div>
-        <button onClick={() => navigate("/auth")} className="flex items-center gap-1 px-4 py-2 text-sm text-white rounded-full max-sm:text-xs bg-primary">
+        <button
+          onClick={() => navigate("/auth")}
+          className="flex items-center gap-1 px-4 py-2 text-sm text-white rounded-full max-sm:text-xs bg-primary"
+        >
           Join now
         </button>
       </header>
@@ -39,7 +42,10 @@ function LandingPage() {
           place.
         </p>
         <div className="mt-8">
-          <button onClick={() => navigate("/auth")} className="flex z-10 items-center relative group hover:text-white gap-1 py-2 px-4 overflow-auto shadow-[0_0_0_1px] shadow-primary outline-primary text-primary rounded-full max-sm:text-sm">
+          <button
+            onClick={() => navigate("/auth")}
+            className="flex z-10 items-center relative group hover:text-white gap-1 py-2 px-4 overflow-auto shadow-[0_0_0_1px] shadow-primary outline-primary text-primary rounded-full max-sm:text-sm"
+          >
             Get Started <IoIosArrowForward />
             <span className="absolute inset-0 duration-300 ease-in-out origin-left -translate-x-full bg-primary group-hover:translate-x-0 trasnition-all -z-10"></span>
           </button>
