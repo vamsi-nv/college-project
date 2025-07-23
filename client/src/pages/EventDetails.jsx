@@ -72,7 +72,7 @@ function EventDetails() {
             </p>
           </Link>
         </div>
-        <div className="flex items-center gap-2 px-2">
+        <div className="flex items-center gap-2 px-0.5">
           <div className="rounded-full max-w-12 shrink-0">
             {event?.createdBy?.profileImageUrl && !isImageBroken ? (
               <img
