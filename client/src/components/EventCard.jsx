@@ -62,15 +62,15 @@ function EventCard({ event }) {
   return (
     <div className="relative flex flex-col p-3 border-b border-gray-300 md:p-4 ">
       <div
-        onClick={() => navigate(`/clubs/${event.club._id}`)}
+        onClick={() => navigate(`/clubs/${event.club?._id}`)}
         className="flex w-fit items-center gap-1 mb-2 text-sm text-gray-400 cursor-pointer sm:text-base"
       >
         <LuUsers />
-        <p className="hover:underline underline-offset-1">{event.club.name}</p>
+        <p className="hover:underline underline-offset-1">{event.club?.name}</p>
       </div>
       <div className="flex items-start gap-1">
         <div className="shrink-0">
-          {event.createdBy.profileImageUrl && !isImageBroken ? (
+          {event.createdBy?.profileImageUrl && !isImageBroken ? (
             <img
               src={event.createdBy.profileImageUrl}
               onError={() => setIsImageBroken(true)}
@@ -84,7 +84,7 @@ function EventCard({ event }) {
           <div className="flex items-center gap-2 mb-2">
             <div className="flex items-center gap-2">
               <p className="flex items-center gap-1 text-sm font-semibold sm:text-base text-black/80">
-                {event.createdBy.name}
+                {event.createdBy?.name}
               </p>
               <p className="text-xs text-gray-500">
                 {" "}
@@ -92,13 +92,13 @@ function EventCard({ event }) {
               </p>
             </div>
           </div>
-          <Link to={`/clubs/${event.club.name}/events/${event._id}`}>
+          <Link to={`/clubs/${event.club?.name}/events/${event?._id}`}>
             <div className="">
               <div className="flex items-center gap-3">
-                <p className="font-semibold text-black/75">{event.title}</p>
+                <p className="font-semibold text-black/75">{event?.title}</p>
               </div>
               <p className="text-base text-gray-700 max-sm:text-sm">
-                {event.description}
+                {event?.description}
               </p>
             </div>
           </Link>
@@ -113,7 +113,7 @@ function EventCard({ event }) {
             <span>{moment(event.date).format("hh:mm A")}</span>
           </div>
         </div>
-        {event.createdBy._id === user._id && (
+        {event.createdBy?._id === user?._id && (
           <button
             onClick={() => handleDelete(event._id)}
             title="Delete Event"

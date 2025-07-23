@@ -227,6 +227,14 @@ export const updateClub = async (req, res) => {
     const { name, description, removeCoverImage } = req.body;
     const coverImage = req.file?.path;
 
+    const existingClub = await Club.findOne({ name });
+    if (existingClub) {
+      return res.status(400).json({
+        success: false,
+        message: "Club Name is already in use",
+      });
+    }
+
     const updateFields = {};
     if (name) updateFields.name = name.trim();
     if (description !== undefined) updateFields.description = description;

@@ -8,11 +8,9 @@ import { useAuth } from "../context/UserContextProvider.jsx";
 import Loader from "../components/Loader";
 import ProfilePhotoSelector from "../components/ProfilePhotoSelector.jsx";
 import { LuUser } from "react-icons/lu";
-import { HiMiniUserCircle } from "react-icons/hi2";
 
 function Signup() {
   const { fetchCurrentUser } = useAuth();
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -84,14 +82,14 @@ function Signup() {
   if (loading) return <Loader />;
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-2">
-      <div className="w-full max-w-sm p-4 mx-auto border border-gray-200 rounded-lg shadow-lg sm:max-w-lg sm:p-8 bg-gray-50">
+    <div className="flex items-center justify-center min-h-screen relative">
+      <div className="p-4 border border-gray-200 rounded-lg shadow-lg w-7/8 sm:max-w-md sm:p-8 bg-gray-50">
         <h2 className="mx-2 my-5 text-xl font-semibold text-center sm:mx-4 sm:text-2xl text-primary ">
           Sign Up
         </h2>
         <form
           onSubmit={handleSignUp}
-          className="flex flex-col gap-1 p-2 sm:gap-2 sm:p-4"
+          className="flex flex-col gap-1 p-2 sm:gap-2 "
         >
           <ProfilePhotoSelector
             image={image}

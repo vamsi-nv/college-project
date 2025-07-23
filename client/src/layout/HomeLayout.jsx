@@ -36,7 +36,7 @@ function HomeLayout() {
               alt=""
             />
           ) : (
-            <HiMiniUserCircle className="w-6 text-gray-300" />
+            <HiMiniUserCircle className="size-6 text-gray-300" />
           )}
         </button>
       </div>

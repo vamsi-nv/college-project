@@ -18,11 +18,11 @@ button {
 }
 
 .input-field {
-  @apply p-2 text-sm border border-gray-300 rounded-lg outline-none sm:p-4 focus:ring-1 focus:ring-black placeholder:text-gray-400 bg-neutral-50 sm:text-base;
+  @apply p-2 text-sm border border-gray-300 rounded-lg outline-none focus:ring-1 focus:ring-black placeholder:text-gray-400 bg-neutral-50 sm:text-base;
 }
 
 .input-field-label {
-  @apply px-4 text-sm text-gray-600 max-sm:text-xs;
+  @apply px-2 text-sm text-gray-600 max-sm:text-xs;
 }
 
 .form-submit-btn {
