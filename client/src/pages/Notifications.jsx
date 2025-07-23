@@ -93,7 +93,7 @@ function Notifications() {
           Delete All
         </button>
       </div>
-      <div className="flex flex-col items-start max-sm:mt-[51px]">
+      <div className="flex flex-col items-start">
         {notifications.length < 1 && <p className="text-gray-500 mx-auto mt-10">No notifications yet.</p>}
         {notifications.map((notification) => (
           <div

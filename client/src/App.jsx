@@ -18,7 +18,6 @@ import EventDetails from "./pages/EventDetails";
 import LandingPage from "./pages/LandingPage";
 import { useEffect } from "react";
 import socket, { registerSocket } from "./utils/socket";
-import AuthPage from "./pages/AuthPage";
 
 function App() {
   const { user, loading } = useAuth();
@@ -44,7 +43,6 @@ function App() {
         {!user && (
           <>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/auth" element={<AuthPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Signup />} />
           </>

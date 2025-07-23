@@ -3,23 +3,15 @@ import { FiHome, FiCompass, FiBell, FiUser, FiLogOut } from "react-icons/fi";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { LuUsers } from "react-icons/lu";
 import { useAuth } from "../context/UserContextProvider";
-import { useAuth0 } from "@auth0/auth0-react";
 import logo from "../assets/globe.png";
 
 function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen = () => {} }) {
   const { logout, user, unreadCount } = useAuth();
   const navigate = useNavigate();
-  const { logout: auth0Logout } = useAuth0();
 
   const handleLogout = async () => {
     try {
       logout();
-      auth0Logout({
-        logoutParams: {
-          returnTo: window.location.origin,
-          federated: true,
-        },
-      });
     } catch (error) {
       console.error("error : ", error);
     }
