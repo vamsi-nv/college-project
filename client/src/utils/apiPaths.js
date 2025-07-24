@@ -1,4 +1,4 @@
-export const base_url = "http://localhost:3000";
+export const base_url = "https://csphere-server.onrender.com/";
 
 export const api_paths = {
   auth: {
