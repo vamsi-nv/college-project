@@ -18,6 +18,7 @@ import EventDetails from "./pages/EventDetails";
 import LandingPage from "./pages/LandingPage";
 import { useEffect } from "react";
 import socket, { registerSocket } from "./utils/socket";
+import NotFound from "./pages/NotFound";
 
 function App() {
   const { user, loading } = useAuth();
@@ -81,7 +82,7 @@ function App() {
           <Route path="/admin/*" element={<Navigate to="/" replace />} />
         )}
 
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );
