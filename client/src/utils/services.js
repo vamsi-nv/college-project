@@ -4,7 +4,7 @@ import axiosInstance from "./axiosInstance";
 
 export const fetchUserClubs = async () => {
   try {
-    const response = await axiosInstance(api_paths.clubs.get_user_clubs);
+    const response = await axiosInstance.get(api_paths.clubs.get_user_clubs);
     if (response.data.success) {
       return response.data.clubs;
     }

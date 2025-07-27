@@ -1,45 +1,48 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import Signup from "./pages/Signup";
-import Login from "./pages/Login";
 import { useAuth } from "./context/UserContextProvider";
 import Loader from "./components/Loader";
-import HomeLayout from "./layout/HomeLayout";
-import Home from "./pages/Home";
-import Notifications from "./pages/Notifications";
-import Profile from "./pages/Profile";
-import Explore from "./pages/Explore";
-import Clubs from "./pages/Clubs";
-import ClubDetails from "./pages/ClubDetails";
 import toast, { Toaster } from "react-hot-toast";
-import Admin from "./pages/Admin/Admin";
-import AdminClubsPage from "./pages/Admin/AdminClubsPage";
-import AdminDashboard from "./pages/Admin/AdminDashboard";
-import EventDetails from "./pages/EventDetails";
-import LandingPage from "./pages/LandingPage";
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense, useMemo } from "react";
 import socket, { registerSocket } from "./utils/socket";
-import NotFound from "./pages/NotFound";
+
+const Signup = lazy(() => import("./pages/Signup"));
+const Login = lazy(() => import("./pages/Login"));
+const HomeLayout = lazy(() => import("./layout/HomeLayout"));
+const Home = lazy(() => import("./pages/Home"));
+const Notifications = lazy(() => import("./pages/Notifications"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Explore = lazy(() => import("./pages/Explore"));
+const Clubs = lazy(() => import("./pages/Clubs"));
+const ClubDetails = lazy(() => import("./pages/ClubDetails"));
+const Admin = lazy(() => import("./pages/Admin/Admin"));
+const AdminClubsPage = lazy(() => import("./pages/Admin/AdminClubsPage"));
+const AdminDashboard = lazy(() => import("./pages/Admin/AdminDashboard"));
+const EventDetails = lazy(() => import("./pages/EventDetails"));
+const LandingPage = lazy(() => import("./pages/LandingPage"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
   const { user, loading } = useAuth();
-
-  if (loading) return <Loader />;
 
   useEffect(() => {
     if (user?._id) {
       registerSocket(user._id);
 
-      socket.on("notification", (data) => {
+      const handleNotification = (data) => {
         toast(`New event posted on ${data.club}`);
-      });
+      };
 
-      return () => socket.off("notification");
+      socket.on("notification", handleNotification);
+
+      return () => socket.off("notification", handleNotification);
     }
-  }, [user]);
+  }, [user?._id]); 
 
-  return (
-    <div className="min-h-screen bg-gray-50 max-sm:overflow-x-hidden">
-      <Toaster position="top-center" reverseOrder={false} />
+ 
+  const routes = useMemo(() => {
+    if (loading) return null;
+
+    return (
       <Routes>
         {!user && (
           <>
@@ -84,6 +87,15 @@ function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+    );
+  }, [user, loading]);
+
+  if (loading) return <Loader />;
+
+  return (
+    <div className="min-h-screen bg-gray-50 max-sm:overflow-x-hidden">
+      <Toaster position="top-center" reverseOrder={false} />
+      <Suspense fallback={<Loader />}>{routes}</Suspense>
     </div>
   );
 }
