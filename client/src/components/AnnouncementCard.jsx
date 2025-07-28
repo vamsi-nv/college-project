@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import { BsFillPinFill } from "react-icons/bs";
 import { useState } from "react";
 
-function AnnouncementCard({ announcement, fetchAnnouncements }) {
+function AnnouncementCard({ announcement, onDelete , onTogglePin}) {
   const navigate = useNavigate();
   const [isImageBroken, setIsImageBroken] = useState(false);
   const { user } = useAuth();
@@ -27,7 +27,7 @@ function AnnouncementCard({ announcement, fetchAnnouncements }) {
       const data = response.data;
       if (data.success) {
         toast.success("Announcement deleted");
-        fetchAnnouncements();
+        onDelete?.(id)
       }
     } catch (error) {
       toast.error("Error deleting Announcement");
@@ -43,7 +43,7 @@ function AnnouncementCard({ announcement, fetchAnnouncements }) {
       const data = response.data;
       if (data.success) {
         toast.success(data.message);
-        fetchAnnouncements();
+        onTogglePin?.(id)
       }
     } catch (error) {
       toast.error(error.response.data.message);

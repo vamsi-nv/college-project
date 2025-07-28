@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { PiUsersThreeThin } from "react-icons/pi";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { AnimatePresence, motion } from "motion/react";
@@ -67,6 +67,28 @@ function ClubDetails() {
   const toggleMemberMenu = (memberId) => {
     setOpenMenuMemberId((prev) => (prev === memberId ? null : memberId));
   };
+
+  const handleEventDelete = useCallback((eventId) => {
+    setEvents((prevEvents) =>
+      prevEvents.filter((event) => event._id !== eventId)
+    );
+  }, []);
+
+  const handleAnnouncementDelete = useCallback((announcementId) => {
+    setAnnouncements((prevAnnouncements) =>
+      prevAnnouncements.filter(
+        (announcement) => announcement._id !== announcementId
+      )
+    );
+  }, []);
+
+  const handleTogglePin = useCallback((announcementId) => {
+    setAnnouncements((prevAnnouncements) =>
+      prevAnnouncements.map((a) =>
+        a._id === announcementId ? { ...a, pinned: !a.pinned } : a
+      )
+    );
+  }, []);
 
   const fetchClubDetails = async () => {
     try {
@@ -591,7 +613,7 @@ function ClubDetails() {
 
                 <div className="flex items-center gap-2">
                   <div className="size-8">
-                    {member.profileImageUrl && !isImageBroken? (
+                    {member.profileImageUrl && !isImageBroken ? (
                       <img
                         src={member.profileImageUrl}
                         alt=""
@@ -617,7 +639,11 @@ function ClubDetails() {
         {currentTab === "Events" && (
           <div>
             {events.map((event) => (
-              <EventCard key={event._id} event={event} />
+              <EventCard
+                key={event._id}
+                event={event}
+                onDelete={handleEventDelete}
+              />
             ))}
           </div>
         )}
@@ -628,7 +654,8 @@ function ClubDetails() {
               <AnnouncementCard
                 key={announcement._id}
                 announcement={announcement}
-                fetchAnnouncements={fetchClubAnnouncements}
+                onDelete={handleAnnouncementDelete}
+                onTogglePin={handleTogglePin}
               />
             ))}
           </div>
@@ -787,7 +814,7 @@ function ClubDetails() {
                 </button>
               </form>
             )}
-            {formType === "EditClub" && (  
+            {formType === "EditClub" && (
               <form
                 onSubmit={handleEditClub}
                 className="flex flex-col gap-1 p-2 sm:gap-2 sm:p-4"

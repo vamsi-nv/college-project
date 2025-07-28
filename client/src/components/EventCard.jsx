@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import { MdEventAvailable, MdEventBusy } from "react-icons/md";
 import { useEffect, useState } from "react";
 
-function EventCard({ event }) {
+function EventCard({ event, onDelete }) {
   const [isAttending, setIsAttending] = useState(false);
   const [isImageBroken, setIsImageBroken] = useState(false);
   const navigate = useNavigate();
@@ -28,6 +28,7 @@ function EventCard({ event }) {
       const data = response.data;
       if (data.success) {
         toast.success("Event deleted");
+        onDelete(id)
       }
     } catch (error) {
       toast.error("Error deleting event");

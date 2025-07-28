@@ -40,14 +40,15 @@ function Notifications() {
       if (!confirm) {
         return;
       }
-
       const response = await axiosInstance.delete(
         api_paths.notifications.delete_notification(id)
       );
 
       if (response.data.success) {
         toast.success("Notification deleted");
-        fetchNotifications();
+        setNotifications((prevNotifications) =>
+          prevNotifications.filter((notification) => notification._id !== id)
+        );
       }
     } catch (error) {
       toast.error("Error deleting notification");
@@ -67,7 +68,7 @@ function Notifications() {
 
       if (response.data.success) {
         toast.success("Notifications Deleted");
-        fetchNotifications();
+        setNotifications([]);
       }
     } catch (error) {
       toast.error("Error deleting  notifications");
@@ -80,7 +81,7 @@ function Notifications() {
   }, []);
 
   if (loading) return <Loader />;
-  
+
   return (
     <div className="w-full min-h-screen">
       <div className="flex items-center justify-between w-full p-6 border-b border-gray-300 pt-[52px] sm:pt-5">
@@ -94,7 +95,9 @@ function Notifications() {
         </button>
       </div>
       <div className="flex flex-col items-start">
-        {notifications.length < 1 && <p className="text-gray-500 mx-auto mt-10">No notifications yet.</p>}
+        {notifications.length < 1 && (
+          <p className="text-gray-500 mx-auto mt-10">No notifications yet.</p>
+        )}
         {notifications.map((notification) => (
           <div
             key={notification?._id}

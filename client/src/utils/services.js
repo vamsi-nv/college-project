@@ -17,3 +17,4 @@ export const fetchUserClubs = async () => {
     return null;
   }
 };
+

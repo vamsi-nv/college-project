@@ -1,102 +1,175 @@
-import { useState } from "react";
-import axiosInstance from "../utils/axiosInstance";
-import { api_paths } from "../utils/apiPaths";
-import { useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import EventCard from "../components/EventCard";
 import AnnouncementCard from "../components/AnnouncementCard";
-import toast from "react-hot-toast";
 import Loader from "../components/Loader";
+import HomeService from "../services/homeServices";
+
+const TAB_ITEMS = [
+  { label: "For You" },
+  { label: "Events" },
+  { label: "Announcements" },
+];
 
 function Home() {
   const [currentTab, setCurrentTab] = useState("For You");
   const [events, setEvents] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
-  const [feed, setFeed] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [fetchedData, setFetchedData] = useState({
+    events: false,
+    announcements: false,
+    forYou: false,
+  });
 
-  const tabItems = [
-    {
-      label: "For You",
-    },
-    {
-      label: "Events",
-    },
-    {
-      label: "Announcements",
-    },
-  ];
+  const feed = useMemo(() => {
+    if (events.length === 0 && announcements.length === 0) return [];
+    return HomeService.createMergedFeed(events, announcements);
+  }, [events, announcements]);
 
-  const fetchEvents = async () => {
+  const handleEventDelete = useCallback((eventId) => {
+    setEvents((prevEvents) =>
+      prevEvents.filter((event) => event._id !== eventId)
+    );
+  }, []);
+
+  const handleAnnouncementDelete = useCallback((announcementId) => {
+    setAnnouncements((prevAnnouncements) =>
+      prevAnnouncements.filter(
+        (announcement) => announcement._id !== announcementId
+      )
+    );
+  }, []);
+
+  const handleTogglePin = useCallback((announcementId) => {
+    setAnnouncements((prevAnnouncements) =>
+      prevAnnouncements.map((a) =>
+        a._id === announcementId ? { ...a, pinned: !a.pinned } : a
+      )
+    );
+  }, []);
+
+  const fetchEvents = useCallback(async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const response = await axiosInstance.get(
-        api_paths.events.get_user_club_events
-      );
-      const data = response.data;
-
-      if (data.success) {
-        setEvents(data.events);
-      }
-    } catch (error) {
-      toast.error("Error fetching events");
+      const fetchedEvents = await HomeService.fetchEvents();
+      setEvents(fetchedEvents);
+      setFetchedData((prev) => ({ ...prev, events: true }));
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchAnnouncements = async () => {
+  const fetchAnnouncements = useCallback(async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const response = await axiosInstance.get(
-        api_paths.announcements.get_user_club_announcements
-      );
-      const data = response.data;
-      if (data.success) {
-        setAnnouncements(data.announcements);
-      }
-    } catch (error) {
-      toast.error("Error fetching announcements");
+      const fetchedAnnouncements = await HomeService.fetchAnnouncements();
+      setAnnouncements(fetchedAnnouncements);
+      setFetchedData((prev) => ({ ...prev, announcements: true }));
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  const fetchAllData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const { events: fetchedEvents, announcements: fetchedAnnouncements } =
+        await HomeService.fetchAllData();
+
+      setEvents(fetchedEvents);
+      setAnnouncements(fetchedAnnouncements);
+      setFetchedData((prev) => ({
+        ...prev,
+        events: true,
+        announcements: true,
+        forYou: true,
+      }));
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    if (currentTab === "Events") {
-      fetchEvents();
-    }
+    if (loading) return;
 
-    if (currentTab === "Announcements") {
+    if (currentTab === "For You" && !fetchedData.forYou) {
+      fetchAllData();
+    } else if (currentTab === "Events" && !fetchedData.events) {
+      fetchEvents();
+    } else if (currentTab === "Announcements" && !fetchedData.announcements) {
       fetchAnnouncements();
     }
+  }, [
+    currentTab,
+    fetchedData,
+    loading,
+    fetchAllData,
+    fetchEvents,
+    fetchAnnouncements,
+  ]);
 
-    if (currentTab === "For You") {
-      if (events.length === 0) fetchEvents();
-      if (announcements.length === 0) fetchAnnouncements();
+  const renderContent = () => {
+    switch (currentTab) {
+      case "For You":
+        return (
+          <div className="">
+            {feed.map((item) =>
+              item.type === "event" ? (
+                <EventCard
+                  key={`event-${item._id}`}
+                  event={item}
+                  onDelete={handleEventDelete}
+                />
+              ) : (
+                <AnnouncementCard
+                  key={`announcement-${item._id}`}
+                  announcement={item}
+                  onDelete={handleAnnouncementDelete}
+                  onTogglePin={handleTogglePin}
+                />
+              )
+            )}
+          </div>
+        );
+
+      case "Events":
+        return (
+          <div className="">
+            {events.map((event) => (
+              <EventCard
+                key={`event-${event._id}`}
+                onDelete={handleEventDelete}
+                event={event}
+              />
+            ))}
+          </div>
+        );
+
+      case "Announcements":
+        return (
+          <div className="">
+            {announcements.map((announcement) => (
+              <AnnouncementCard
+                key={`announcement-${announcement._id}`}
+                announcement={announcement}
+                onDelete={handleAnnouncementDelete}
+                onTogglePin={handleTogglePin}
+              />
+            ))}
+          </div>
+        );
+
+      default:
+        return null;
     }
-  }, [currentTab]);
-
-  useEffect(() => {
-    if (events.length || announcements.length) {
-      const eventItems = events.map((e) => ({ ...e, type: "event" }));
-      const announcementItems = announcements.map((a) => ({
-        ...a,
-        type: "announcement",
-      }));
-
-      const mergedFeed = [...eventItems, ...announcementItems].sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      );
-      setFeed(mergedFeed);
-    }
-  }, [events, announcements]);
+  };
 
   if (loading) return <Loader />;
 
   return (
-    <div className="h-full max-w-full ">
+    <div className="h-full max-w-full">
       <div className="sticky flex items-center justify-around w-full sm:pt-4 pt-[50px] overflow-x-scroll border-b border-gray-300">
-        {tabItems.map((tabItem) => (
+        {TAB_ITEMS.map((tabItem) => (
           <button
             key={tabItem.label}
             title={tabItem.label}
@@ -110,41 +183,7 @@ function Home() {
         ))}
       </div>
 
-      {currentTab === "For You" && (
-        <div className="">
-          {feed.map((item) =>
-            item.type === "event" ? (
-              <EventCard key={item._id} event={item} />
-            ) : (
-              <AnnouncementCard
-                key={item._id}
-                announcement={item}
-                fetchAnnouncements={fetchAnnouncements}
-              />
-            )
-          )}
-        </div>
-      )}
-
-      {currentTab === "Events" && (
-        <div className="">
-          {events.map((event) => (
-            <EventCard key={event._id} event={event} />
-          ))}
-        </div>
-      )}
-
-      {currentTab === "Announcements" && (
-        <div className="">
-          {announcements.map((announcement) => (
-            <AnnouncementCard
-              key={announcement._id}
-              announcement={announcement}
-              fetchAnnouncements={fetchAnnouncements}
-            />
-          ))}
-        </div>
-      )}
+      {renderContent()}
     </div>
   );
 }

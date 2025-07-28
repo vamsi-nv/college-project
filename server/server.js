@@ -23,15 +23,19 @@ connectDB();
 
 // middleware
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+const allowedOrigins = [
+  "https://csphere-connect.vercel.app",
+  "http://localhost:5173",
+];
 
-app.use(cors({ origin: "https://csphere-connect.vercel.app", credentials: true }));
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json({ limit: "16kb" }));
 app.use(helmet());
 app.use(sanitize());
 // app.use(limiter);
 
 const io = new Server(server, {
-  cors: { origin: "https://csphere-connect.vercel.app", credentials: true },
+  cors: { origin: allowedOrigins, credentials: true },
 });
 
 app.set("io", io);
