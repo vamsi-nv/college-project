@@ -4,6 +4,7 @@ import Loader from "./components/Loader";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, lazy, Suspense, useMemo } from "react";
 import socket, { registerSocket } from "./utils/socket";
+import Chat from "./pages/Chat";
 
 const Signup = lazy(() => import("./pages/Signup"));
 const Login = lazy(() => import("./pages/Login"));
@@ -36,9 +37,8 @@ function App() {
 
       return () => socket.off("notification", handleNotification);
     }
-  }, [user?._id]); 
+  }, [user?._id]);
 
- 
   const routes = useMemo(() => {
     if (loading) return null;
 
@@ -60,6 +60,7 @@ function App() {
               <Route path="explore" element={<Explore />} />
               <Route path="notifications" element={<Notifications />} />
               <Route path="clubs" element={<Clubs />} />
+              <Route path="chat" element={<Chat />} />
               <Route path="profile" element={<Profile />} />
               <Route path="clubs/:id" element={<ClubDetails />} />
               <Route
@@ -85,7 +86,7 @@ function App() {
           <Route path="/admin/*" element={<Navigate to="/" replace />} />
         )}
 
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     );
   }, [user, loading]);

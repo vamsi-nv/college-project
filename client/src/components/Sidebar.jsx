@@ -1,5 +1,12 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { FiHome, FiCompass, FiBell, FiUser, FiLogOut } from "react-icons/fi";
+import {
+  FiHome,
+  FiCompass,
+  FiBell,
+  FiUser,
+  FiLogOut,
+  FiMessageSquare,
+} from "react-icons/fi";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { LuUsers } from "react-icons/lu";
 import { useAuth } from "../context/UserContextProvider";
@@ -27,6 +34,11 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen = () => {} }) {
       label: "Explore",
       path: "/explore",
       icon: FiCompass,
+    },
+    {
+      label: "Chat",
+      path: "/chat",
+      icon: FiMessageSquare,
     },
     {
       label: "Notifications",

@@ -14,6 +14,7 @@ import userRouter from "./routes/authRoutes.js";
 import socketHandler from "./socket.js";
 import notificationRouter from "./routes/notificationRoutes.js";
 import exploreRouter from "./routes/exploreRoutes.js";
+import messageRouter from "./routes/messageRoutes.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -53,6 +54,7 @@ app.use("/api/events", eventRouter);
 app.use("/api/announcements", announcementRouter);
 app.use("/api/notifications", notificationRouter);
 app.use("/api/explore", exploreRouter);
+app.use("/api/messages", messageRouter)
 
 server.listen(port, () => {
   console.log("Server is up and running on port : " + port);
