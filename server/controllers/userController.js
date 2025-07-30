@@ -87,7 +87,7 @@ export const loginUser = async (req, res) => {
   }
 
   try {
-    const user = await User.findOne({ email }).select("-password");
+    const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
       return res.status(401).json({
@@ -106,7 +106,7 @@ export const loginUser = async (req, res) => {
 
     const isAdmin = email === process.env.ADMIN_EMAIL;
     const plainUser = user.toObject();
-
+    delete plainUser.password;
     const ResponseUser = { ...plainUser, isAdmin };
 
     res.status(200).json({
