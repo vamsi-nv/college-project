@@ -55,9 +55,9 @@ function ClubDetails() {
   });
 
   const tabItems = [
+    { label: "Members", icon: LuUsers, count: club?.members?.length || 0 },
     { label: "Events", icon: LuCalendar, count: events.length },
     { label: "Announcements", icon: LuMegaphone, count: announcements.length },
-    { label: "Members", icon: LuUsers, count: club?.members?.length || 0 },
   ];
 
   const isClubOwner = club?.createdBy?._id === user?._id;
@@ -414,6 +414,15 @@ function ClubDetails() {
       />
 
       <div className="pb-20">
+        {currentTab === "Members" && (
+          <MembersList
+            club={club}
+            user={user}
+            onToggleAdmin={handleToggleAdmin}
+            onRemoveMember={handleRemoveMember}
+          />
+        )}
+
         {currentTab === "Events" && (
           <ClubEventsList events={events} onEventDelete={handleEventDelete} />
         )}
@@ -423,15 +432,6 @@ function ClubDetails() {
             announcements={announcements}
             onAnnouncementDelete={handleAnnouncementDelete}
             onTogglePin={handleTogglePin}
-          />
-        )}
-
-        {currentTab === "Members" && (
-          <MembersList
-            club={club}
-            user={user}
-            onToggleAdmin={handleToggleAdmin}
-            onRemoveMember={handleRemoveMember}
           />
         )}
       </div>

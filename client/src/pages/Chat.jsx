@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { fetchUserClubs } from "../utils/services";
 import { LuSend } from "react-icons/lu";
 import socket from "../utils/socket";
 import { useAuth } from "../context/UserContextProvider";
-import { PiArrowLeft, PiPlaceholder, PiUsersThree } from "react-icons/pi";
+import { PiArrowLeft } from "react-icons/pi";
 import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
 import toast from "react-hot-toast";
@@ -26,49 +25,53 @@ function useIsMobile(breakpoint = 768) {
 }
 
 function Chat() {
-  const [clubs, setClubs] = useState([]);
   const [currentClub, setCurrentClub] = useState(null);
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
-  const { user } = useAuth();
   const [chatState, setChatState] = useState(false);
   const bottomRef = useRef(null);
   const isMobile = useIsMobile(768);
   const shouldShowChat = !isMobile || (isMobile && chatState);
 
+  const {
+    user,
+    userClubs,
+    unreadMessageCounts,
+    markClubMessagesAsRead,
+    fetchUserClubsData,
+  } = useAuth();
+
   const handleSendMessage = async () => {
     if (!message.trim() || !currentClub) return;
 
-    const response = await axiosInstance.post(api_paths.messages.send_message, {
-      clubId: currentClub._id,
-      message: message,
-    });
-
-    const data = response.data;
-
-    if (!data.success) return;
-
-    socket.emit("sendMessage", {
-      room: currentClub._id,
-      message,
-      sender: user.name,
-    });
-
-    setChat((prev) => [
-      ...prev,
-      { message, sender: user.name, createdAt: data.newMessage.createdAt },
-    ]);
-    setMessage("");
-  };
-
-  const markMessagesRead = async () => {
     try {
-      const response = await axiosInstance.patch(
-        api_paths.messages.mark_read_many,
-        { clubId: currentClub._id }
+      const response = await axiosInstance.post(
+        api_paths.messages.send_message,
+        {
+          clubId: currentClub._id,
+          message: message,
+        }
       );
+
+      const data = response.data;
+
+      if (!data.success) return;
+
+      socket.emit("sendMessage", {
+        room: currentClub._id,
+        message,
+        sender: user.name,
+        clubId: currentClub._id,
+      });
+
+      setChat((prev) => [
+        ...prev,
+        { message, sender: user.name, createdAt: data.newMessage.createdAt },
+      ]);
+      setMessage("");
     } catch (error) {
-      console.error("Error marking messages as read");
+      toast.error("Failed to send message");
+      console.error("Error sending message:", error);
     }
   };
 
@@ -79,19 +82,24 @@ function Chat() {
     }
   };
 
+  const handleClubSelect = async (club) => {
+    setCurrentClub(club);
+    setChatState(true);
+
+    if (unreadMessageCounts[club._id] > 0) {
+      await markClubMessagesAsRead(club._id);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const clubs = await fetchUserClubs();
-      if (clubs) setClubs(clubs);
-    };
-    fetchData();
-  }, []);
+    fetchUserClubsData();
+  }, [fetchUserClubsData]);
 
   useEffect(() => {
     if (!currentClub) return;
 
     socket.emit("joinRoom", currentClub._id);
-    markMessagesRead();
+
     const handleMessage = ({ message, sender, createdAt }) => {
       setChat((prev) => [...prev, { message, sender, createdAt }]);
     };
@@ -154,41 +162,55 @@ function Chat() {
         </h2>
 
         <div>
-          {clubs.map((club) => (
-            <div
-              key={club?._id}
-              onClick={() => {
-                setCurrentClub(club);
-                setChatState(true);
-              }}
-              className={`cursor-pointer px-4 py-6 flex items-center gap-3 transition ${
-                currentClub?._id === club?._id
-                  ? "bg-primary/10 border-l-2 border-primary"
-                  : "hover:bg-gray-200/40"
-              }`}
-            >
-              {club.coverImage ? (
-                <img
-                  src={club.coverImage}
-                  className="object-cover rounded-full w-14 h-14 "
-                  alt={club.name}
-                />
-              ) : (
-                <span className="">
-                  <HiUsers
-                    fill="white"
-                    className="w-14 h-14 p-2.5 bg-gray-400/60 text-white bg-contain border border-gray-300 rounded-full"
-                  />
-                </span>
-              )}
-              <div>
-                <p className="font-medium">{club.name}</p>
-                <p className="text-sm text-gray-500 truncate">
-                  {club.description}
-                </p>
+          {userClubs.map((club) => {
+            const unreadCount = unreadMessageCounts[club._id] || 0;
+
+            return (
+              <div
+                key={club?._id}
+                onClick={() => handleClubSelect(club)}
+                className={`cursor-pointer  px-4 py-6 flex items-center gap-3 transition relative ${
+                  currentClub?._id === club?._id
+                    ? "bg-primary/10 border-l-2 border-primary"
+                    : "hover:bg-gray-200/40"
+                }`}
+              >
+                <div className="relative">
+                  {club.coverImage ? (
+                    <img
+                      src={club.coverImage}
+                      className="object-cover rounded-full w-14 h-14"
+                      alt={club.name}
+                    />
+                  ) : (
+                    <span className="">
+                      <HiUsers
+                        fill="white"
+                        className="w-14 h-14 p-2.5 bg-gray-400/60 text-white bg-contain border border-gray-300 rounded-full"
+                      />
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex-1">
+                  <p className="font-medium">{club.name}</p>
+                  <p className="text-sm text-gray-500 truncate">
+                    {club.description}
+                  </p>
+                </div>
+                {unreadCount > 0 && (
+                  <div className="flex flex-col items-center justify-center">
+                    <span className="text-xs text-primary">new</span>
+                    {unreadCount > 0 && (
+                      <div className="bg-primary text-white text-xs rounded-full min-w-[22px] h-[22px] flex items-center justify-center px-1">
+                        {unreadCount > 99 ? "99+" : unreadCount}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -205,7 +227,7 @@ function Chat() {
                       setChatState(false);
                       setCurrentClub(null);
                     }}
-                    className="mr-2 font-medium "
+                    className="mr-2 font-medium"
                   >
                     <PiArrowLeft className="size-6" />
                   </button>
@@ -218,8 +240,8 @@ function Chat() {
                     alt={currentClub.name}
                   />
                 ) : (
-                  <span className="text-white rounded-full bg-primary/100 ">
-                    <HiUsers className="p-2.5 stroke-1 size-12" />
+                  <span className="text-white rounded-full">
+                    <HiUsers className="p-2.5 stroke-1 size-12  bg-gray-400/60 text-white bg-contain border border-gray-300 rounded-full" />
                   </span>
                 )}
                 <div className="flex flex-col items-start">
@@ -236,7 +258,7 @@ function Chat() {
                 {chat.map((msg, i) => (
                   <div
                     key={i}
-                    className={` mb-2 ${
+                    className={`mb-2 ${
                       msg.sender === user.name ? "text-right" : "text-left"
                     }`}
                   >
@@ -276,7 +298,7 @@ function Chat() {
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Type a message..."
                   type="text"
-                  className="flex-1 ring-1 ring-gray-300 focus:ring-1 focus:ring-primary px-4 py-2 border-none rounded-full outline-none "
+                  className="flex-1 ring-1 ring-gray-300 focus:ring-1 focus:ring-primary px-4 py-2 border-none rounded-full outline-none"
                 />
                 {message && (
                   <button

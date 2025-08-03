@@ -34,11 +34,11 @@ function AddContentButton({ onCreateEvent, onCreateAnnouncement, isAdmin }) {
 
   return (
     <div className="relative">
-      {isOpen && <div className="fixed z-[80] bg-black/70 inset-0"></div>}
+      {isOpen && <div className="fixed z-[80] bg-black/85 inset-0"></div>}
       <motion.button
         ref={buttonRef}
         animate={{ rotate: isOpen ? 45 : 0 }}
-        transition={{ duration: 0.1, ease: "easeInOut" }}
+        transition={{ duration: 0.01, ease: "easeInOut" }}
         onClick={() => setIsOpen((prev) => !prev)}
         className="p-3 text-white transition-all duration-200 rounded-full shadow-lg bg-primary hover:bg-primary/95 hover:scale-105"
       >
@@ -52,35 +52,35 @@ function AddContentButton({ onCreateEvent, onCreateAnnouncement, isAdmin }) {
             className="absolute z-[100] mb-2 space-y-2 bottom-full"
           >
             <motion.button
-              initial={{ opacity: 0, scale: 0.8, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.8, y: 10 }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.2 }}
               onClick={() => {
                 onCreateEvent();
                 setIsOpen(false);
               }}
-              className="flex relative items-center gap-2 p-3 text-white transition-colors rounded-full shadow-lg bg-primary whitespace-nowrap"
+              className="flex relative items-center gap-2 p-3 text-primary transition-colors rounded-full shadow-lg bg-white whitespace-nowrap"
             >
-              <span className="absolute -left-40 text-sm font-medium">
-                Create Event
+              <span className="absolute text-white -left-28 text-sm font-medium">
+                Event
               </span>
               <MdEvent className="w-5 h-5" />
             </motion.button>
 
             <motion.button
-              initial={{ opacity: 0, scale: 0.8, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.8, y: 10 }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.2, delay: 0.05 }}
               onClick={() => {
                 onCreateAnnouncement();
                 setIsOpen(false);
               }}
-              className="flex relative items-center gap-2 p-3 text-white transition-colors rounded-full shadow-lg bg-primary whitespace-nowrap"
+              className="flex relative items-center gap-2 p-3 text-primary transition-colors rounded-full shadow-lg bg-white whitespace-nowrap"
             >
-              <span className="absolute -left-40 text-sm font-medium">
-                Create Announcement
+              <span className="absolute text-white -left-28 text-sm font-medium">
+                Announcement
               </span>
               <MdAnnouncement className="w-5 h-5" />
             </motion.button>

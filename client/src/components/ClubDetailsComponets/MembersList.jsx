@@ -53,7 +53,7 @@ function MemberItem({ member, club, user, onToggleAdmin, onRemoveMember }) {
         <div className="flex items-center justify-between w-full">
           <p className="font-medium text-gray-900">{member.name}</p>
           {isMemberAdmin && (
-            <span className="inline-flex items-center px-6 py-2 text-xs font-medium text-green-600 rounded-full bg-green-500/10">
+            <span className="px-3 py-1 text-xs font-medium text-green-500 border border-green-500 rounded-full bg-green-500/10">
               Admin
             </span>
           )}

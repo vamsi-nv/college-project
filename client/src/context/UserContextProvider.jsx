@@ -11,6 +11,7 @@ import { api_paths } from "../utils/apiPaths";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import socket from "../utils/socket";
+import { fetchUserClubs } from "../utils/services";
 
 const UserContext = createContext();
 
@@ -19,9 +20,13 @@ function UserContextProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadMessageCounts, setUnreadMessageCounts] = useState({});
+  const [userClubs, setUserClubs] = useState([]);
 
   const logout = useCallback(() => {
     setUser(null);
+    setUnreadMessageCounts({});
+    setUserClubs([]);
     localStorage.removeItem("college-token");
     navigate("/login");
   }, [navigate]);
@@ -60,16 +65,99 @@ function UserContextProvider({ children }) {
     }
   }, []);
 
+  const fetchUserClubsData = useCallback(async () => {
+    try {
+      const clubs = await fetchUserClubs();
+      if (clubs) {
+        setUserClubs(clubs);
+        return clubs;
+      }
+    } catch (error) {
+      console.error("Error fetching user clubs:", error);
+    }
+    return [];
+  }, []);
+
+  const fetchUnreadMessageCounts = useCallback(async (clubIds) => {
+    if (!clubIds || clubIds.length === 0) {
+      setUnreadMessageCounts({});
+      return;
+    }
+
+    try {
+      const clubIdsString = clubIds.join(",");
+      const response = await axiosInstance.get(
+        `${api_paths.messages.get_unread_messages_count}?clubIds=${clubIdsString}`
+      );
+
+      const data = response.data;
+      if (data.success) {
+        setUnreadMessageCounts(data.unreadMessagesCounts);
+      }
+    } catch (error) {
+      console.error("Error fetching unread message counts:", error);
+    }
+  }, []);
+
+  const markClubMessagesAsRead = useCallback(async (clubId) => {
+    try {
+      await axiosInstance.patch(api_paths.messages.mark_read_many, { clubId });
+      
+      // Update the unread count for this specific club
+      setUnreadMessageCounts(prev => ({
+        ...prev,
+        [clubId]: 0
+      }));
+    } catch (error) {
+      console.error("Error marking messages as read:", error);
+    }
+  }, []);
+
+  const updateUnreadMessageCount = useCallback((clubId, count) => {
+    setUnreadMessageCounts(prev => ({
+      ...prev,
+      [clubId]: count
+    }));
+  }, []);
+
+  const incrementUnreadMessageCount = useCallback((clubId) => {
+    setUnreadMessageCounts(prev => ({
+      ...prev,
+      [clubId]: (prev[clubId] || 0) + 1
+    }));
+  }, []);
+
   const value = useMemo(
     () => ({
       user,
       logout,
       loading,
       unreadCount,
+      unreadMessageCounts,
+      userClubs,
       fetchCurrentUser,
       fetchUnreadCount,
+      fetchUserClubsData,
+      fetchUnreadMessageCounts,
+      markClubMessagesAsRead,
+      updateUnreadMessageCount,
+      incrementUnreadMessageCount,
     }),
-    [user, logout, loading, unreadCount, fetchCurrentUser, fetchUnreadCount]
+    [
+      user,
+      logout,
+      loading,
+      unreadCount,
+      unreadMessageCounts,
+      userClubs,
+      fetchCurrentUser,
+      fetchUnreadCount,
+      fetchUserClubsData,
+      fetchUnreadMessageCounts,
+      markClubMessagesAsRead,
+      updateUnreadMessageCount,
+      incrementUnreadMessageCount,
+    ]
   );
 
   useEffect(() => {
@@ -85,16 +173,40 @@ function UserContextProvider({ children }) {
         fetchUnreadCount();
       };
 
+      const messageHandler = ({ clubId, sender }) => {
+        // Only increment if the message is not from the current user
+        if (sender !== user.name) {
+          incrementUnreadMessageCount(clubId);
+        }
+      };
+
       socket.on("updateUnreadCount", updateHandler);
+      socket.on("newMessage", messageHandler);
+
       return () => {
         socket.off("updateUnreadCount", updateHandler);
+        socket.off("newMessage", messageHandler);
       };
     }
-  }, [user, fetchUnreadCount]);
+  }, [user, fetchUnreadCount, incrementUnreadMessageCount]);
+
+  // Fetch user clubs and their unread counts when user is available
+  useEffect(() => {
+    if (user) {
+      const initializeClubData = async () => {
+        const clubs = await fetchUserClubsData();
+        if (clubs && clubs.length > 0) {
+          const clubIds = clubs.map(club => club._id);
+          await fetchUnreadMessageCounts(clubIds);
+        }
+      };
+      
+      initializeClubData();
+    }
+  }, [user, fetchUserClubsData, fetchUnreadMessageCounts]);
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
 
 export default UserContextProvider;
-
 export const useAuth = () => useContext(UserContext);

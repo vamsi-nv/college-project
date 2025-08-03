@@ -15,6 +15,7 @@ import { fetchUserClubs } from "../utils/services";
 import toast from "react-hot-toast";
 import EventCard from "../components/EventCard";
 import AnnouncementCard from "../components/AnnouncementCard";
+import ClubCard from "../components/ClubCard";
 
 function Profile() {
   const { fetchCurrentUser, user } = useAuth();
@@ -145,7 +146,7 @@ function Profile() {
     <div className="w-full h-full">
       <div className="py-20">
         <div className="flex flex-col items-center">
-          <div className="max-sm:size-30 size-32 sm:size-36 lg:size-40">
+          <div className="max-sm:size-30 size-32 sm:size-36 lg:size-40 rounded-full">
             {profileImageUrl && !loading ? (
               <img
                 src={profileImageUrl}
@@ -201,36 +202,10 @@ function Profile() {
         </div>
 
         {currentTab === "Clubs" && (
-          <div>
+          <div className="my-10 space-y-5">
             {clubs.map((club) => (
               <Link key={club._id} to={`/clubs/${club._id}`}>
-                <div
-                  title={club.name}
-                  className="hover:bg-gray-50/50 mx-auto my-5 w-4/5 sm:w-[80%] md:w-6/7 lg:w-4/5 xl:w-3/5 border border-gray-300 rounded-2xl shadow-gray-300/80 hover:shadow-[0_0_10px] hover:scale-105 transition-all duration-300 cursor-pointer"
-                >
-                  {club.coverImage ? (
-                    <img
-                      src={club.coverImage}
-                      alt={club.name}
-                      className="object-cover aspect-video rounded-t-2xl"
-                    />
-                  ) : (
-                    <PiUsersThreeThin className="mx-auto font-light min-h-[190px] text-gray-300 max-sm:size-24 sm:size-32 size-40" />
-                  )}
-                  <div className="p-4">
-                    <h2 className="flex items-center justify-between text-lg font-semibold text-gray-700 max-sm:text-sm">
-                      {club.name}
-                      {club.admins.includes(user._id) && (
-                        <span className="px-2 py-0.5 text-xs font-medium text-green-500 border border-green-500 rounded-full bg-green-500/10">
-                          Admin
-                        </span>
-                      )}
-                    </h2>
-                    <p className="text-sm text-gray-500 max-sm:text-xs max-w-[40ch]">
-                      {club.description}
-                    </p>
-                  </div>
-                </div>
+                <ClubCard club={club} user={user} />
               </Link>
             ))}
           </div>

@@ -1,20 +1,24 @@
 import { useCallback, useEffect, useState } from "react";
 import { api_paths } from "../utils/apiPaths";
 import axiosInstance from "../utils/axiosInstance";
-import { HiOutlineUserGroup, HiUsers } from "react-icons/hi2";
+import { HiUsers } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/UserContextProvider";
-import { fetchUserClubs } from "../utils/services";
 
 function RightSidebar() {
   const [clubs, setClubs] = useState([]);
-  const [userClubs, setUserClubs] = useState([]);
-  const [unreadCounts, setUnreadCounts] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
+  
+  const { 
+    user, 
+    userClubs, 
+    unreadMessageCounts, 
+    fetchUserClubsData,
+    fetchUnreadMessageCounts 
+  } = useAuth();
 
-  const fetchAllclubs = useCallback(async () => {
+  const fetchAllClubs = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axiosInstance.get(api_paths.clubs.get_all_clubs);
@@ -35,42 +39,20 @@ function RightSidebar() {
     }
   }, []);
 
-  const fetchUnreadMessagesCount = useCallback(async (clubIds) => {
-    if (!clubIds || clubIds.length === 0) return;
-
-    try {
-      const clubIdsString = clubIds.join(",");
-      const response = await axiosInstance.get(
-        `${api_paths.messages.get_unread_messages_count}?clubIds=${clubIdsString}`
-      );
-
-      const data = response.data;
-      if (data.success) {
-        setUnreadCounts(data.unreadMessagesCounts);
-      }
-    } catch (error) {
-      console.error("Error fetching unread counts:", error);
-      setError(
-        error.response?.data?.message ||
-          error.message ||
-          "Failed to fetch unread message counts"
-      );
-    }
-  }, []);
-
   const handleJoinClub = async (id) => {
     try {
       setError(null);
       const response = await axiosInstance.post(api_paths.clubs.join_club(id));
       const data = response.data;
+      
       if (data.success) {
         console.log("Joined club");
-        await fetchAllclubs();
-        const userClubsData = await fetchUserClubs();
-        if (userClubsData) {
-          setUserClubs(userClubsData);
-          const clubIds = userClubsData.map((club) => club._id);
-          await fetchUnreadMessagesCount(clubIds);
+        await fetchAllClubs();
+        
+        const updatedClubs = await fetchUserClubsData();
+        if (updatedClubs && updatedClubs.length > 0) {
+          const clubIds = updatedClubs.map((club) => club._id);
+          await fetchUnreadMessageCounts(clubIds);
         }
       }
     } catch (error) {
@@ -79,39 +61,21 @@ function RightSidebar() {
           error.message ||
           "Something went wrong. Please try again"
       );
-      console.error("Error joining club:", error);
+      console.error("Error joining club:", error);  
     }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userClubsData = await fetchUserClubs();
-        if (userClubsData && userClubsData.length > 0) {
-          setUserClubs(userClubsData);
-
-          const clubIds = userClubsData.map((club) => club._id);
-          await fetchUnreadMessagesCount(clubIds);
-        }
-      } catch (error) {
-        console.error("Error fetching user clubs:", error);
-      }
-    };
-
-    fetchData();
-  }, [fetchUnreadMessagesCount]);
-
-  useEffect(() => {
-    fetchAllclubs();
-  }, [fetchAllclubs]);
+    fetchAllClubs();
+  }, [fetchAllClubs]);
 
   return (
-    <div className={`p-3 mt-10 lg:p-6 `}>
+    <div className={`p-3 mt-10 lg:p-6 sticky top-0`}>
       <div className="xl:w-[80%] border border-gray-300 p-5 rounded-lg">
         <h3 className="px-4 mb-3 text-lg font-semibold text-gray-700">
           What to join
         </h3>
-        <div className=" xl:w-full flex flex-col divide-y divide-gray-300">
+        <div className="xl:w-full flex flex-col divide-y divide-gray-300">
           {clubs.map((club) => (
             <div
               key={club._id}
@@ -160,9 +124,9 @@ function RightSidebar() {
           New Messages
         </h3>
 
-        <div className=" xl:w-full flex flex-col divide-y divide-gray-300">
+        <div className="xl:w-full flex flex-col divide-y divide-gray-300">
           {userClubs.map((club) => {
-            const unreadCount = unreadCounts[club._id] || 0;
+            const unreadCount = unreadMessageCounts[club._id] || 0;
 
             return (
               <div
@@ -209,6 +173,12 @@ function RightSidebar() {
           })}
         </div>
       </div>
+
+      {error && (
+        <div className="mt-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded">
+          {error}
+        </div>
+      )}
     </div>
   );
 }
