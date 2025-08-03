@@ -1,8 +1,16 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import socket from "../utils/socket";
 
 const UserContext = createContext();
 
@@ -12,7 +20,13 @@ function UserContextProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  const fetchCurrentUser = async () => {
+  const logout = useCallback(() => {
+    setUser(null);
+    localStorage.removeItem("college-token");
+    navigate("/login");
+  }, [navigate]);
+
+  const fetchCurrentUser = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axiosInstance.get(api_paths.auth.get_current_user);
@@ -28,13 +42,12 @@ function UserContextProvider({ children }) {
       if (error.response?.status === 401) {
         setUser(null);
       }
-      setUser(null);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchUnreadCount = async () => {
+  const fetchUnreadCount = useCallback(async () => {
     try {
       const response = await axiosInstance.get(
         api_paths.notifications.get_unread_count
@@ -45,36 +58,43 @@ function UserContextProvider({ children }) {
     } catch (error) {
       toast.error("Error fetching unread notification count");
     }
-  };
+  }, []);
 
-  const logout = () => {
-    setUser(null); // {} is a truthy value
-    localStorage.removeItem("college-token");
-    navigate("/login");
-  };
-
-  const value = {
-    user,
-    logout,
-    loading,
-    fetchCurrentUser,
-    fetchUnreadCount,
-    unreadCount,
-    setUser
-  };
+  const value = useMemo(
+    () => ({
+      user,
+      logout,
+      loading,
+      unreadCount,
+      fetchCurrentUser,
+      fetchUnreadCount,
+    }),
+    [user, logout, loading, unreadCount, fetchCurrentUser, fetchUnreadCount]
+  );
 
   useEffect(() => {
     fetchCurrentUser();
+  }, [fetchCurrentUser]);
+
+  useEffect(() => {
     if (user) {
       fetchUnreadCount();
+      socket.emit("register", user._id);
+
+      const updateHandler = () => {
+        fetchUnreadCount();
+      };
+
+      socket.on("updateUnreadCount", updateHandler);
+      return () => {
+        socket.off("updateUnreadCount", updateHandler);
+      };
     }
-  }, []);
+  }, [user, fetchUnreadCount]);
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
 
 export default UserContextProvider;
 
-export const useAuth = function () {
-  return useContext(UserContext);
-};
+export const useAuth = () => useContext(UserContext);

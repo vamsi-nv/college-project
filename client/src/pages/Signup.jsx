@@ -74,19 +74,19 @@ function Signup() {
           "Something went wrong. Please try again"
       );
       console.log(error);
-    } finally {
+    } finally {  
       setLoading(false);
     }
   };
 
-  if (loading) return <Loader />;
-
   return (
-    <div className="flex items-center justify-center min-h-screen relative">
-      <div className="p-4 border border-gray-200 rounded-lg shadow-lg w-7/8 sm:max-w-md sm:p-8 bg-gray-50">
-        <h2 className="mx-2 my-5 text-xl font-semibold text-center sm:mx-4 sm:text-2xl text-primary ">
-          Sign Up
-        </h2>
+    <div className="flex flex-col items-center justify-center min-h-screen relative  bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      <h2 className="mx-2 my-5 text-3xl font-bold text-center sm:mx-4 sm:text-3xl text-transparent bg-gradient-to-b from-blue-600 via-primary to-blue-600 bg-clip-text">
+        Welcome to CSphere
+      </h2>
+      <p className="text-gray-500 text-sm mb-4">Create your account</p>
+
+      <div className="p-4 rounded-lg shadow-xl border border-gray-100 w-[90%] sm:max-w-md sm:p-8 bg-white">
         <form
           onSubmit={handleSignUp}
           className="flex flex-col gap-1 p-2 sm:gap-2 "
@@ -126,19 +126,26 @@ function Signup() {
             </p>
           )}
 
-          <p className="mb-2 ml-2 text-xs text-gray-400 sm:text-sm sm:mb-4 sm:ml-4">
+          <button
+            disabled={loading}
+            type="submit"
+            className="w-full flex items-center justify-center gap-2  transition-all duration-300 form-submit-btn text-white p-4 rounded-lg"
+          >
+            {loading && (
+              <span className="border-2 animate-spin border-t-transparent border-white size-4 rounded-full "></span>
+            )}
+
+            {loading ? "Please wait..." : "Signup"}
+          </button>
+          <p className="mt-2 text-center ml-2 text-xs text-gray-400 sm:text-sm sm:mb-4 sm:ml-4">
             Already have an account?{" "}
             <span
               onClick={() => navigate("/login")}
               className="underline cursor-pointer text-neutral-800"
             >
-              login
+              Login
             </span>
           </p>
-
-          <button type="submit" className="w-full form-submit-btn">
-            Sign Up
-          </button>
         </form>
       </div>
     </div>

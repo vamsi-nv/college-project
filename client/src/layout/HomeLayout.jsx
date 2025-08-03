@@ -64,9 +64,9 @@ function HomeLayout() {
   }, [lastScrollY]);
 
   return (
-    <div className={`min-h-screen relative flex bg-gray-50`}>
+    <div className={`min-h-screen relative flex bg-white`}>
       <motion.div
-        className="fixed top-0 left-0 right-0 flex items-center justify-between z-30 p-3 text-gray-800 bg-gray-50/90 sm:hidden backdrop-blur-xl"
+        className="fixed top-0 left-0 right-0 flex items-center justify-between z-30 p-3 text-gray-800  sm:hidden backdrop-blur-xl"
         initial={{ y: 0 }}
         animate={{
           y: isTopBarVisible ? 0 : -100,
@@ -79,11 +79,11 @@ function HomeLayout() {
         <button onClick={() => setIsMobileMenuOpen(true)} className="">
           <RiMenu2Fill className="text-xl sm:text-2xl" />
         </button>
-        <button onClick={() => navigate("/profile")} className="">
+        <button onClick={() => navigate("/profile")} className="z-30">
           {user.profileImageUrl ? (
             <img
               src={user.profileImageUrl}
-              className="w-6 h-6 rounded-full"
+              className="w-7 h-7 rounded-full"
               alt=""
             />
           ) : (
@@ -110,7 +110,7 @@ function HomeLayout() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -300, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="fixed top-0 left-0 z-50 h-full w-64 bg-gray-50 sm:hidden"
+              className="fixed top-0 left-0 z-50 h-full w-64 bg-white sm:hidden"
             >
               <Sidebar
                 isMobileMenuOpen={isMobileMenuOpen}

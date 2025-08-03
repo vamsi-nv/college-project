@@ -94,7 +94,7 @@ function Chat() {
 
   useEffect(() => {
     if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behaviour: "smooth" });
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [chat]);
 
@@ -156,7 +156,11 @@ function Chat() {
               }`}
             >
               {club.coverImage ? (
-                <img src={club.coverImage} alt={club.name} />
+                <img
+                  src={club.coverImage}
+                  className="object-cover rounded-full w-14 h-14 "
+                  alt={club.name}
+                />
               ) : (
                 <span className="p-2 text-white rounded bg-gradient-to-br from-primary/20 to-blue-600">
                   <PiPlaceholder className="w-6 h-6" />
@@ -193,7 +197,11 @@ function Chat() {
                 )}
 
                 {currentClub.coverImage ? (
-                  <img src={currentClub.coverImage} alt={currentClub.name} />
+                  <img
+                    className="object-cover w-12 h-12 rounded-full"
+                    src={currentClub.coverImage}
+                    alt={currentClub.name}
+                  />
                 ) : (
                   <span className="text-white rounded-full bg-primary/100 ">
                     <PiUsersThree className="p-2 stroke-1 size-12" />
@@ -209,7 +217,6 @@ function Chat() {
                 </div>
               </div>
 
-              {/* Messages */}
               <div className="flex-1 p-4 overflow-y-auto bg-primary/5">
                 {chat.map((msg, i) => (
                   <div
@@ -219,7 +226,7 @@ function Chat() {
                     }`}
                   >
                     <div
-                      className={`inline-flex items-center gap-6 p-2 rounded-lg ${
+                      className={`inline-flex items-center gap-6 p-2 rounded-lg shadow ${
                         msg.sender === user.name
                           ? "bg-primary rounded-br-none text-white"
                           : "bg-white rounded-tl-none"
@@ -231,7 +238,7 @@ function Chat() {
                             {msg.sender}
                           </p>
                         )}
-                        <p className="text-sm mb-1">{msg.message}</p>
+                        <p className="mb-1 text-sm">{msg.message}</p>
                       </div>
                       <span
                         className={`self-end text-[10px] ${
@@ -247,21 +254,20 @@ function Chat() {
                 <div ref={bottomRef} />
               </div>
 
-              {/* Input */}
-              <div className="flex items-center p-4 border-t  border-gray-300">
+              <div className="flex items-center p-4 border-t border-gray-300">
                 <input
                   onKeyDown={handleKeyPress}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Type a message..."
                   type="text"
-                  className="flex-1 bg-primary/5 px-4 py-2 border-none rounded-full outline-none"
+                  className="flex-1 ring-1 ring-gray-300 focus:ring-1 focus:ring-primary px-4 py-2 border-none rounded-full outline-none "
                 />
                 {message && (
                   <button
                     onClick={handleSendMessage}
                     disabled={!message}
-                    className="mx-4 font-medium text-primary disabled:opacity-70"
+                    className="mx-4 font-medium text-white bg-gradient-to-br from-primary to-blue-600 p-2 rounded-full disabled:opacity-70"
                   >
                     <LuSend className="size-5" />
                   </button>

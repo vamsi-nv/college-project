@@ -1,5 +1,6 @@
 import Announcement from "../models/announcementModel.js";
 import Club from "../models/clubModel.js";
+import Notification from "../models/notificationModel.js";
 
 export const createAnnoucement = async (req, res) => {
   const userId = req.user._id;
@@ -31,6 +32,35 @@ export const createAnnoucement = async (req, res) => {
       postedBy: userId,
       club,
       pinned,
+    });
+
+    const io = req.app.get("io");
+
+    const otherMembers = foundClub.members.filter(
+      (member) => member._id.toString() !== userId.toString()
+    );
+
+    otherMembers.forEach((member) => {
+      io.sendNotification(member._id.toString(), {
+        title: "",
+        message: `${announcement.title} has been posted`,
+        type: "announcement",
+        club: foundClub.name,
+      });
+    });
+
+    const notifications = otherMembers.map((member) => ({
+      recipient: member._id,
+      relatedClub: foundClub._id,
+      type: "announcement",
+      title: `New Announcement in ${foundClub.name}`,
+      relatedAnnouncememt: announcement._id,
+    }));
+
+    await Notification.insertMany(notifications);
+
+    otherMembers.forEach((member) => {
+      io.updateUnreadCount(member._id.toString());
     });
 
     res.status(201).json({
@@ -70,10 +100,10 @@ export const getAllAnnouncements = async (req, res) => {
       filter.club = { $in: clubIds };
     } else if (clubId) {
       filter.club = clubId;
-    }else if(postedByMe === "true" && userId){
+    } else if (postedByMe === "true" && userId) {
       filter.postedBy = userId;
-    }else{
-      filter = {}
+    } else {
+      filter = {};
     }
 
     const announcements = await Announcement.find(filter)

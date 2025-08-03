@@ -30,7 +30,7 @@ function App() {
       registerSocket(user._id);
 
       const handleNotification = (data) => {
-        toast(`New event posted on ${data.club}`);
+        toast(`New ${data.type} posted on ${data.club}`);
       };
 
       socket.on("notification", handleNotification);
@@ -94,7 +94,7 @@ function App() {
   if (loading) return <Loader />;
 
   return (
-    <div className="min-h-screen bg-gray-50 max-sm:overflow-x-hidden">
+    <div className="min-h-screen bg-white max-sm:overflow-x-hidden">
       <Toaster position="top-center" reverseOrder={false} />
       <Suspense fallback={<Loader />}>{routes}</Suspense>
     </div>

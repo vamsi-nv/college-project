@@ -59,6 +59,14 @@ export const getMessages = async (req, res) => {
       });
     }
 
+    const isMember = club.members.includes(userId);
+    if (!isMember) {
+      return res.status(400).json({
+        success: false,
+        message: "Not allowed to perform this action",
+      });
+    }
+
     const messages = await Message.find({
       club: clubId,
       deleteFor: { $ne: userId },

@@ -15,7 +15,7 @@ function LandingPage() {
         </div>
         <button
           onClick={() => navigate("/register")}
-          className="flex items-center gap-1 px-4 py-2 hover:scale-105 transition-all duration-300 text-sm text-white rounded-full max-sm:text-xs bg-primary"
+          className="flex items-center gap-1 px-4 py-2 hover:scale-105 transition-all duration-300 text-sm text-white rounded-full max-sm:text-xs bg-gradient-to-r from-primary to-blue-600/95"
         >
           Join now
         </button>
@@ -44,16 +44,16 @@ function LandingPage() {
         <div className="mt-8 flex items-center justify-center gap-5">
           <button
             onClick={() => navigate("/login")}
-            className="px-6 py-2 text-white hover:scale-105 transition-all duration-300 hover:bg-primary/90 bg-primary rounded-full"
+            className="px-6 py-2 text-white hover:scale-105 transition-all duration-300 bg-gradient-to-r from-primary to-blue-600/95 rounded-full"
           >
             Login
           </button>
           <button
             onClick={() => navigate("/register")}
-            className="flex z-10 items-center relative group hover:text-white gap-1 py-2 px-6 overflow-auto shadow-[0_0_0_1px] shadow-primary outline-primary text-primary rounded-full max-sm:text-sm"
+            className="flex z-10 items-center  relative group hover:text-white gap-1 py-2 px-6 overflow-auto shadow-[0_0_0_1px] shadow-primary hover:shadow-none outline-primary text-primary rounded-full max-sm:text-sm"
           >
             Signup
-            <span className="absolute inset-0 duration-300 ease-in-out origin-left -translate-x-full bg-primary group-hover:translate-x-0 trasnition-all -z-10"></span>
+            <span className="absolute inset-0 duration-300 ease-in-out origin-left -translate-x-full bg-gradient-to-r from-primary  to-blue-600/95  group-hover:translate-x-0 trasnition-all -z-10"></span>
           </button>
         </div>
       </main>

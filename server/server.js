@@ -25,7 +25,6 @@ connectDB();
 // middleware
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
 const allowedOrigins = [
-  "https://csphere-connect.vercel.app",
   "http://localhost:5173",
 ];
 

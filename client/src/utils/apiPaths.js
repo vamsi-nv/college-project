@@ -1,4 +1,4 @@
-export const base_url = "https://csphere-server.onrender.com";
+export const base_url = "http://localhost:3000";
 
 export const api_paths = {
   auth: {
@@ -65,5 +65,7 @@ export const api_paths = {
   messages: {
     send_message: "/api/messages",
     get_messages: "/api/messages",
+    get_unread_messages_count: "/api/messages/unread-count",
+    mark_read: "/api/messages/mark-read",
   },
 };

@@ -33,26 +33,32 @@ export const createEvent = async (req, res) => {
     });
 
     const io = req.app.get("io");
-    foundClub.members.forEach((member) => {
-      if (member._id.toString() !== userId.toString()) {
-        io.sendNotification(member._id.toString(), {
-          title: "",
-          message: `${newEvent.title} has been posted!`,
-          type: "event",
-          club: foundClub.name,
-        });
-      }
+
+    const otherMembers = foundClub.members.filter(
+      (member) => member._id.toString() !== userId.toString()
+    );
+
+    otherMembers.forEach((member) => {
+      io.sendNotification(member._id.toString(), {
+        title: "",
+        message: `${newEvent.title} has been posted!`,
+        type: "event",
+        club: foundClub.name,
+      });
     });
 
-    const notifications = foundClub.members.map((member) => ({
+    const notifications = otherMembers.map((member) => ({
       recipient: member._id,
       relatedClub: foundClub._id,
       type: "event",
       title: `New Event in ${foundClub.name}`,
       relatedEvent: newEvent._id,
     }));
-
     await Notification.insertMany(notifications);
+
+    otherMembers.forEach((member) => {
+      io.updateUnreadCount(member._id.toString());
+    });
 
     res.status(201).json({
       success: true,

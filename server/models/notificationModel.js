@@ -33,6 +33,11 @@ const notificationSchema = new mongoose.Schema(
       ref: "Event",
     },
 
+    relatedAnnouncement: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Announcement",
+    },
+
     isRead: {
       type: Boolean,
       default: false,

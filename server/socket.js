@@ -50,4 +50,11 @@ export default function socketHandler(io) {
       io.to(socketId).emit("notification", data);
     }
   };
+
+  io.updateUnreadCount = (userId) => {
+    const socketId = activeUsers.get(userId)
+    if(socketId){
+      io.to(socketId).emit("updateUnreadCount")
+    }
+  }
 }

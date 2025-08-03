@@ -58,25 +58,24 @@ function Login() {
     }
   };
 
-  if (loading) return <Loader />;
-
   return (
-    <div className="relative z-0 flex items-center justify-center min-h-screen">
-      <div className=" p-4 border border-gray-200 rounded-lg shadow-lg w-7/8 sm:max-w-md sm:p-8 bg-gray-50">
-        <h2 className="mx-2 my-5 text-xl font-semibold text-center sm:mx-4 sm:text-2xl text-primary">
-          Login
-        </h2>
+    <div className="relative z-0 flex flex-col bg-gradient-to-br from-blue-50 via-white to-indigo-50 items-center justify-center min-h-screen">
+      <h2 className="mx-2 my-5 text-3xl font-bold text-center sm:mx-4 sm:text-3xl text-transparent bg-gradient-to-b from-blue-600 via-primary/90 to-blue-600 bg-clip-text">
+        Welcome back
+      </h2>
+      <p className="text-gray-500 text-sm mb-4">Login to your account</p>
+      <div className=" p-4  rounded-lg shadow-xl border border-gray-100 w-[90%] sm:max-w-md sm:p-8">
         <form
           onSubmit={handleLogin}
-          className="flex flex-col gap-1 p-2 sm:gap-2"
+          className="flex flex-col z-20 gap-1 p-2 sm:gap-2"
         >
           <Input
             value={email}
             id="email"
             onChange={({ target }) => setEmail(target.value)}
             type="email"
-            label="Email"
-            placeholder="Enter your email"
+            label="Email Address"
+            placeholder="Enter your email address"
           />
           <Input
             value={password}
@@ -92,19 +91,26 @@ function Login() {
             </p>
           )}
 
-          <p className="mb-2 ml-2 text-xs text-gray-400 sm:text-sm sm:mb-4 sm:ml-4">
+          <button
+            disabled={loading}
+            type="submit"
+            className="w-full flex items-center justify-center gap-2 form-submit-btn hover:scale-105 transition-all duration-300  text-white p-4 rounded-lg"
+          >
+            {loading && (
+              <span className="border-2 animate-spin border-t-transparent border-white size-4 rounded-full "></span>
+            )}
+
+            {loading ? "Please wait..." : "Login"}
+          </button>
+          <p className="mt-4 ml-2 text-center text-xs text-gray-400 sm:text-sm sm:mb-4 sm:ml-4">
             Don't have an account?{" "}
             <span
               onClick={() => navigate("/register")}
               className="underline cursor-pointer text-neutral-800"
             >
-              signup
+              Create Account
             </span>
           </p>
-
-          <button type="submit" className="w-full form-submit-btn">
-            Login
-          </button>
         </form>
       </div>
     </div>

@@ -1,30 +1,28 @@
-import { useEffect, useRef, useState, useCallback } from "react";
-import { PiUsersThreeThin } from "react-icons/pi";
-import { HiOutlineDotsVertical } from "react-icons/hi";
-import { AnimatePresence, motion } from "motion/react";
-import { LuPen, LuPlus, LuTrash2, LuUserMinus } from "react-icons/lu";
-import { MdAnnouncement, MdEvent } from "react-icons/md";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { HiMiniUserCircle, HiOutlineUserGroup } from "react-icons/hi2";
+import { LuUsers, LuCalendar, LuMegaphone } from "react-icons/lu";
 import toast from "react-hot-toast";
 import Loader from "../components/Loader";
 import Modal from "../components/Modal";
 import Input from "../components/Input";
-import EventCard from "../components/EventCard";
-import AnnouncementCard from "../components/AnnouncementCard";
 import ProfilePhotoSelector from "../components/ProfilePhotoSelector";
+import { HiOutlineUserGroup } from "react-icons/hi2";
 import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
 import { useAuth } from "../context/UserContextProvider";
-import { RxDotsHorizontal } from "react-icons/rx";
+import ClubHeader from "../components/ClubDetailsComponets/ClubHeader";
+import ClubCover from "../components/ClubDetailsComponets/ClubCover";
+import ClubInfo from "../components/ClubDetailsComponets/ClubInfo";
+import AddContentButton from "../components/ClubDetailsComponets/AddContextButton";
+import ClubTabs from "../components/ClubDetailsComponets/ClubTabs";
+import ClubEventsList from "../components/ClubDetailsComponets/ClubEventsList";
+import ClubAnnouncementsList from "../components/ClubDetailsComponets/ClubAnnouncementsList";
+import MembersList from "../components/ClubDetailsComponets/MembersList";
 
 function ClubDetails() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { user } = useAuth();
-  const postMenuRef = useRef(null);
-  const clubEditMenuRef = useRef(null);
-  const memberMenuRef = useRef(null);
   const [club, setClub] = useState(null);
   const [events, setEvents] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
@@ -33,18 +31,16 @@ function ClubDetails() {
   const [currentTab, setCurrentTab] = useState("Events");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState("");
-  const [isPostMenuOpen, setIsPostMenuOpen] = useState(false);
-  const [isClubEditMenuOpen, setIsClubEditMenuOpen] = useState(false);
-  const [openMenuMemberId, setOpenMenuMemberId] = useState(null);
   const [formType, setFormType] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
   const [removeCoverImage, setRemoveCoverImage] = useState(false);
-  const [isImageBroken, setIsImageBroken] = useState(false);
+
   const [clubForm, setClubForm] = useState({
     name: "",
     description: "",
     coverImage: null,
   });
+
   const [eventForm, setEventForm] = useState({
     title: "",
     description: "",
@@ -59,14 +55,13 @@ function ClubDetails() {
   });
 
   const tabItems = [
-    { label: "Members" },
-    { label: "Events" },
-    { label: "Announcements" },
+    { label: "Events", icon: LuCalendar, count: events.length },
+    { label: "Announcements", icon: LuMegaphone, count: announcements.length },
+    { label: "Members", icon: LuUsers, count: club?.members?.length || 0 },
   ];
 
-  const toggleMemberMenu = (memberId) => {
-    setOpenMenuMemberId((prev) => (prev === memberId ? null : memberId));
-  };
+  const isClubOwner = club?.createdBy?._id === user?._id;
+  const isClubAdmin = club?.admins?.some((admin) => admin?._id === user?._id);
 
   const handleEventDelete = useCallback((eventId) => {
     setEvents((prevEvents) =>
@@ -136,6 +131,22 @@ function ClubDetails() {
     }
   };
 
+  const handleJoinClub = async () => {
+    try {
+      const response = await axiosInstance.post(
+        api_paths.clubs.join_club(club._id)
+      );
+      if (response.data.success) {
+        toast.success("You joined the club");
+        fetchClubDetails();
+      } else {
+        toast.error("Failed to join club");
+      }
+    } catch {
+      toast.error("Failed to join club");
+    }
+  };
+
   const handleLeaveClub = async () => {
     try {
       const response = await axiosInstance.post(
@@ -150,22 +161,6 @@ function ClubDetails() {
       }
     } catch (error) {
       toast.error("Failed to leave club");
-    }
-  };
-
-  const handleJoinClub = async () => {
-    try {
-      const response = await axiosInstance.post(
-        api_paths.clubs.join_club(club._id)
-      );
-      if (response.data.success) {
-        toast.success("You joined the club");
-        fetchClubDetails();
-      } else {
-        toast.error("Failed to join club");
-      }
-    } catch {
-      toast.error("Failed to join club");
     }
   };
 
@@ -188,8 +183,68 @@ function ClubDetails() {
     }
   };
 
-  const handlePostEvent = async () => {
+  const handleToggleAdmin = async (userToToggle) => {
+    try {
+      const response = await axiosInstance.patch(
+        api_paths.clubs.toggle_admin(club._id),
+        { userToToggle }
+      );
+      if (response.data.success) {
+        fetchClubDetails();
+      }
+    } catch (error) {
+      toast.error("Error setting admin status");
+    }
+  };
+
+  const handleRemoveMember = async (userToRemove) => {
+    try {
+      const confirm = window.confirm(
+        "Are you sure you want to remove this user?"
+      );
+      if (!confirm) return;
+
+      const response = await axiosInstance.patch(
+        api_paths.clubs.remover_member_from_club(club._id),
+        { userToRemove }
+      );
+      if (response.data.success) {
+        fetchClubDetails();
+      }
+    } catch (error) {
+      toast.error(error.response?.data.message || "Something went wrong");
+    }
+  };
+
+  const handleEditClub = () => {
+    setFormType("EditClub");
+    setIsModalOpen(true);
+    setClubForm({
+      name: club.name || "",
+      description: club.description || "",
+      coverImage: null,
+    });
+    if (club.coverImage) {
+      setCoverImageUrl(club.coverImage);
+    }
+  };
+
+  const handleCreateEvent = () => {
+    setFormType("PostEvent");
+    setCurrentTab("Events");
+    setIsModalOpen(true);
+  };
+
+  const handleCreateAnnouncement = () => {
+    setFormType("PostAnnouncement");
+    setCurrentTab("Announcements");
+    setIsModalOpen(true);
+  };
+
+  const handlePostEvent = async (e) => {
+    e.preventDefault();
     const { title, description, date, location } = eventForm;
+
     if (!title) return setError("Title is required");
     if (!description) return setError("Description is required");
     if (!location) return setError("Location is required");
@@ -210,12 +265,13 @@ function ClubDetails() {
       }
     } catch (error) {
       toast.error("Failed to post event");
-    } finally {
     }
   };
 
-  const handlePostAnnouncement = async () => {
+  const handlePostAnnouncement = async (e) => {
+    e.preventDefault();
     const { title, content } = announcementForm;
+
     if (!title) return setError("Title is required");
     if (!content) return setError("Content is required");
 
@@ -237,13 +293,11 @@ function ClubDetails() {
       }
     } catch (error) {
       toast.error("Failed to post announcement");
-    } finally {
     }
   };
 
-  const handleEditClub = async (e) => {
+  const handleEditClubSubmit = async (e) => {
     e.preventDefault();
-
     const { name, description, coverImage } = clubForm;
 
     if (!name || !description) {
@@ -286,43 +340,8 @@ function ClubDetails() {
         error.message ||
         "Something went wrong. Please try again.";
       setError(message);
-      console.error(error);
     } finally {
       setSaving(false);
-    }
-  };
-
-  const handleRemoveMemberFromClub = async (userToRemove) => {
-    try {
-      const confirm = window.confirm(
-        "Are you sure you want to remove this user?"
-      );
-      if (!confirm) return;
-      const response = await axiosInstance.patch(
-        api_paths.clubs.remover_member_from_club(club._id),
-        { userToRemove }
-      );
-      if (response.data.success) {
-        fetchClubDetails();
-        setCurrentTab("Members");
-      }
-    } catch (error) {
-      toast.error(error.response?.data.message || "Something went wrong");
-    }
-  };
-
-  const handleToggleAdmin = async (userToToggle) => {
-    try {
-      const response = await axiosInstance.patch(
-        api_paths.clubs.toggle_admin(club._id),
-        { userToToggle }
-      );
-      if (response.data.success) {
-        fetchClubDetails();
-        setCurrentTab("Members");
-      }
-    } catch (error) {
-      toast.error("Error setting admin status");
     }
   };
 
@@ -351,332 +370,83 @@ function ClubDetails() {
         content: "",
         pinned: false,
       });
-      setClubForm({
-        name: club.name || "",
-        description: club.description || "",
-        coverImage: null,
-      });
-      if (club.coverImage) {
-        setCoverImageUrl(club.coverImage);
-      }
     }
   }, [isModalOpen]);
 
-  useEffect(() => {
-    function handleOutsideClick(event) {
-      if (
-        isClubEditMenuOpen &&
-        clubEditMenuRef.current &&
-        !clubEditMenuRef.current.contains(event.target)
-      ) {
-        setIsClubEditMenuOpen(false);
-      }
-
-      if (
-        isPostMenuOpen &&
-        postMenuRef.current &&
-        !postMenuRef.current.contains(event.target)
-      ) {
-        setIsPostMenuOpen(false);
-      }
-
-      if (
-        openMenuMemberId !== null &&
-        memberMenuRef.current &&
-        !memberMenuRef.current.contains(event.target)
-      ) {
-        setOpenMenuMemberId(null);
-      }
-    }
-
-    const shouldListen =
-      isClubEditMenuOpen || isPostMenuOpen || openMenuMemberId !== null;
-
-    if (shouldListen) {
-      document.addEventListener("mousedown", handleOutsideClick);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, [isClubEditMenuOpen, isPostMenuOpen, openMenuMemberId]);
-
   if (loading) return <Loader />;
-  // if (!club || !user || !club.createdBy)
-  //   return (
-  //     <p className="mt-20 text-center text-red-500">
-  //       Club not found or failed to load.
-  //     </p>
-  //   );
+
+  if (!club || !user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-red-500">Club not found or failed to load.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="relative w-full h-full pt-12 sm:pt-0">
-      <div className="flex items-center justify-between p-4 max-sm:text-sm">
-        <p>{club?.name}</p>
+    <div className="min-h-screen bg-white">
+      <ClubHeader
+        club={club}
+        user={user}
+        onEditClub={handleEditClub}
+        onDeleteClub={handleDeleteClub}
+      />
 
-        {club?.createdBy?._id === user._id && (
-          <div className="relative group">
-            <button
-              onClick={() => setIsClubEditMenuOpen((prev) => !prev)}
-              className="p-2 rounded-full hover:bg-primary/10 hover:text-primary"
-            >
-              <HiOutlineDotsVertical className="size-5" />
-            </button>
-            {isClubEditMenuOpen && (
-              <motion.div
-                initial={{ x: 10, y: -10, opacity: 0 }}
-                animate={{ x: 0, y: 0, opacity: 1 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
-                ref={clubEditMenuRef}
-                className="absolute right-0 p-2 space-y-1 border border-gray-200 rounded-lg shadow-md bg-gray-50"
-              >
-                <button
-                  onClick={() => {
-                    setFormType("EditClub");
-                    setIsModalOpen(true);
-                    setClubForm({
-                      name: club.name,
-                      description: club.description,
-                      coverImage: club.coverImage,
-                    });
-                  }}
-                  className="flex items-center gap-1 w-full px-4 py-2 max-sm:text-sm text-left rounded-[6px] text-gray-700 hover:bg-primary/20 hover:text-primary transition-all duration-300 "
-                >
-                  <LuPen />
-                  Edit
-                </button>
-                <button
-                  onClick={handleDeleteClub}
-                  className="flex items-center gap-1 w-full px-4 py-2 max-sm:text-sm text-left rounded-[6px] transition-all duration-300  hover:bg-red-100 text-red-500"
-                >
-                  <LuTrash2 /> Delete
-                </button>
-              </motion.div>
-            )}
-          </div>
-        )}
-      </div>
+      <ClubCover coverImage={club?.coverImage} clubName={club?.name} />
 
-      <div className="w-full ">
-        {club?.coverImage ? (
-          <img
-            src={club?.coverImage}
-            alt="Club Cover"
-            className="object-cover w-full h-auto aspect-video"
-          />
-        ) : (
-          <PiUsersThreeThin className="mx-auto font-light text-gray-300 size-42" />
-        )}
-      </div>
+      <ClubInfo
+        club={club}
+        user={user}
+        onJoinClub={handleJoinClub}
+        onLeaveClub={handleLeaveClub}
+      >
+        <AddContentButton
+          onCreateEvent={handleCreateEvent}
+          onCreateAnnouncement={handleCreateAnnouncement}
+          isAdmin={isClubAdmin}
+        />
+      </ClubInfo>
 
-      <div className="flex items-center justify-between w-full p-6">
-        <div className="w-full">
-          <div className="flex items-center justify-between w-full">
-            <h1 className="flex-1 font-semibold text-black/80 lg:text-xl sm:text-xl max-sm:text-lg">
-              {club?.name}
-            </h1>
+      <ClubTabs
+        tabs={tabItems}
+        activeTab={currentTab}
+        onTabChange={setCurrentTab}
+      />
 
-            {club?.createdBy?._id !== user._id &&
-              (club?.members?.some((member) => member._id === user._id) ? (
-                <button
-                  onClick={handleLeaveClub}
-                  className="px-6 py-2 text-sm border rounded-full hover:bg-primary/30 text-primary bg-primary/20"
-                >
-                  Leave
-                </button>
-              ) : (
-                <button
-                  onClick={handleJoinClub}
-                  className="px-8 py-2 text-sm text-white rounded-full bg-primary hover:bg-primary/90"
-                >
-                  Join
-                </button>
-              ))}
-
-            {club?.admins?.some((admin) => admin?._id === user?._id) && (
-              <div
-                onClick={() => setIsPostMenuOpen((prev) => !prev)}
-                className=""
-              >
-                <div className="relative">
-                  <button className="p-2 text-white transition-all duration-300 rounded-full shadow-lg bg-primary hover:scale-105 hover:bg-primary/90">
-                    <LuPlus className="size-5 max-sm:size-4" />
-                  </button>
-                  {isPostMenuOpen && (
-                    <div ref={postMenuRef}>
-                      <AnimatePresence>
-                        <motion.button
-                          initial={{ x: 35, y: 35, opacity: 0 }}
-                          animate={{ x: 0, y: 0, opacity: 1 }}
-                          transition={{ duration: 0.3, ease: "easeInOut" }}
-                          exit={{ opacity: 0, scale: 0 }}
-                          onClick={() => {
-                            setFormType("PostEvent");
-                            setCurrentTab("Events");
-                            setIsModalOpen(true);
-                          }}
-                          className="absolute p-3 text-white transition-all duration-300 rounded-full shadow-lg right-8 bottom-8 bg-primary hover:scale-105 hover:bg-primary/90"
-                        >
-                          <MdEvent className="size-5 max-sm:size-4 " />
-                        </motion.button>
-                      </AnimatePresence>
-                      <AnimatePresence>
-                        <motion.button
-                          initial={{ x: 35, y: -35, opacity: 0 }}
-                          animate={{ x: 0, y: 0, opacity: 1 }}
-                          transition={{ duration: 0.3, ease: "easeInOut" }}
-                          exit={{ opacity: 0, scale: 0 }}
-                          onClick={() => {
-                            setFormType("PostAnnouncement");
-                            setCurrentTab("Announcements");
-                            setIsModalOpen(true);
-                          }}
-                          className="absolute p-3 text-white transition-all duration-300 rounded-full shadow-lg top-8 right-8 bg-primary hover:scale-105 hover:bg-primary/90"
-                        >
-                          <MdAnnouncement className="size-5 max-sm:size-4" />
-                        </motion.button>
-                      </AnimatePresence>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-          <p className="text-gray-700 max-w-5/6 max-sm:text-sm">
-            {club?.description}
-          </p>
-        </div>
-      </div>
-
-      <div>
-        <div className="sticky flex items-center justify-around w-full overflow-x-auto border-b border-gray-300 whitespace-nowrap sm:pt-3 top-16">
-          {tabItems.map((tab) => (
-            <button
-              key={tab.label}
-              onClick={() => setCurrentTab(tab.label)}
-              className={`tab-label ${
-                currentTab === tab.label ? "tab-selected" : "tab-not-selected"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {currentTab === "Members" && (
-          <div className="flex flex-col items-start last:mb-30">
-            {club.members.map((member) => (
-              <div
-                key={member._id}
-                className="relative flex items-center justify-between w-full px-5 py-5"
-              >
-                {club.admins.some((admin) => admin._id === user._id) &&
-                  user._id !== member._id && (
-                    <div className="absolute right-1 top-1">
-                      <button
-                        className="p-2 rounded-full hover:bg-primary/10 hover:text-primary"
-                        onClick={() => toggleMemberMenu(member._id)}
-                      >
-                        <RxDotsHorizontal className="" />
-                      </button>
-                      {openMenuMemberId === member._id && (
-                        <div className="relative z-20 " ref={memberMenuRef}>
-                          <div className="absolute flex text-sm flex-col p-2 bg-white border border-gray-200 rounded-lg shadow-lg -left-38 whitespace-nowrap">
-                            <button
-                              onClick={() => {
-                                handleToggleAdmin(member._id);
-                                setOpenMenuMemberId(null);
-                              }}
-                              className="px-4 py-4 rounded-md hover:bg-gray-200/50"
-                            >
-                              {club.admins.some(
-                                (admin) => admin._id === member._id
-                              )
-                                ? "Remove as admin"
-                                : "Make club admin"}
-                            </button>
-                            <button
-                              onClick={() => {
-                                handleRemoveMemberFromClub(member._id);
-                                setOpenMenuMemberId(null);
-                              }}
-                              className="px-4 py-4 flex items-center gap-1 hover:bg-red-500/10 rounded-md text-red-500"
-                            >
-                              <LuUserMinus />
-                              Remove User
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                <div className="flex items-center gap-2">
-                  <div className="size-8">
-                    {member.profileImageUrl && !isImageBroken ? (
-                      <img
-                        src={member.profileImageUrl}
-                        alt=""
-                        onError={() => setIsImageBroken(true)}
-                        className="rounded-full size-full"
-                      />
-                    ) : (
-                      <HiMiniUserCircle className="text-gray-300 size-full" />
-                    )}
-                  </div>
-                  <p>{member.name}</p>
-                </div>
-                {club.admins.some((admin) => admin._id === member._id) && (
-                  <span className="px-3 py-1 mr-10 text-xs font-medium text-green-500 border border-green-500 rounded-full bg-green-500/10">
-                    Admin
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-
+      <div className="pb-20">
         {currentTab === "Events" && (
-          <div>
-            {events.map((event) => (
-              <EventCard
-                key={event._id}
-                event={event}
-                onDelete={handleEventDelete}
-              />
-            ))}
-          </div>
+          <ClubEventsList events={events} onEventDelete={handleEventDelete} />
         )}
 
         {currentTab === "Announcements" && (
-          <div>
-            {announcements.map((announcement) => (
-              <AnnouncementCard
-                key={announcement._id}
-                announcement={announcement}
-                onDelete={handleAnnouncementDelete}
-                onTogglePin={handleTogglePin}
-              />
-            ))}
-          </div>
+          <ClubAnnouncementsList
+            announcements={announcements}
+            onAnnouncementDelete={handleAnnouncementDelete}
+            onTogglePin={handleTogglePin}
+          />
+        )}
+
+        {currentTab === "Members" && (
+          <MembersList
+            club={club}
+            user={user}
+            onToggleAdmin={handleToggleAdmin}
+            onRemoveMember={handleRemoveMember}
+          />
         )}
       </div>
 
       {isModalOpen && (
         <Modal setIsModalOpen={setIsModalOpen}>
-          <div>
-            <h2 className="mx-2 my-5 text-xl font-semibold text-center text-primary sm:mx-4 sm:text-2xl">
-              {formType === "PostEvent" && "Event"}
-              {formType === "PostAnnouncement" && "Announcement"}
+          <div className="p-6">
+            <h2 className="mb-6 text-2xl font-semibold text-center text-primary">
+              {formType === "PostEvent" && "Create Event"}
+              {formType === "PostAnnouncement" && "Create Announcement"}
               {formType === "EditClub" && "Edit Club"}
             </h2>
+
             {formType === "PostEvent" && (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handlePostEvent();
-                }}
-              >
+              <form onSubmit={handlePostEvent} className="space-y-4">
                 <Input
                   label="Title"
                   placeholder="Enter title"
@@ -742,17 +512,13 @@ function ClubDetails() {
                   </p>
                 )}
                 <button type="submit" className="w-full form-submit-btn">
-                  Post
+                  Post Event
                 </button>
               </form>
             )}
+
             {formType === "PostAnnouncement" && (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handlePostAnnouncement();
-                }}
-              >
+              <form onSubmit={handlePostAnnouncement} className="space-y-4">
                 <Input
                   label="Title"
                   placeholder="Enter title"
@@ -810,15 +576,14 @@ function ClubDetails() {
                   </p>
                 )}
                 <button type="submit" className="w-full form-submit-btn">
-                  Post
+                  Post Announcement
                 </button>
               </form>
             )}
+
+            {/* Edit Club Form */}
             {formType === "EditClub" && (
-              <form
-                onSubmit={handleEditClub}
-                className="flex flex-col gap-1 p-2 sm:gap-2 sm:p-4"
-              >
+              <form onSubmit={handleEditClubSubmit} className="space-y-4">
                 <ProfilePhotoSelector
                   image={clubForm.coverImage}
                   removeImage={setRemoveCoverImage}
@@ -865,9 +630,9 @@ function ClubDetails() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="form-submit-btn"
+                  className="w-full form-submit-btn"
                 >
-                  {saving ? "Saving..." : "Save"}
+                  {saving ? "Saving..." : "Save Changes"}
                 </button>
               </form>
             )}

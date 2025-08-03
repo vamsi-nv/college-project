@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   FiHome,
@@ -31,6 +32,11 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen = () => {} }) {
       icon: FiHome,
     },
     {
+      label: "Notifications",
+      path: "/notifications",
+      icon: FiBell,
+    },
+    {
       label: "Explore",
       path: "/explore",
       icon: FiCompass,
@@ -39,11 +45,6 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen = () => {} }) {
       label: "Chat",
       path: "/chat",
       icon: FiMessageSquare,
-    },
-    {
-      label: "Notifications",
-      path: "/notifications",
-      icon: FiBell,
     },
     {
       label: "Clubs",
@@ -59,7 +60,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen = () => {} }) {
 
   return (
     <div
-      className={`min-h-screen sticky top-0 lg:w-60 p-4 bg-gray-50 lg:ml-10 xl:ml-25 lg:p-8 flex flex-col items-start`}
+      className={`min-h-screen sticky top-0 lg:w-60 p-4 bg-white lg:ml-10 xl:ml-25 lg:p-8 flex flex-col items-start`}
     >
       <Link to={"/"}>
         <div className="flex items-center gap-1 px-2 mb-5">
@@ -153,4 +154,4 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen = () => {} }) {
   );
 }
 
-export default Sidebar;
+export default memo(Sidebar);
