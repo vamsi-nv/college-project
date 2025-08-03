@@ -66,6 +66,6 @@ export const api_paths = {
     send_message: "/api/messages",
     get_messages: "/api/messages",
     get_unread_messages_count: "/api/messages/unread-count",
-    mark_read: "/api/messages/mark-read",
+    mark_read_many: "/api/messages/mark-read-many",
   },
 };

@@ -2,7 +2,6 @@ import express from "express";
 import {
   getAllUsersAdmin,
   getCurrentUser,
-  googleAuth,
   loginUser,
   registerUser,
   updateUser,
@@ -14,7 +13,6 @@ const userRouter = express.Router();
 
 userRouter.post("/register", upload.single("image"), registerUser);
 userRouter.post("/login", loginUser);
-userRouter.post("/auth/google", googleAuth);
 userRouter.put("/current-user", protect, upload.single("image"), updateUser);
 userRouter.get("/current-user", protect, getCurrentUser);
 userRouter.get("/", protect, getAllUsersAdmin);

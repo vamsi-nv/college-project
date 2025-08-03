@@ -50,32 +50,6 @@ export const registerUser = async (req, res) => {
   }
 };
 
-export const googleAuth = async (req, res) => {
-  const { email, name, image } = req.body;
-  try {
-    let user = await User.findOne({ email });
-    if (!user) {
-      user = await User.create({
-        name,
-        email,
-        profileImageUrl: image,
-      });
-    }
-
-    res.status(201).json({
-      success: true,
-      user,
-      token: generateToken(user._id),
-    });
-  } catch (error) {
-    console.log("Error in googleAuth controller : ", error.message);
-    res.status(500).json({
-      success: false,
-      message: "Auth failed",
-    });
-  }
-};
-
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 

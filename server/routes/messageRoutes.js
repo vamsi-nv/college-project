@@ -3,6 +3,8 @@ import protect from "../middleware/authMiddleware.js";
 import {
   deleteMessageForUser,
   getMessages,
+  getUnreadMessagesCount,
+  markMessagesAsRead,
   sendMessage,
 } from "../controllers/messageController.js";
 
@@ -13,5 +15,7 @@ messageRouter
   .post(protect, sendMessage)
   .get(protect, getMessages)
   .patch(protect, deleteMessageForUser);
+messageRouter.route("/unread-count").get(protect, getUnreadMessagesCount);
+messageRouter.route("/mark-read-many").patch(protect, markMessagesAsRead);
 
 export default messageRouter;

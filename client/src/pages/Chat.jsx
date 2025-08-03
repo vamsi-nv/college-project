@@ -8,6 +8,7 @@ import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
 import toast from "react-hot-toast";
 import moment from "moment";
+import { HiUsers } from "react-icons/hi2";
 
 function useIsMobile(breakpoint = 768) {
   const getIsMobile = () =>
@@ -60,6 +61,17 @@ function Chat() {
     setMessage("");
   };
 
+  const markMessagesRead = async () => {
+    try {
+      const response = await axiosInstance.patch(
+        api_paths.messages.mark_read_many,
+        { clubId: currentClub._id }
+      );
+    } catch (error) {
+      console.error("Error marking messages as read");
+    }
+  };
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -79,7 +91,7 @@ function Chat() {
     if (!currentClub) return;
 
     socket.emit("joinRoom", currentClub._id);
-
+    markMessagesRead();
     const handleMessage = ({ message, sender, createdAt }) => {
       setChat((prev) => [...prev, { message, sender, createdAt }]);
     };
@@ -152,7 +164,7 @@ function Chat() {
               className={`cursor-pointer px-4 py-6 flex items-center gap-3 transition ${
                 currentClub?._id === club?._id
                   ? "bg-primary/10 border-l-2 border-primary"
-                  : "hover:bg-gray-200/50"
+                  : "hover:bg-gray-200/40"
               }`}
             >
               {club.coverImage ? (
@@ -162,8 +174,11 @@ function Chat() {
                   alt={club.name}
                 />
               ) : (
-                <span className="p-2 text-white rounded bg-gradient-to-br from-primary/20 to-blue-600">
-                  <PiPlaceholder className="w-6 h-6" />
+                <span className="">
+                  <HiUsers
+                    fill="white"
+                    className="w-14 h-14 p-2.5 bg-gray-400/60 text-white bg-contain border border-gray-300 rounded-full"
+                  />
                 </span>
               )}
               <div>
@@ -204,7 +219,7 @@ function Chat() {
                   />
                 ) : (
                   <span className="text-white rounded-full bg-primary/100 ">
-                    <PiUsersThree className="p-2 stroke-1 size-12" />
+                    <HiUsers className="p-2.5 stroke-1 size-12" />
                   </span>
                 )}
                 <div className="flex flex-col items-start">
