@@ -1,5 +1,4 @@
 import Modal from "../components/Modal";
-import { HiMiniUserCircle } from "react-icons/hi2";
 import { useAuth } from "../context/UserContextProvider";
 import { useEffect, useState } from "react";
 import ProfilePhotoSelector from "../components/ProfilePhotoSelector";
@@ -8,7 +7,6 @@ import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
 import Loader from "../components/Loader";
 import { FiEdit2 } from "react-icons/fi";
-import { PiUsersThreeThin } from "react-icons/pi";
 import { Link } from "react-router-dom";
 import { LuUser } from "react-icons/lu";
 import { fetchUserClubs } from "../utils/services";

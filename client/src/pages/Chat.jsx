@@ -8,6 +8,7 @@ import { api_paths } from "../utils/apiPaths";
 import toast from "react-hot-toast";
 import moment from "moment";
 import { HiUsers } from "react-icons/hi2";
+import { HiOutlineChatAlt } from "react-icons/hi";
 
 function useIsMobile(breakpoint = 768) {
   const getIsMobile = () =>
@@ -254,7 +255,7 @@ function Chat() {
                 </div>
               </div>
 
-              <div className="flex-1 p-4 overflow-y-auto bg-primary/5">
+              <div className="flex-1 p-4 overflow-y-auto bg-primary/5 relative">
                 {chat.map((msg, i) => (
                   <div
                     key={i}
@@ -312,8 +313,9 @@ function Chat() {
               </div>
             </>
           ) : (
-            <div className="flex items-center justify-center h-full text-gray-500">
-              Select a club to start chatting
+            <div className="flex  flex-col items-center justify-center h-full">
+              <HiOutlineChatAlt className="w-24 h-24 text-primary/90 fill-primary/20" />
+              <p className="text-gray-600">Select a club to start chatting</p>
             </div>
           )}
         </div>
