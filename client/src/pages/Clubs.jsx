@@ -92,12 +92,16 @@ function Clubs() {
   return (
     <div className="w-full min-h-screen">
       <div className="sticky top-0 z-10 flex items-center justify-between w-full px-5 pt-[52px] pb-2 border-b border-gray-200 sm:pt-5 backdrop-blur-xl bg-gray-50/60">
-        <LuUsers className="text-gray-500 size-6" />
+        <div className="flex items-center gap-2 text-gray-600">
+          <LuUsers className=" size-5" />
+          <span className="text-base font-medium">My Clubs</span>
+        </div>
         <button
           onClick={() => setIsModalOpen(true)}
           className="flex items-center gap-1 px-3 py-2 text-xs font-medium transition-all duration-300 ease-in-out border rounded-full hover:bg-primary/20 bg-primary/10 text-primary border-primary"
-        >  
-          <LuPlus className="stroke-2 size-4"/>Create Club
+        >
+          <LuPlus className="stroke-2 size-4" />
+          Create Club
         </button>
       </div>
 
@@ -163,8 +167,8 @@ function Clubs() {
 
       <div className="flex flex-col justify-center w-full h-full px-4 py-6">
         {clubs.length === 0 ? (
-          <p className="mt-10 text-center text-gray-400">
-            No clubs yet. Create one!
+          <p className="max-w-sm mt-10 text-sm text-center text-gray-400">
+            You haven't joined any clubs yet. Create your own club.
           </p>
         ) : (
           clubs.map((club) => (
