@@ -228,7 +228,7 @@ export const updateClub = async (req, res) => {
     const coverImage = req.file?.path;
 
     const existingClub = await Club.findOne({ name });
-    if (existingClub) {
+    if (existingClub && existingClub._id.toString() !== club._id.toString()) {
       return res.status(400).json({
         success: false,
         message: "Club Name is already in use",
