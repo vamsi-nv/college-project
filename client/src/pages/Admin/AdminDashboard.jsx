@@ -3,7 +3,7 @@ import { LuUsers } from "react-icons/lu";
 import { MdEvent } from "react-icons/md";
 import { FiUser } from "react-icons/fi";
 import { fetchAllClubs, fetchAllEvents, fetchAllUsers } from "./adminHelper";
-
+import { SlGraph } from "react-icons/sl";
 function AdminDashboard() {
   const [clubs, setClubs] = useState([]);
   const [events, setEvents] = useState([]);
@@ -81,7 +81,7 @@ function AdminDashboard() {
       <div className="flex flex-col w-full h-full gap-10 px-4 py-8 max-sm:py-16 md:p-8 lg:p-10">
         <div className="text-center text-red-600">
           Error loading dashboard: {error}
-        </div>  
+        </div>
       </div>
     );
   }
@@ -129,7 +129,8 @@ function AdminDashboard() {
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         {displayClubs.length > 0 && (
           <div className="flex flex-col h-full py-3 border border-gray-200 rounded-lg shadow-sm">
-            <h3 className="px-5 py-4 mb-4 text-lg font-medium text-gray-800">
+            <h3 className="flex items-center gap-2 px-5 py-4 mb-4 text-lg font-medium text-gray-800 ">
+              <SlGraph className="text-blue-700 size-6" />
               Recently Created Clubs
             </h3>
             <div className="max-sm:text-sm">
@@ -149,7 +150,8 @@ function AdminDashboard() {
 
         {displayEvents.length > 0 && (
           <div className="flex flex-col h-full py-3 border border-gray-200 rounded-lg shadow-sm">
-            <h3 className="px-5 py-4 mb-4 text-lg font-medium text-gray-800">
+            <h3 className="flex items-center gap-2 px-5 py-4 mb-4 text-lg font-medium text-gray-800">
+              <SlGraph className="text-blue-700 size-6" />
               Recent Events
             </h3>
             <div className="max-sm:text-sm">
