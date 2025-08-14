@@ -12,6 +12,7 @@ import { PiUsersThreeThin } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import { LuSearch, LuX } from "react-icons/lu";
 import { useDebounce } from "../hooks/useDebounce";
+import { HiUsers } from "react-icons/hi2";
 
 const EventCard = lazy(() => import("../components/EventCard"));
 
@@ -27,12 +28,14 @@ const ClubItem = ({ club, onClick }) => (
       {club.coverImage ? (
         <img
           src={club.coverImage}
-          alt={`${club.name} cover`}
-          className="h-12 w-12 rounded-full object-cover"
-          loading="lazy"
+          alt="club cover image"
+          className="object-cover rounded-full shrink-0 size-full"
         />
       ) : (
-        <PiUsersThreeThin className="w-12 h-12 text-white stroke-3 bg-gray-300/80 rounded-full p-1" />
+        <HiUsers
+          fill="white"
+          className="w-12 h-12 p-2 bg-gray-400/60 text-white bg-contain border border-gray-300 rounded-full"
+        />
       )}
     </div>
     <div className="min-w-0 flex-1">

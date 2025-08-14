@@ -92,8 +92,8 @@ function Clubs() {
   return (
     <div className="w-full min-h-screen">
       <div className="sticky top-0 z-10 flex items-center justify-between w-full px-5 pt-[52px] pb-2 border-b border-gray-200 sm:pt-5 backdrop-blur-xl bg-gray-50/60">
-        <div className="flex items-center gap-2 text-gray-600">
-          <LuUsers className=" size-5" />
+        <div className="flex items-center gap-2">
+          {/* <LuUsers className=" size-5" /> */}
           <span className="text-base font-medium">My Clubs</span>
         </div>
         <button

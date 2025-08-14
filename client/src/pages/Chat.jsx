@@ -9,6 +9,8 @@ import toast from "react-hot-toast";
 import moment from "moment";
 import { HiUsers } from "react-icons/hi2";
 import { HiOutlineChatAlt } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
+
 
 const ClubProfileComponent = memo(({ club }) => {
   return (
@@ -121,6 +123,7 @@ const ClubItem = memo(({ club, currentClubId, unreadCount, onSelect }) => {
 ClubItem.displayName = "ClubItem";
 
 function Chat() {
+  const navigate = useNavigate();
   const [currentClub, setCurrentClub] = useState(null);
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
@@ -321,8 +324,7 @@ function Chat() {
           isMobile && shouldShowChat ? "hidden" : "block"
         }`}
       >
-        <h2 className="px-4 py-6.5 text-base font-medium border-b border-gray-300">
-          
+        <h2 className="px-4 max-sm:py-4 py-6.5 text-base font-medium border-b border-gray-300">
           Chats
         </h2>
 
@@ -344,7 +346,7 @@ function Chat() {
                 )}
 
                 <ClubProfileComponent club={currentClub} />
-                <div className="flex flex-col items-start">
+                <div onClick={() => navigate(`/clubs/${currentClub._id}`)} className="cursor-pointer flex flex-col items-start">
                   <p className="font-semibold text-gray-800">
                     {currentClub.name}
                   </p>

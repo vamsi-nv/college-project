@@ -22,7 +22,6 @@ const server = http.createServer(app);
 
 connectDB();
 
-// middleware
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
 const allowedOrigins = [
   "http://localhost:5173",
@@ -42,11 +41,9 @@ app.set("io", io);
 
 socketHandler(io);
 
-// routes
 app.get("/", (req, res) => {
   res.send("Api Working");
 });
-
 app.use("/api/user", userRouter);
 app.use("/api/clubs", clubRouter);
 app.use("/api/events", eventRouter);

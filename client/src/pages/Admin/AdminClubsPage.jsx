@@ -158,13 +158,13 @@ function AdminClubsPage() {
 
   return (
     <div className="w-full h-full px-12 py-16 md:p-8 lg:p-10 max-sm:px-2">
-      <div className="flex items-center justify-between w-full px-10 mb-10">
-        <h3 className="text-xl font-semibold text-gray-700">Existing Clubs</h3>
+      <div className="flex items-center justify-between w-full px-10 max-sm:px-1 max-sm:mb-8 mb-10">
+        <h3 className="text-xl font-semibold text-gray-700 max-sm:text-lg">Existing Clubs</h3>
         <button
           onClick={handleExportCSV}
-          className="flex items-center gap-1 px-3 py-2 text-xs font-semibold transition-all duration-300 rounded-md text-primary ring-1 hover:bg-primary/10 ring-primary"
+          className="flex items-center gap-1 px-3 max-sm:ring-0 py-2 text-xs font-semibold transition-all duration-300 rounded-md text-primary ring-1 hover:bg-primary/10 ring-primary"
         >
-          <PiExport className="stroke-2 size-5" /> Export as CSV
+          <PiExport className="stroke-2 size-5" /> 
         </button>
       </div>
       <div className="overflow-auto border border-gray-200 rounded-lg shadow-sm">
