@@ -126,7 +126,8 @@ export const getEventById = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id.toString())
       .populate("club", "name")
-      .populate("createdBy", "name email profileImageUrl");
+      .populate("createdBy", "name email profileImageUrl")
+      .populate("attendees", "name profileImageUrl");
 
     if (!event) {
       return res.status(404).json({
