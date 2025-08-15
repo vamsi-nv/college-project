@@ -79,7 +79,7 @@ const ActionMenu = memo(({ event, onDelete, isOwner }) => {
       <button
         ref={buttonRef}
         onClick={handleToggleMenu}
-        className="p-2 rounded-full cursor-pointer text-md hover:bg-gray-500/10 transition-colors"
+        className="p-2 transition-colors rounded-full cursor-pointer text-md hover:bg-gray-500/10"
         aria-label="Event options"
         aria-expanded={isOpen}
         aria-haspopup="true"
@@ -227,7 +227,7 @@ function EventCard({ event, onDelete }) {
     <article className="relative flex flex-col p-3 transition-colors border-b border-gray-300 md:p-4 hover:bg-gray-50/50">
       <ClubLink club={event.club} onClick={handleClubNavigation} />
 
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-1.5">
         <div className="flex-shrink-0">
           <ProfileImage
             profileImageUrl={event.createdBy?.profileImageUrl}

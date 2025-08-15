@@ -51,7 +51,7 @@ const ActionMenu = memo(({ announcement, onPin, onDelete, isOwner }) => {
       <button
         ref={buttonRef}
         onClick={handleToggleMenu}
-        className="p-2 rounded-full cursor-pointer text-md hover:bg-gray-500/10 transition-colors"
+        className="p-2 transition-colors rounded-full cursor-pointer text-md hover:bg-gray-500/10"
         aria-label="Announcement options"
         aria-expanded={isOpen}
         aria-haspopup="true"
@@ -150,9 +150,9 @@ function AnnouncementCard({ announcement, onDelete, onTogglePin }) {
   }, [announcement._id, onTogglePin]);
 
   return (
-    <article className="relative flex flex-col p-3 border-b border-gray-300 md:p-4 hover:bg-gray-50/50 transition-colors">
+    <article className="relative flex flex-col p-3 transition-colors border-b border-gray-300 md:p-4 hover:bg-gray-50/50">
       <ClubLink club={announcement.club} onClick={handleClubNavigation} />
-      <div className="flex gap-3">
+      <div className="flex gap-1.5">
         <div className="flex-shrink-0">
           <ProfileImage
             profileImageUrl={announcement.postedBy.profileImageUrl}
@@ -167,10 +167,10 @@ function AnnouncementCard({ announcement, onDelete, onTogglePin }) {
           />
 
           <div className="space-y-1">
-            <h2 className="font-semibold text-black/75 break-words">
+            <h2 className="font-semibold break-words text-black/75">
               {announcement.title}
             </h2>
-            <p className="text-base text-gray-700 max-sm:text-sm break-words whitespace-pre-wrap">
+            <p className="text-base text-gray-700 break-words whitespace-pre-wrap max-sm:text-sm">
               {announcement.content}
             </p>
           </div>

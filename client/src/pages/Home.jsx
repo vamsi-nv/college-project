@@ -186,12 +186,12 @@ function Home() {
       {renderContent()}
       {feed.length < 1 && currentTab === "For You" && (
         <div className="h-[50vh] flex items-center justify-center text-gray-500">
-          Join a club to see events and announcements in your feed.
+          No events or announcements are there right now.
         </div>
       )}
       {events.length < 1 && currentTab === "Events" && (
         <div className="h-[50vh] flex items-center justify-center text-gray-500">
-          No events available at the moment. Check back later!
+          No events available at the moment. 
         </div>
       )}
       {announcements.length < 1 && currentTab === "Announcements" && (

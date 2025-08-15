@@ -4,7 +4,7 @@ import { LuUsers } from "react-icons/lu";
 import { TbPresentationAnalytics } from "react-icons/tb";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { RiMenu2Fill } from "react-icons/ri";
-
+import { MdOutlineEventNote } from "react-icons/md";
 function Admin() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navItems = [
@@ -17,6 +17,11 @@ function Admin() {
       label: "Clubs",
       path: "clubs",
       icon: LuUsers,
+    },
+    {
+      label: "Events",
+      path: "events",
+      icon: MdOutlineEventNote,
     },
   ];
 
@@ -75,7 +80,7 @@ function Admin() {
                     <>
                       <Icon
                         className={`size-5  lg:size-6 transition-all duration-200 ${
-                          isActive ? "stroke-2 text-primary" : "stroke-gray-500"
+                          isActive ? " text-primary" : "text-gray-500"
                         }`}
                       />
                       <span

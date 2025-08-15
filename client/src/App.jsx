@@ -5,6 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useEffect, lazy, Suspense, useMemo } from "react";
 import socket, { registerSocket } from "./utils/socket";
 import Chat from "./pages/Chat";
+import AdminEventsPage from "./pages/Admin/AdminEventsPage";
 
 const Signup = lazy(() => import("./pages/Signup"));
 const Login = lazy(() => import("./pages/Login"));
@@ -80,6 +81,7 @@ function App() {
             <Route path="/admin" element={<Admin />}>
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="clubs" element={<AdminClubsPage />} />
+              <Route path="events" element={<AdminEventsPage />} />
             </Route>
           </>
         ) : (

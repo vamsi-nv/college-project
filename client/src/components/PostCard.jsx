@@ -33,7 +33,7 @@ export const ProfileImage = memo(({ profileImageUrl, userName, size = 8 }) => {
 export const ClubLink = memo(({ club, onClick }) => (
   <div
     onClick={onClick}
-    className="flex w-fit hover:underline items-center gap-1 mb-1 text-sm text-gray-400 cursor-pointer sm:text-base transition-colors"
+    className="flex items-center gap-1 mb-1 text-sm text-gray-400 transition-colors cursor-pointer w-fit hover:underline sm:text-base"
     role="button"
     tabIndex={0}
     onKeyDown={(e) => e.key === "Enter" && onClick()}
@@ -61,7 +61,7 @@ export const TimeStamp = memo(({ createdAt }) => {
 export const AuthorInfo = memo(({ author, createdAt }) => {
   return (
     <div className="flex items-center gap-2 mb-2">
-      <h3 className="text-sm font-semibold sm:text-base text-black/80 truncate">
+      <h3 className="text-sm font-semibold truncate sm:text-base text-black/80">
         {author?.name}
       </h3>
       <TimeStamp createdAt={createdAt} />
