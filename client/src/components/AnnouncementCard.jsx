@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { BsFillPinFill } from "react-icons/bs";
 import { ProfileImage, ClubLink, AuthorInfo } from "./PostCard";
+import { LuPin, LuPinOff, LuTrash2 } from "react-icons/lu";
 
 const ActionMenu = memo(({ announcement, onPin, onDelete, isOwner }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,7 +37,7 @@ const ActionMenu = memo(({ announcement, onPin, onDelete, isOwner }) => {
 
   const handleToggleMenu = useCallback((e) => {
     e.stopPropagation();
-    setIsOpen(prev => !prev);
+    setIsOpen((prev) => !prev);
   }, []);
 
   const handleMenuAction = useCallback((action) => {
@@ -65,19 +66,27 @@ const ActionMenu = memo(({ announcement, onPin, onDelete, isOwner }) => {
         >
           <button
             onClick={() => handleMenuAction(onPin)}
-            className="w-full px-4 py-3 text-left rounded-[4px] hover:bg-primary/10 hover:text-primary transition-colors"
+            className="w-full px-4 flex items-center gap-1 py-3 text-left rounded-[4px] hover:bg-primary/10 hover:text-primary transition-colors"
             aria-label={
               announcement.pinned ? "Unpin announcement" : "Pin announcement"
             }
           >
-            {announcement.pinned ? "Unpin" : "Pin"}
+            {announcement.pinned ? (
+              <>
+                <LuPinOff /> Unpin
+              </>
+            ) : (
+              <>
+                <LuPin /> Pin
+              </>
+            )}
           </button>
           <button
             onClick={() => handleMenuAction(onDelete)}
-            className="w-full px-4 py-3 text-left rounded-[4px] hover:bg-red-500/10 hover:text-red-500 transition-colors"
+            className="w-full flex items-center gap-1 px-4 py-3 text-left rounded-[4px] hover:bg-red-500/10 hover:text-red-500 transition-colors"
             aria-label="Delete announcement"
           >
-            Delete
+            <LuTrash2 /> Delete
           </button>
         </div>
       )}
