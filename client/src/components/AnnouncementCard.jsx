@@ -130,10 +130,6 @@ function AnnouncementCard({ announcement, onDelete, onTogglePin }) {
         error.message ||
         "Error deleting announcement";
       toast.error(errorMessage);
-
-      if (process.env.NODE_ENV === "development") {
-        console.error("Error deleting announcement:", error);
-      }
     }
   }, [announcement._id, onDelete]);
 

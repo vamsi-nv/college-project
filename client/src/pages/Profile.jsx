@@ -1,6 +1,6 @@
 import Modal from "../components/Modal";
 import { useAuth } from "../context/UserContextProvider";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import ProfilePhotoSelector from "../components/ProfilePhotoSelector";
 import Input from "../components/Input";
 import axiosInstance from "../utils/axiosInstance";
@@ -30,13 +30,17 @@ function Profile() {
   const [announcements, setAnnouncements] = useState([]);
   const [removeProfileImage, setRemoveProfileImage] = useState(false);
 
-  const tabItems = [
-    { label: "Clubs" },
-    { label: "Events" },
-    { label: "Announcements" },
-  ];
+  const tabItems = useMemo(
+    () => [{ label: "Clubs" }, { label: "Events" }, { label: "Announcements" }],
+    []
+  );
 
-  const fetchUserEvents = async () => {
+  const userInitials = useMemo(() => {
+    if (!user?.name) return "";
+    return user.name.split(" ").map((word) => word.charAt(0));
+  }, [user?.name]);
+
+  const fetchUserEvents = useCallback(async () => {
     try {
       const response = await axiosInstance.get(
         api_paths.events.get_events_createdBy_me
@@ -48,9 +52,9 @@ function Profile() {
     } catch (error) {
       toast.error("Failed to fetch events");
     }
-  };
+  }, []);
 
-  const fetchUserAnnouncements = async () => {
+  const fetchUserAnnouncements = useCallback(async () => {
     try {
       const response = await axiosInstance.get(
         api_paths.announcements.get_announcements_createdBy_me
@@ -62,74 +66,109 @@ function Profile() {
     } catch (error) {
       toast.error("Failed to fetch announcements");
     }
-  };
+  }, []);
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    if (!name.trim()) return setError("Name is required");
+  const handleUpdate = useCallback(
+    async (e) => {
+      e.preventDefault();
+      if (!name.trim()) return setError("Name is required");
 
-    try {
-      setSaving(true);
-      const formData = new FormData();
-      formData.append("name", name);
+      try {
+        setSaving(true);
+        const formData = new FormData();
+        formData.append("name", name);
 
-      if (image) {
-        formData.append("image", image);
-      } else if (removeProfileImage) {
-        formData.append("removeProfileImage", true);
-      }
-
-      const response = await axiosInstance.put(
-        api_paths.auth.update_current_user,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+        if (image) {
+          formData.append("image", image);
+        } else if (removeProfileImage) {
+          formData.append("removeProfileImage", true);
         }
-      );
 
-      const data = response.data;
-      if (data.success) {
-        fetchCurrentUser();
-        setIsModalOpen(false);
-        setError("");
+        const response = await axiosInstance.put(
+          api_paths.auth.update_current_user,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        const data = response.data;
+        if (data.success) {
+          fetchCurrentUser();
+          setIsModalOpen(false);
+          setError("");
+        }
+      } catch (error) {
+        setError(
+          error.response?.data?.message ||
+            error.message ||
+            "Something went wrong. Please try again"
+        );
+        console.log(error);
+      } finally {
+        setSaving(false);
       }
-    } catch (error) {
-      setError(
-        error.response?.data?.message ||
-          error.message ||
-          "Something went wrong. Please try again"
-      );
-      console.log(error);
-    } finally {
-      setSaving(false);
-    }
-  };
+    },
+    [name, image, removeProfileImage, fetchCurrentUser]
+  );
+
+  const handleImageError = useCallback((e) => {
+    e.target.onerror = null;
+    setProfileImageUrl("");
+  }, []);
+
+  const handleTabChange = useCallback((tabLabel) => {
+    setCurrentTab(tabLabel);
+  }, []);
+
+  const handleModalOpen = useCallback(() => {
+    setIsModalOpen(true);
+  }, []);
 
   useEffect(() => {
+    if (!user) return;
     const fetchData = async () => {
       const clubData = await fetchUserClubs();
       if (clubData) setClubs(clubData);
     };
 
-    if (user) {
-      fetchData();
-      setProfileImageUrl(user.profileImageUrl || "");
-    }
+    fetchData();
+    setProfileImageUrl(user.profileImageUrl || "");
   }, [user]);
 
   useEffect(() => {
-    if (currentTab === "Events") fetchUserEvents();
-    if (currentTab === "Announcements") fetchUserAnnouncements();
-  }, [currentTab]);
+    let isMounted = true;
+
+    const fetchTabData = async () => {
+      if (currentTab === "Events" && events.length === 0) {
+        await fetchUserEvents();
+      } else if (currentTab === "Announcements" && announcements.length === 0) {
+        await fetchUserAnnouncements();
+      }
+    };
+
+    if (isMounted) {
+      fetchTabData();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [
+    currentTab,
+    events.length,
+    announcements.length,
+    fetchUserEvents,
+    fetchUserAnnouncements,
+  ]);
 
   useEffect(() => {
     if (isModalOpen && user) {
       setName(user.name);
     }
-  }, [isModalOpen, user]);
-
+  }, [isModalOpen, user?.name]);
   useEffect(() => {
     if (!isModalOpen) {
       setRemoveProfileImage(false);
@@ -149,21 +188,19 @@ function Profile() {
               <img
                 src={profileImageUrl}
                 alt="Profile"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  setProfileImageUrl("");
-                }}
+                onError={handleImageError}
                 className="w-full h-full rounded-full aspect-square"
+                loading="lazy"
               />
             ) : (
               <div className="size-full bg-gray-400 grid place-content-center rounded-full">
                 <div className="flex items-center justify-center">
-                  {user.name.split(" ").map((word, index) => (
+                  {userInitials.map((initial, index) => (
                     <span
                       className="pt-1 text-5xl max-sm:text-4xl text-white"
                       key={index}
                     >
-                      {word.charAt(0)}
+                      {initial}
                     </span>
                   ))}
                 </div>
@@ -175,7 +212,7 @@ function Profile() {
           </h3>
           <p className="text-sm text-gray-500 sm:text-base">{user.email}</p>
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={handleModalOpen}
             className="flex items-center gap-1 px-3 py-1 my-2 text-xs border rounded-full sm:text-sm sm:px-4 border-primary text-primary hover:bg-primary/30 bg-primary/20"
           >
             <FiEdit2 /> Edit
@@ -187,7 +224,7 @@ function Profile() {
             <button
               key={tabItem.label}
               title={tabItem.label}
-              onClick={() => setCurrentTab(tabItem.label)}
+              onClick={() => handleTabChange(tabItem.label)}
               className={`tab-label ${
                 currentTab === tabItem.label
                   ? "tab-selected"

@@ -13,7 +13,7 @@ import { useAuth } from "../context/UserContextProvider";
 import ClubHeader from "../components/ClubDetailsComponets/ClubHeader";
 import ClubCover from "../components/ClubDetailsComponets/ClubCover";
 import ClubInfo from "../components/ClubDetailsComponets/ClubInfo";
-import AddContentButton from "../components/ClubDetailsComponets/AddContextButton";
+import AddContentButton from "../components/ClubDetailsComponets/AddContentButton";
 import ClubTabs from "../components/ClubDetailsComponets/ClubTabs";
 import ClubEventsList from "../components/ClubDetailsComponets/ClubEventsList";
 import ClubAnnouncementsList from "../components/ClubDetailsComponets/ClubAnnouncementsList";

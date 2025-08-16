@@ -1,10 +1,10 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
-import { HiMiniUserCircle, HiUser, HiUsers } from "react-icons/hi2";
-import { LuArrowLeft, LuUser, LuUsers } from "react-icons/lu";
+import { HiMiniUserCircle, HiUsers } from "react-icons/hi2";
+import { LuUsers } from "react-icons/lu";
 import moment from "moment";
 import { MdEventAvailable, MdEventBusy, MdLocationOn } from "react-icons/md";
 import { useAuth } from "../context/UserContextProvider";
