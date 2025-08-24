@@ -10,12 +10,12 @@ const ClubImage = ({ coverImage, clubName }) => {
       {coverImage ? (
         <img
           src={coverImage}
-          className="object-cover w-12 h-12 rounded-full"
+          className="object-cover max-sm:w-10 max-sm:h-10 w-12 h-12 rounded-full"
           alt={clubName}
         />
       ) : (
         <span className="">
-          <HiUsers className="w-12 h-12 p-2.5 text-gray-400 bg-contain bg-gray-200  rounded-full" />
+          <HiUsers className="max-sm:w-10 max-sm:h-10 w-12 h-12 p-2.5 text-gray-400 bg-contain bg-gray-200  rounded-full" />
         </span>
       )}
     </div>

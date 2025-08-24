@@ -97,7 +97,7 @@ const ClubItem = memo(({ club, currentClubId, unreadCount, onSelect }) => {
       key={club?._id}
       onClick={handleClick}
       className={`cursor-pointer  px-4 py-6 flex items-center gap-3 transition relative ${
-        currentClubId === club?._id
+        currentClubId === club?._id  
           ? "bg-gray-100 border-l-2 border-primary"
           : "hover:bg-gray-50"
       }`}
@@ -106,7 +106,7 @@ const ClubItem = memo(({ club, currentClubId, unreadCount, onSelect }) => {
 
       <div className="flex-1">
         <p className="font-medium">{club.name}</p>
-        <p className="text-sm text-gray-500 truncate">{club.description}</p>
+        <p className="text-sm text-gray-500 truncate w-xs">{club.description}</p>
       </div>
       {unreadCount > 0 && (
         <div className="flex flex-col items-center justify-center">

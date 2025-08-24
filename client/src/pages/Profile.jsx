@@ -189,7 +189,7 @@ function Profile() {
                 src={profileImageUrl}
                 alt="Profile"
                 onError={handleImageError}
-                className="w-full h-full rounded-full aspect-square"
+                className="w-full h-full object-cover bg-cover rounded-full aspect-square"
                 loading="lazy"
               />
             ) : (

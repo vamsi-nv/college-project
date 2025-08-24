@@ -83,7 +83,7 @@ function HomeLayout() {
           {user.profileImageUrl ? (
             <img
               src={user.profileImageUrl}
-              className="w-7 h-7 rounded-full"
+              className="w-7 h-7 bg-cover object-cover rounded-full"
               alt=""
             />
           ) : (

@@ -15,7 +15,7 @@ export const ProfileImage = memo(({ profileImageUrl, userName, size = 8 }) => {
       <img
         src={profileImageUrl}
         alt={`${userName}'s profile`}
-        className={`w-${size} h-${size} rounded-full object-cover`}
+        className={`w-${size} h-${size} rounded-full bg-cover object-cover`}
         onError={handleImageError}
         loading="lazy"
       />

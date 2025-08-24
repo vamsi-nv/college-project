@@ -17,7 +17,7 @@ function ClubCard({ club, user = {} }) {
       ) : (
         <PiUsersThreeThin className="mx-auto font-light text-gray-300 size-40" />
       )}
-      <div className="p-4">
+      <div className="p-6">
         <h2 className="flex items-center justify-between text-lg font-semibold text-gray-700">
           {club.name}{" "}
           {club.admins.includes(user._id) && (
@@ -26,7 +26,7 @@ function ClubCard({ club, user = {} }) {
             </span>
           )}
         </h2>
-        <p className="text-sm text-gray-500">{club.description}</p>
+        <p className="text-sm max-w-[320px] sm:max-w-[350px] truncate text-gray-500">{club.description}</p>
       </div>
     </div>
   );
