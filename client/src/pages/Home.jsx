@@ -32,6 +32,16 @@ function Home() {
     );
   }, []);
 
+  const handleRSVPUpdate = useCallback((eventId, updatedAttendees) => {
+    setEvents((prevEvents) =>
+      prevEvents.map((event) =>
+        event._id === eventId
+          ? { ...event, attendees: updatedAttendees }
+          : event
+      )
+    );
+  }, []);
+
   const handleAnnouncementDelete = useCallback((announcementId) => {
     setAnnouncements((prevAnnouncements) =>
       prevAnnouncements.filter(
@@ -119,6 +129,7 @@ function Home() {
                   key={`event-${item._id}`}
                   event={item}
                   onDelete={handleEventDelete}
+                  onRSVPUpdate={handleRSVPUpdate} 
                 />
               ) : (
                 <AnnouncementCard
@@ -139,6 +150,7 @@ function Home() {
               <EventCard
                 key={`event-${event._id}`}
                 onDelete={handleEventDelete}
+                onRSVPUpdate={handleRSVPUpdate} 
                 event={event}
               />
             ))}
@@ -191,7 +203,7 @@ function Home() {
       )}
       {events.length < 1 && currentTab === "Events" && (
         <div className="h-[50vh] flex items-center justify-center text-gray-500">
-          No events available at the moment. 
+          No events available at the moment.
         </div>
       )}
       {announcements.length < 1 && currentTab === "Announcements" && (

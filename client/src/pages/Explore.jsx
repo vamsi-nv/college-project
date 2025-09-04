@@ -8,7 +8,6 @@ import {
   useEffect,
 } from "react";
 import axiosInstance from "../utils/axiosInstance";
-import { PiUsersThreeThin } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import { LuSearch, LuX } from "react-icons/lu";
 import { useDebounce } from "../hooks/useDebounce";
@@ -19,7 +18,7 @@ const EventCard = lazy(() => import("../components/EventCard"));
 const ClubItem = ({ club, onClick }) => (
   <div
     onClick={onClick}
-    className="flex items-center gap-3 py-3 px-3 hover:bg-white w-full rounded-lg cursor-pointer transition-colors duration-150"
+    className="flex items-center w-full gap-3 px-3 py-3 transition-colors duration-150 rounded-lg cursor-pointer hover:bg-white"
     role="button"
     tabIndex={0}
     onKeyDown={(e) => e.key === "Enter" && onClick()}
@@ -34,11 +33,11 @@ const ClubItem = ({ club, onClick }) => (
       ) : (
         <HiUsers
           fill="white"
-          className="w-12 h-12 p-2 bg-gray-400/60 text-white bg-contain border border-gray-300 rounded-full"
+          className="w-12 h-12 p-2 text-white bg-contain border border-gray-300 rounded-full bg-gray-400/60"
         />
       )}
     </div>
-    <div className="min-w-0 flex-1">
+    <div className="flex-1 min-w-0">
       <p className="font-medium text-gray-900 truncate">{club.name}</p>
       <p className="text-sm text-gray-500">
         {club.members?.length || 0} members
@@ -49,9 +48,9 @@ const ClubItem = ({ club, onClick }) => (
 
 const SearchInput = ({ value, onChange, onClear }) => (
   <div className="max-sm:mt-[52px] flex m-5 items-center bg-white border border-gray-300 rounded-lg px-4 py-2 w-4/5 max-sm:w-[92%] mx-auto">
-    <LuSearch className="text-gray-400 mr-3 flex-shrink-0" size={20} />
+    <LuSearch className="flex-shrink-0 mr-3 text-gray-400" size={20} />
     <input
-      className="flex-1 bg-transparent outline-none text-sm placeholder-gray-500"
+      className="flex-1 text-sm placeholder-gray-500 bg-transparent outline-none"
       type="text"
       value={value}
       onChange={onChange}
@@ -164,14 +163,14 @@ function Explore() {
       />
 
       {error && (
-        <div className="mx-5 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-red-600 text-sm">{error}</p>
+        <div className="p-4 mx-5 border border-red-200 rounded-lg bg-red-50">
+          <p className="text-sm text-red-600">{error}</p>
         </div>
       )}
 
       {clubs.length > 0 && (
         <section className="m-5">
-          <h2 className="font-semibold text-lg text-gray-800 mb-3">
+          <h2 className="mb-3 text-lg font-semibold text-gray-800">
             Clubs ({clubs.length})
           </h2>
           <div className="space-y-1">
@@ -188,7 +187,7 @@ function Explore() {
 
       {events.length > 0 && (
         <section className="mb-5">
-          <h2 className="font-semibold text-lg text-gray-800 mx-5 mb-3">
+          <h2 className="mx-5 mb-3 text-lg font-semibold text-gray-800">
             Events ({events.length})
           </h2>
           <Suspense
@@ -197,7 +196,7 @@ function Explore() {
                 {[...Array(3)].map((_, i) => (
                   <div
                     key={i}
-                    className="animate-pulse bg-gray-200 h-24 rounded-lg"
+                    className="h-24 bg-gray-200 rounded-lg animate-pulse"
                   ></div>
                 ))}
               </div>
@@ -213,29 +212,29 @@ function Explore() {
       )}
 
       {showNoResults && (
-        <div className="text-center py-12">
-          <div className="text-gray-400 mb-2">
+        <div className="py-12 text-center">
+          <div className="mb-2 text-gray-400">
             <LuSearch size={48} className="mx-auto" />
           </div>
-          <p className="text-gray-500 text-lg">
+          <p className="text-lg text-gray-500">
             No results found for "
             <span className="font-semibold text-gray-700">{searchQuery}</span>"
           </p>
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="mt-1 text-sm text-gray-400">
             Try searching with different keywords
           </p>
         </div>
       )}
 
       {!searchQuery && searchResults.length === 0 && !loading && (
-        <div className="text-center py-16">
-          <div className="text-gray-300 mb-4">
+        <div className="py-16 text-center">
+          <div className="mb-4 text-gray-300">
             <LuSearch size={64} className="mx-auto" />
           </div>
-          <h3 className="text-xl font-medium text-gray-600 mb-2">
+          <h3 className="mb-2 text-xl font-medium text-gray-600">
             Discover clubs and events
           </h3>
-          <p className="text-gray-500 text-sm md:text-base">
+          <p className="text-sm text-gray-500 md:text-base">
             Search for clubs, events, and announcements to get started
           </p>
         </div>

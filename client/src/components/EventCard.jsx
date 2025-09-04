@@ -104,20 +104,6 @@ const ActionMenu = memo(({ event, onDelete, isOwner }) => {
   );
 });
 
-const DeleteButton = memo(({ onDelete, eventId, isOwner }) => {
-  if (!isOwner) return null;
-
-  return (
-    <button
-      onClick={() => onDelete(eventId)}
-      title="Delete Event"
-      className="flex items-center justify-center gap-1 p-2 transition-colors rounded-full cursor-pointer text-md hover:bg-red-500/10 hover:text-red-500"
-      aria-label="Delete event"
-    >
-      <LuTrash2 size={16} />
-    </button>
-  );
-});
 
 const RSVPButton = memo(({ isAttending, onRsvp, isLoading }) => (
   <button
@@ -141,7 +127,7 @@ const RSVPButton = memo(({ isAttending, onRsvp, isLoading }) => (
   </button>
 ));
 
-function EventCard({ event, onDelete }) {
+function EventCard({ event, onDelete, onRSVPUpdate }) {
   const [isAttending, setIsAttending] = useState(false);
   const [isRsvpLoading, setIsRsvpLoading] = useState(false);
   const navigate = useNavigate();
@@ -210,7 +196,16 @@ function EventCard({ event, onDelete }) {
 
       if (response.data?.success) {
         toast.success(response.data.message);
-        setIsAttending((prev) => !prev);
+        const newAttendingStatus = !isAttending;
+        setIsAttending(newAttendingStatus);
+        
+        if (onRSVPUpdate) {
+          const updatedAttendees = newAttendingStatus 
+            ? [...(event.attendees || []), user._id]
+            : (event.attendees || []).filter(id => id !== user._id);
+          
+          onRSVPUpdate(event._id, updatedAttendees);
+        }
       } else {
         throw new Error("RSVP failed");
       }
@@ -221,7 +216,7 @@ function EventCard({ event, onDelete }) {
     } finally {
       setIsRsvpLoading(false);
     }
-  }, [event._id, isRsvpLoading]);
+  }, [event._id, isRsvpLoading, isAttending, onRSVPUpdate, event.attendees, user._id]);
 
   return (
     <article className="relative flex flex-col p-3 transition-colors border-b border-gray-300 md:p-4 hover:bg-gray-50/50">

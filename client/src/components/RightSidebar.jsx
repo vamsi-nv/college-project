@@ -75,7 +75,7 @@ function RightSidebar() {
         <h3 className="px-4 mb-3 text-lg font-semibold text-gray-700">
           What to join
         </h3>
-        <div className="xl:w-full flex flex-col divide-y divide-gray-300">
+        <div className="flex flex-col divide-y divide-gray-300 xl:w-full">
           {clubs.map((club) => (
             <div
               key={club._id}
@@ -92,13 +92,13 @@ function RightSidebar() {
                   ) : (
                     <HiUsers
                       fill="white"
-                      className="w-12 h-12 p-2 bg-gray-400/60 text-white bg-contain border border-gray-300 rounded-full"
+                      className="w-12 h-12 p-2 text-white bg-contain border border-gray-300 rounded-full bg-gray-400/60"
                     />
                   )}
                 </div>
                 <div>
                   <Link to={`/clubs/${club._id}`}>
-                    <h4 className="text-base text-gray-700 font-medium">
+                    <h4 className="text-base font-medium text-gray-700">
                       {club.name}
                     </h4>
                   </Link>
@@ -107,13 +107,13 @@ function RightSidebar() {
                   </p>
                 </div>
               </div>
-              <button
+              {/* <button
                 onClick={() => handleJoinClub(club._id)}
                 disabled={loading}
                 className="px-4 py-1 mt-2 text-sm text-white transition-colors duration-300 rounded-full bg-primary hover:bg-primary/90 place-self-start disabled:opacity-50"
               >
                 Join
-              </button>
+              </button> */}
             </div>
           ))}
         </div>
@@ -124,7 +124,7 @@ function RightSidebar() {
           New Messages
         </h3>
 
-        <div className="xl:w-full flex flex-col divide-y divide-gray-300">
+        <div className="flex flex-col divide-y divide-gray-300 xl:w-full">
           {userClubs.map((club) => {
             const unreadCount = unreadMessageCounts[club._id] || 0;
 
@@ -134,7 +134,7 @@ function RightSidebar() {
                 className="flex items-center justify-between p-4"
               >
                 <div className="relative flex items-center gap-2">
-                  <div className="size-12 shrink-0 relative">
+                  <div className="relative size-12 shrink-0">
                     {club.coverImage ? (
                       <img
                         src={club.coverImage}
@@ -144,7 +144,7 @@ function RightSidebar() {
                     ) : (
                       <HiUsers
                         fill="white"
-                        className="w-12 h-12 p-2 bg-gray-400/60 text-white bg-contain border border-gray-300 rounded-full"
+                        className="w-12 h-12 p-2 text-white bg-contain border border-gray-300 rounded-full bg-gray-400/60"
                       />
                     )}
                     {unreadCount > 0 && (
@@ -155,7 +155,7 @@ function RightSidebar() {
                   </div>
                   <div>
                     <Link to={`/chat`}>
-                      <h4 className="text-base text-gray-700 font-medium">
+                      <h4 className="text-base font-medium text-gray-700">
                         {club.name}
                       </h4>
                     </Link>
@@ -175,7 +175,7 @@ function RightSidebar() {
       </div>
 
       {error && (
-        <div className="mt-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded">
+        <div className="p-3 mt-4 text-red-700 bg-red-100 border border-red-300 rounded">
           {error}
         </div>
       )}

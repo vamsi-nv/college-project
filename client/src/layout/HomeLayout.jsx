@@ -66,7 +66,7 @@ function HomeLayout() {
   return (
     <div className={`min-h-screen relative flex bg-white`}>
       <motion.div
-        className="fixed top-0 left-0 right-0 flex items-center justify-between z-30 p-3 text-gray-800  sm:hidden backdrop-blur-xl"
+        className="fixed top-0 left-0 right-0 z-30 flex items-center justify-between p-3 text-gray-800 sm:hidden backdrop-blur-xl"
         initial={{ y: 0 }}
         animate={{
           y: isTopBarVisible ? 0 : -100,
@@ -83,11 +83,11 @@ function HomeLayout() {
           {user.profileImageUrl ? (
             <img
               src={user.profileImageUrl}
-              className="w-7 h-7 bg-cover object-cover rounded-full"
+              className="object-cover bg-cover rounded-full w-7 h-7"
               alt=""
             />
           ) : (
-            <HiMiniUserCircle className="size-6 text-gray-300" />
+            <HiMiniUserCircle className="text-gray-300 size-6" />
           )}
         </button>
       </motion.div>
@@ -110,7 +110,7 @@ function HomeLayout() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -300, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="fixed top-0 left-0 z-50 h-full w-64 bg-white sm:hidden"
+              className="fixed top-0 left-0 z-50 w-64 h-full bg-white sm:hidden"
             >
               <Sidebar
                 isMobileMenuOpen={isMobileMenuOpen}
