@@ -35,7 +35,7 @@ function ProfilePhotoSelector({
     <div className="flex justify-center">
       <input
         type="file"
-        accept="image/"
+        accept="image/*"
         ref={inputRef}
         onChange={handleImageChange}
         className="hidden"

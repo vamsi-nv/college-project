@@ -5,7 +5,10 @@ import { TbPresentationAnalytics } from "react-icons/tb";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { RiMenu2Fill } from "react-icons/ri";
 import { MdOutlineEventNote } from "react-icons/md";
+import { FiLogOut } from "react-icons/fi";
+import { useAuth } from "../../context/UserContextProvider";
 function Admin() {
+  const { logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navItems = [
     {
@@ -24,6 +27,13 @@ function Admin() {
       icon: MdOutlineEventNote,
     },
   ];
+  const handleLogout = async () => {
+    try {
+      logout();
+    } catch (error) {
+      console.error("error : ", error);
+    }
+  };
 
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -46,18 +56,16 @@ function Admin() {
               : "sm:block md:block hidden max-sm:-translate-x-full sticky"
           }`}
         >
-          <Link to={"/home"}>
-            <div className="flex items-center gap-1 px-2 mb-5">
-              <img src={logo} alt="logo" className="w-10" />
-              <h2
-                className={`hidden font-medium text-xl lg:block ${
-                  isMobileMenuOpen && "max-sm:block"
-                }`}
-              >
-                CSphere
-              </h2>
-            </div>
-          </Link>
+          <div className="flex items-center gap-1 px-2 mb-5">
+            <img src={logo} alt="logo" className="w-10" />
+            <h2
+              className={`hidden font-medium text-xl lg:block ${
+                isMobileMenuOpen && "max-sm:block"
+              }`}
+            >
+              CSphere
+            </h2>
+          </div>
           <div className="flex flex-col">
             {navItems.map(({ label, path, icon: Icon }) => (
               <div
@@ -99,6 +107,19 @@ function Admin() {
                 </NavLink>
               </div>
             ))}
+            <button
+              onClick={handleLogout}
+              className={`flex items-center gap-3 text-base p-4 mb-4 text-red-500  hover:bg-red-500/10 hover:ring hover:gap-5  transition-all duration-200 rounded-lg`}
+            >
+              <FiLogOut className="size-5" />
+              <span
+                className={`${
+                  isMobileMenuOpen ? "max-sm:block" : ""
+                }  hidden lg:flex-1 text-left lg:block`}
+              >
+                Logout
+              </span>
+            </button>
           </div>
         </div>
       </div>

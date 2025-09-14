@@ -3,6 +3,8 @@ import EventCard from "../components/EventCard";
 import AnnouncementCard from "../components/AnnouncementCard";
 import Loader from "../components/Loader";
 import HomeService from "../services/homeServices";
+import { useAuth } from "../context/UserContextProvider";
+import { useNavigate } from "react-router-dom";
 
 const TAB_ITEMS = [
   { label: "For You" },
@@ -20,6 +22,14 @@ function Home() {
     announcements: false,
     forYou: false,
   });
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  if (user?.isAdmin) {
+    console.log("redirected");
+    navigate("/admin/dashboard");
+  }
 
   const feed = useMemo(() => {
     if (events.length === 0 && announcements.length === 0) return [];
@@ -129,7 +139,7 @@ function Home() {
                   key={`event-${item._id}`}
                   event={item}
                   onDelete={handleEventDelete}
-                  onRSVPUpdate={handleRSVPUpdate} 
+                  onRSVPUpdate={handleRSVPUpdate}
                 />
               ) : (
                 <AnnouncementCard
@@ -150,7 +160,7 @@ function Home() {
               <EventCard
                 key={`event-${event._id}`}
                 onDelete={handleEventDelete}
-                onRSVPUpdate={handleRSVPUpdate} 
+                onRSVPUpdate={handleRSVPUpdate}
                 event={event}
               />
             ))}

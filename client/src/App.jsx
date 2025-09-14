@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "./context/UserContextProvider";
 import Loader from "./components/Loader";
 import toast, { Toaster } from "react-hot-toast";
@@ -25,7 +25,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
   const { user, loading } = useAuth();
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (user?._id) {
       registerSocket(user._id);
@@ -35,13 +35,17 @@ function App() {
       };
 
       socket.on("notification", handleNotification);
-
       return () => socket.off("notification", handleNotification);
     }
   }, [user?._id]);
 
   const routes = useMemo(() => {
     if (loading) return null;
+
+    if (user?.isAdmin) {
+      console.log("redirected");
+      navigate("/admin/dashboard");
+    }
 
     return (
       <Routes>

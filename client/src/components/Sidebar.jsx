@@ -124,7 +124,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen = () => {} }) {
 
       <button
         onClick={handleLogout}
-        className={`flex items-center gap-3 text-base p-4 mb-4 text-gray-500 hover:gap-4 hover:text-neutral-950 transition-all duration-200`}
+        className={`flex items-center gap-3 text-base p-4 mb-4 text-gray-500 hover:gap-4 hover:text-red-500 transition-all duration-200`}
       >
         <FiLogOut className="w-5 h-5 max-xl:flex-1" />
         <span

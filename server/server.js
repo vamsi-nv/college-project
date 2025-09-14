@@ -23,9 +23,7 @@ const server = http.createServer(app);
 connectDB();
 
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
-const allowedOrigins = [
-  "http://localhost:5173",
-];
+const allowedOrigins = ["http://localhost:5173"];
 
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json({ limit: "16kb" }));
@@ -50,7 +48,7 @@ app.use("/api/events", eventRouter);
 app.use("/api/announcements", announcementRouter);
 app.use("/api/notifications", notificationRouter);
 app.use("/api/explore", exploreRouter);
-app.use("/api/messages", messageRouter)
+app.use("/api/messages", messageRouter);
 
 server.listen(port, () => {
   console.log("Server is up and running on port : " + port);

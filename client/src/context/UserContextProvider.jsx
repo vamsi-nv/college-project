@@ -102,11 +102,10 @@ function UserContextProvider({ children }) {
   const markClubMessagesAsRead = useCallback(async (clubId) => {
     try {
       await axiosInstance.patch(api_paths.messages.mark_read_many, { clubId });
-      
-      // Update the unread count for this specific club
-      setUnreadMessageCounts(prev => ({
+
+      setUnreadMessageCounts((prev) => ({
         ...prev,
-        [clubId]: 0
+        [clubId]: 0,
       }));
     } catch (error) {
       console.error("Error marking messages as read:", error);
@@ -114,16 +113,16 @@ function UserContextProvider({ children }) {
   }, []);
 
   const updateUnreadMessageCount = useCallback((clubId, count) => {
-    setUnreadMessageCounts(prev => ({
+    setUnreadMessageCounts((prev) => ({
       ...prev,
-      [clubId]: count
+      [clubId]: count,
     }));
   }, []);
 
   const incrementUnreadMessageCount = useCallback((clubId) => {
-    setUnreadMessageCounts(prev => ({
+    setUnreadMessageCounts((prev) => ({
       ...prev,
-      [clubId]: (prev[clubId] || 0) + 1
+      [clubId]: (prev[clubId] || 0) + 1,
     }));
   }, []);
 
@@ -196,11 +195,11 @@ function UserContextProvider({ children }) {
       const initializeClubData = async () => {
         const clubs = await fetchUserClubsData();
         if (clubs && clubs.length > 0) {
-          const clubIds = clubs.map(club => club._id);
+          const clubIds = clubs.map((club) => club._id);
           await fetchUnreadMessageCounts(clubIds);
         }
       };
-      
+
       initializeClubData();
     }
   }, [user, fetchUserClubsData, fetchUnreadMessageCounts]);
