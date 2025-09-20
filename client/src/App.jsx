@@ -21,7 +21,6 @@ const AdminClubsPage = lazy(() => import("./pages/Admin/AdminClubsPage"));
 const AdminDashboard = lazy(() => import("./pages/Admin/AdminDashboard"));
 const EventDetails = lazy(() => import("./pages/EventDetails"));
 const LandingPage = lazy(() => import("./pages/LandingPage"));
-const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
   const { user, loading } = useAuth();
@@ -43,7 +42,6 @@ function App() {
     if (loading) return null;
 
     if (user?.isAdmin) {
-      console.log("redirected");
       navigate("/admin/dashboard");
     }
 

@@ -24,6 +24,7 @@ connectDB();
 
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
 const allowedOrigins = ["https://csphere-connect.vercel.app"];
+// const allowedOrigins = ["http://localhost:5173"];
 
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json({ limit: "16kb" }));

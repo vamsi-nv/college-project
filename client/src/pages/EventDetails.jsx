@@ -60,7 +60,7 @@ const ProfileImage = memo(({ profileImageUrl, name, size = "size-12" }) => {
   return (
     <HiMiniUserCircle
       className={`text-gray-300 rounded-full ${
-        size === "size-10" ? "size-10" : "size-12"
+        size === "size-10" ? "size-12" : "size-12"
       } ${size === "size-10" ? "text-gray-400" : ""}`}
     />
   );

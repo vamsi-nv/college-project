@@ -167,7 +167,7 @@ function Clubs() {
 
       <div className="flex flex-col justify-center w-full h-full sm:px-4 py-6">
         {clubs.length === 0 ? (
-          <p className="max-w-sm mt-10 text-sm text-center text-gray-400">
+          <p className="text-center text-gray-500 mt-40 p-6">
             You haven't joined any clubs yet. Create your own club.
           </p>
         ) : (

@@ -1,4 +1,5 @@
 export const base_url = "https://csphere-sever.onrender.com";
+// export const base_url = "http://localhost:3000";
 
 export const api_paths = {
   auth: {
@@ -6,7 +7,6 @@ export const api_paths = {
     login: "/api/user/login",
     get_current_user: "/api/user/current-user",
     update_current_user: "/api/user/current-user",
-    google_auth: "/api/user/auth/google",
   },
 
   admin: {

@@ -11,7 +11,6 @@ import { HiUsers } from "react-icons/hi2";
 import { HiOutlineChatAlt } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 
-
 const ClubProfileComponent = memo(({ club }) => {
   return (
     <div className="relative">
@@ -97,7 +96,7 @@ const ClubItem = memo(({ club, currentClubId, unreadCount, onSelect }) => {
       key={club?._id}
       onClick={handleClick}
       className={`cursor-pointer  px-4 py-6 flex items-center gap-3 transition relative ${
-        currentClubId === club?._id  
+        currentClubId === club?._id
           ? "bg-gray-100 border-l-2 border-primary"
           : "hover:bg-gray-50"
       }`}
@@ -106,7 +105,9 @@ const ClubItem = memo(({ club, currentClubId, unreadCount, onSelect }) => {
 
       <div className="flex-1">
         <p className="font-medium">{club.name}</p>
-        <p className="text-sm text-gray-500 truncate w-xs">{club.description}</p>
+        <p className="text-sm text-gray-500 truncate w-xs">
+          {club.description}
+        </p>
       </div>
       {unreadCount > 0 && (
         <div className="flex flex-col items-center justify-center">
@@ -328,7 +329,19 @@ function Chat() {
           Chats
         </h2>
 
-        <div>{clubsList}</div>
+        {clubsList.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full py-10 text-gray-500">
+            <HiUsers className="w-16 h-16 mb-4 text-gray-300" />
+            <p className="mb-2 text-lg font-medium">No clubs found</p>
+            <p className="text-sm text-gray-400 text-center">
+              You are not a member of any clubs yet.
+              <br />
+              Join a club to start chatting!
+            </p>
+          </div>
+        ) : (
+          <div>{clubsList}</div>
+        )}
       </div>
 
       {shouldShowChat && (
@@ -346,7 +359,10 @@ function Chat() {
                 )}
 
                 <ClubProfileComponent club={currentClub} />
-                <div onClick={() => navigate(`/clubs/${currentClub._id}`)} className="cursor-pointer flex flex-col items-start">
+                <div
+                  onClick={() => navigate(`/clubs/${currentClub._id}`)}
+                  className="cursor-pointer flex flex-col items-start"
+                >
                   <p className="font-semibold text-gray-800">
                     {currentClub.name}
                   </p>
@@ -384,7 +400,11 @@ function Chat() {
           ) : (
             <div className="flex flex-col items-center justify-center h-full">
               <HiOutlineChatAlt className="w-24 h-24 text-primary/90 fill-primary/20" />
-              <p className="text-gray-600">Select a club to start chatting</p>
+              <p className="text-gray-600">
+                {clubsList.length > 0
+                  ? "Select a club to view conversation"
+                  : "Join a club and start conversation"}
+              </p>
             </div>
           )}
         </div>
