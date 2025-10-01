@@ -186,8 +186,6 @@ function Home() {
     }
   };
 
-  if (loading) return <Loader />;
-
   return (
     <div className="h-full max-w-full">
       <div className="sticky flex items-center justify-around w-full sm:pt-4 pt-[50px] overflow-x-scroll border-b border-gray-300">
@@ -205,21 +203,29 @@ function Home() {
         ))}
       </div>
 
-      {renderContent()}
-      {feed.length < 1 && currentTab === "For You" && (
-        <div className="h-[50vh] flex items-center justify-center text-gray-500 p-6 text-center ">
-          No events or announcements are there right now.
+      {loading ? (
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <Loader />
         </div>
-      )}
-      {events.length < 1 && currentTab === "Events" && (
-        <div className="h-[50vh] flex items-center justify-center text-gray-500 p-6 text-center">
-          No events available at the moment.
-        </div>
-      )}
-      {announcements.length < 1 && currentTab === "Announcements" && (
-        <div className="h-[50vh] flex items-center justify-center text-gray-500 p-6 text-center">
-          No announcements to display right now.
-        </div>
+      ) : (
+        <>
+          {renderContent()}
+          {feed.length < 1 && currentTab === "For You" && (
+            <div className="h-[50vh] flex items-center justify-center text-gray-500 p-6 text-center ">
+              No events or announcements are there right now.
+            </div>
+          )}
+          {events.length < 1 && currentTab === "Events" && (
+            <div className="h-[50vh] flex items-center justify-center text-gray-500 p-6 text-center">
+              No events available at the moment.
+            </div>
+          )}
+          {announcements.length < 1 && currentTab === "Announcements" && (
+            <div className="h-[50vh] flex items-center justify-center text-gray-500 p-6 text-center">
+              No announcements to display right now.
+            </div>
+          )}
+        </>
       )}
     </div>
   );
