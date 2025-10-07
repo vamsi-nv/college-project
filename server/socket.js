@@ -2,10 +2,7 @@ const activeUsers = new Map();
 
 export default function socketHandler(io) {
   io.on("connection", (socket) => {
-    console.log("NEW CONN : ", socket.id);
     socket.on("register", (userId) => {
-      console.log("REGISTER", userId);
-      console.log("Active users", activeUsers);
       activeUsers.set(userId, socket.id);
     });
 
@@ -31,7 +28,6 @@ export default function socketHandler(io) {
       for (const [userId, socketId] of activeUsers.entries()) {
         if (socketId === socket.id) {
           activeUsers.delete(userId);
-          console.log(`User ${userId} disconnected`);
           break;
         }
       }
@@ -39,7 +35,6 @@ export default function socketHandler(io) {
   });
 
   io.sendNotification = (userId, data) => {
-    console.log("SEND NOTIFICATION");
     const socketId = activeUsers.get(userId);
     if (socketId) {
       io.to(socketId).emit("notification", data);
@@ -55,9 +50,6 @@ export default function socketHandler(io) {
 
   io.updateMessageCount = (userId, { clubId }) => {
     const socketId = activeUsers.get(userId);
-    console.log(
-      `NEW MESSAGE - Server: Emitting to user ${userId}, club ${clubId}`
-    );
     if (socketId) {
       io.to(socketId).emit("newMessage", { clubId });
     } else {

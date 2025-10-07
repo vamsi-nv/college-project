@@ -34,14 +34,12 @@ export const sendMessage = async (req, res) => {
 
     const io = req.app.get("io");
     const otherMembers = club.members.filter((member) => {
-      console.log("loop", member._id);
       return member._id.toString() !== userId.toString();
     });
     otherMembers.forEach((member) => {
       io.updateMessageCount(member._id.toString(), { clubId });
     });
 
-    console.log("NEW MESSAGE Controller");
     res.status(201).json({
       success: true,
       message: "message sent",
