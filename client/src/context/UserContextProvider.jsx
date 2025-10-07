@@ -112,19 +112,19 @@ function UserContextProvider({ children }) {
     }
   }, []);
 
-  const updateUnreadMessageCount = useCallback((clubId, count) => {
-    setUnreadMessageCounts((prev) => ({
-      ...prev,
-      [clubId]: count,
-    }));
-  }, []);
+  // const updateUnreadMessageCount = useCallback((clubId, count) => {
+  //   setUnreadMessageCounts((prev) => ({
+  //     ...prev,
+  //     [clubId]: count,
+  //   }));
+  // }, []);
 
-  const incrementUnreadMessageCount = useCallback((clubId) => {
-    setUnreadMessageCounts((prev) => ({
-      ...prev,
-      [clubId]: (prev[clubId] || 0) + 1,
-    }));
-  }, []);
+  // const incrementUnreadMessageCount = useCallback((clubId) => {
+  //   setUnreadMessageCounts((prev) => ({
+  //     ...prev,
+  //     [clubId]: (prev[clubId] || 0) + 1,
+  //   }));
+  // }, []);
 
   const value = useMemo(
     () => ({
@@ -139,8 +139,8 @@ function UserContextProvider({ children }) {
       fetchUserClubsData,
       fetchUnreadMessageCounts,
       markClubMessagesAsRead,
-      updateUnreadMessageCount,
-      incrementUnreadMessageCount,
+      // updateUnreadMessageCount,
+      // incrementUnreadMessageCount,
     }),
     [
       user,
@@ -154,8 +154,8 @@ function UserContextProvider({ children }) {
       fetchUserClubsData,
       fetchUnreadMessageCounts,
       markClubMessagesAsRead,
-      updateUnreadMessageCount,
-      incrementUnreadMessageCount,
+      // updateUnreadMessageCount,
+      // incrementUnreadMessageCount,
     ]
   );
 
@@ -172,11 +172,9 @@ function UserContextProvider({ children }) {
         fetchUnreadCount();
       };
 
-      const messageHandler = ({ clubId, sender }) => {
-        // Only increment if the message is not from the current user
-        if (sender !== user.name) {
-          incrementUnreadMessageCount(clubId);
-        }
+      const messageHandler = ({ clubId }) => {
+        console.log(`NEW MESSAGE - Client: Received for club ${clubId}`);
+        fetchUnreadMessageCounts([clubId]);
       };
 
       socket.on("updateUnreadCount", updateHandler);
@@ -187,7 +185,7 @@ function UserContextProvider({ children }) {
         socket.off("newMessage", messageHandler);
       };
     }
-  }, [user, fetchUnreadCount, incrementUnreadMessageCount]);
+  }, [user, fetchUnreadCount]);
 
   // Fetch user clubs and their unread counts when user is available
   useEffect(() => {

@@ -272,9 +272,10 @@ function Chat() {
 
     socket.on("message", handleMessage);
 
-    return () => {
+    return async () => {
       socket.off("message", handleMessage);
       socket.emit("leaveRoom", currentClub._id);
+      await markClubMessagesAsRead(currentClub._id);
     };
   }, [currentClub]);
 

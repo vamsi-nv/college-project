@@ -2,7 +2,10 @@ const activeUsers = new Map();
 
 export default function socketHandler(io) {
   io.on("connection", (socket) => {
+    console.log("NEW CONN : ", socket.id);
     socket.on("register", (userId) => {
+      console.log("REGISTER", userId);
+      console.log("Active users", activeUsers);
       activeUsers.set(userId, socket.id);
     });
 
@@ -16,6 +19,7 @@ export default function socketHandler(io) {
 
     socket.on("sendMessage", ({ room, message, sender }) => {
       if (!room || !message || !sender) return;
+      console.log(message, sender);
       socket.to(room).emit("message", {
         message,
         sender,
@@ -35,6 +39,7 @@ export default function socketHandler(io) {
   });
 
   io.sendNotification = (userId, data) => {
+    console.log("SEND NOTIFICATION");
     const socketId = activeUsers.get(userId);
     if (socketId) {
       io.to(socketId).emit("notification", data);
@@ -45,6 +50,18 @@ export default function socketHandler(io) {
     const socketId = activeUsers.get(userId);
     if (socketId) {
       io.to(socketId).emit("updateUnreadCount");
+    }
+  };
+
+  io.updateMessageCount = (userId, { clubId }) => {
+    const socketId = activeUsers.get(userId);
+    console.log(
+      `NEW MESSAGE - Server: Emitting to user ${userId}, club ${clubId}`
+    );
+    if (socketId) {
+      io.to(socketId).emit("newMessage", { clubId });
+    } else {
+      console.log(`No socket found for user ${userId}`);
     }
   };
 }
