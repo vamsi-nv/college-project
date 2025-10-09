@@ -33,6 +33,11 @@ const messageSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+
+    dID: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

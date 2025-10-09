@@ -14,12 +14,13 @@ export default function socketHandler(io) {
       socket.leave(clubId);
     });
 
-    socket.on("sendMessage", ({ room, message, sender }) => {
+    socket.on("sendMessage", ({ room, message, sender, dID }) => {
       if (!room || !message || !sender) return;
       console.log(message, sender);
       socket.to(room).emit("message", {
         message,
         sender,
+        dID,
         createdAt: new Date().toISOString(),
       });
     });

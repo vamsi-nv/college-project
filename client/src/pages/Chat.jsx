@@ -7,6 +7,7 @@ import axiosInstance from "../utils/axiosInstance";
 import { api_paths } from "../utils/apiPaths";
 import toast from "react-hot-toast";
 import moment from "moment";
+import { nanoid } from "nanoid";
 import { HiUsers } from "react-icons/hi2";
 import { HiOutlineChatAlt } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
@@ -49,42 +50,172 @@ function useIsMobile(breakpoint = 768) {
   return isMobile;
 }
 
-const MessageItem = memo(({ msg, isCurrentUser, userName }) => {
-  const formattedTime = useMemo(
-    () => moment(msg.createdAt).format("HH:mm"),
-    [msg.createdAt]
-  );
+const MessageItem = memo(
+  ({
+    msg,
+    isCurrentUser,
+    userName,
+    onContextMenu,
+    isHighlighted,
+    messageIndex,
+  }) => {
+    const formattedTime = useMemo(
+      () => moment(msg.createdAt).format("HH:mm"),
+      [msg.createdAt]
+    );
+
+    const handleContextMenu = useCallback(
+      (e) => {
+        e.preventDefault();
+        onContextMenu(e, messageIndex, msg);
+      },
+      [onContextMenu, messageIndex, msg]
+    );
+
+    return (
+      <div
+        className={`mb-2 relative p-2 rounded-lg ${
+          isHighlighted ? "bg-blue-100" : ""
+        } ${msg.sender === userName ? "text-right" : "text-left"}`}
+        onContextMenu={handleContextMenu}
+      >
+        <div
+          className={`inline-flex items-center gap-6 p-2 rounded-lg shadow cursor-context-menu transition-all duration-200 ${
+            msg.sender === userName
+              ? `bg-primary rounded-br-none text-white ${
+                  isHighlighted ? "ring-2 ring-white ring-opacity-60" : ""
+                }`
+              : `bg-white rounded-tl-none ${
+                  isHighlighted ? "ring-2 ring-primary/20 ring-opacity-60" : ""
+                }`
+          }`}
+        >
+          <div>
+            {msg.sender !== userName && (
+              <p className="text-xs font-semibold text-blue-600">
+                {msg.sender}
+              </p>
+            )}
+            <p className="mb-1 text-sm">{msg.message}</p>
+          </div>
+          <span
+            className={`self-end text-[10px] ${
+              msg.sender === userName ? "text-gray-100" : ""
+            }`}
+          >
+            {formattedTime}
+          </span>
+        </div>
+      </div>
+    );
+
+    // return (
+    //   <div
+    //     onClick={() => console.log(msg.dID)}
+    //     onContextMenu={handleContextMenu}
+    //     className={`mb-2 ${
+    //       msg.sender === userName ? "text-right" : "text-left"
+    //     }`}
+    //   >
+    //     <div
+    //       className={`inline-flex items-center gap-6 p-2 rounded-lg shadow ${
+    //         msg.sender === userName
+    //           ? "bg-primary rounded-br-none text-white"
+    //           : "bg-white rounded-tl-none"
+    //       }`}
+    //     >
+    //       <div>
+    //         {msg.sender !== userName && (
+    //           <p className="text-xs font-semibold text-blue-600">
+    //             {msg.sender}
+    //           </p>
+    //         )}
+    //         <p className="mb-1 text-sm">{msg.message}</p>
+    //       </div>
+    //       <span
+    //         className={`self-end text-[10px] ${
+    //           msg.sender === userName ? "text-gray-100" : ""
+    //         }`}
+    //       >
+    //         {formattedTime}
+    //       </span>
+    //     </div>
+    //   </div>
+    // );
+  }
+);
+
+MessageItem.displayName = "MessageItem";
+
+const ContextMenu = memo(({ position, onClose, onDelete, isDeleting }) => {
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        onClose();
+      }
+    };
+
+    const handleEscape = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [onClose]);
+
+  const adjustedPosition = useMemo(() => {
+    const menuWidth = 150;
+    const menuHeight = 50;
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    let x = position.x;
+    let y = position.y;
+    if (x + menuWidth > windowWidth) {
+      x = windowWidth - menuWidth - 10;
+    }
+
+    if (y + menuHeight > windowHeight) {
+      y = windowHeight - menuHeight - 10;
+    }
+
+    return { x, y };
+  }, [position]);
 
   return (
     <div
-      className={`mb-2 ${msg.sender === userName ? "text-right" : "text-left"}`}
+      ref={menuRef}
+      className="fixed z-50 p-1 bg-white border border-gray-200 rounded-lg shadow-md min-w-[150px]"
+      style={{
+        top: `${adjustedPosition.y}px`,
+        left: `${adjustedPosition.x}px`,
+      }}
     >
-      <div
-        className={`inline-flex items-center gap-6 p-2 rounded-lg shadow ${
-          msg.sender === userName
-            ? "bg-primary rounded-br-none text-white"
-            : "bg-white rounded-tl-none"
+      <button
+        onClick={onDelete}
+        disabled={isDeleting}
+        className={`w-full p-2 text-sm text-left rounded-sm transition ${
+          isDeleting
+            ? "text-gray-400 cursor-not-allowed"
+            : "text-red-600 hover:bg-red-50"
         }`}
       >
-        <div>
-          {msg.sender !== userName && (
-            <p className="text-xs font-semibold text-blue-600">{msg.sender}</p>
-          )}
-          <p className="mb-1 text-sm">{msg.message}</p>
-        </div>
-        <span
-          className={`self-end text-[10px] ${
-            msg.sender === userName ? "text-gray-100" : ""
-          }`}
-        >
-          {formattedTime}
-        </span>
-      </div>
+        {isDeleting ? "Deleting..." : "Delete for me"}
+      </button>
     </div>
   );
 });
 
-MessageItem.displayName = "MessageItem";
+ContextMenu.displayName = "ContextMenu";
 
 const ClubItem = memo(({ club, currentClubId, unreadCount, onSelect }) => {
   const handleClick = useCallback(() => {
@@ -132,6 +263,10 @@ function Chat() {
   const bottomRef = useRef(null);
   const lastMessageCountRef = useRef(0);
   const isMobile = useIsMobile(768);
+  const [contextMenu, setContextMenu] = useState(null);
+  const [selectedMessage, setSelectedMessage] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const shouldShowChat = !isMobile || (isMobile && chatState);
 
   const {
@@ -148,10 +283,12 @@ function Chat() {
   const handleSendMessage = useCallback(async () => {
     if (!message.trim() || !currentClub) return;
 
+    const dID = nanoid();
     const messageToSend = message.trim();
     const tempMessage = {
       message: messageToSend,
       sender: user.name,
+      dID,
       createdAt: new Date().toISOString(),
     };
 
@@ -164,6 +301,7 @@ function Chat() {
         {
           clubId: currentClub._id,
           message: messageToSend,
+          dID,
         }
       );
 
@@ -174,13 +312,18 @@ function Chat() {
           room: currentClub._id,
           message: messageToSend,
           sender: user.name,
+          dID,
           clubId: currentClub._id,
         });
 
         setChat((prev) =>
           prev.map((msg, index) =>
             index === prev.length - 1 && msg.message === messageToSend
-              ? { ...msg, createdAt: data.newMessage.createdAt }
+              ? {
+                  ...msg,
+                  createdAt: data.newMessage.createdAt,
+                  dID: data.newMessage.dID,
+                }
               : msg
           )
         );
@@ -195,6 +338,51 @@ function Chat() {
       console.error("Error sending message:", error);
     }
   }, [message, currentClub, user?.name]);
+
+  const handleDeleteMessage = useCallback(async () => {
+    if (!selectedMessage || !currentClub || isDeleting) return;
+    const messageIndex = selectedMessage.index;
+
+    setIsDeleting(true);
+
+    try {
+      const response = await axiosInstance.patch(
+        api_paths.messages.delete_message_for_me,
+        { dID: selectedMessage.msg.dID }
+      );
+
+      const data = response.data;
+      if (data.success) {
+        setChat((prev) => prev.filter((_, index) => index !== messageIndex));
+        toast.success("Message deleted");
+      } else {
+        toast.error("Failed to delete message");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete message");
+      console.error("Error deleting message:", error);
+    } finally {
+      setIsDeleting(false);
+      setContextMenu(null);
+      setSelectedMessage(null);
+    }
+  }, [selectedMessage, currentClub, isDeleting, user?._id]);
+
+  const handleContextMenu = useCallback((e, index, msg) => {
+    e.preventDefault();
+    setContextMenu({
+      x: e.clientX,
+      y: e.clientY,
+    });
+    setSelectedMessage({ index, msg });
+  }, []);
+
+  const closeContextMenu = useCallback(() => {
+    if (!isDeleting) {
+      setContextMenu(null);
+      setSelectedMessage(null);
+    }
+  }, [isDeleting]);
 
   const handleKeyPress = useCallback(
     (e) => {
@@ -252,9 +440,12 @@ function Chat() {
           msg={msg}
           isCurrentUser={msg.sender === userName}
           userName={userName}
+          onContextMenu={handleContextMenu}
+          messageIndex={i}
+          isHighlighted={selectedMessage?.index === i}
         />
       )),
-    [chat, userName]
+    [chat, userName, handleContextMenu, selectedMessage]
   );
 
   useEffect(() => {
@@ -266,8 +457,8 @@ function Chat() {
 
     socket.emit("joinRoom", currentClub._id);
 
-    const handleMessage = ({ message, sender, createdAt }) => {
-      setChat((prev) => [...prev, { message, sender, createdAt }]);
+    const handleMessage = ({ message, sender, createdAt, dID }) => {
+      setChat((prev) => [...prev, { message, sender, createdAt, dID }]);
     };
 
     socket.on("message", handleMessage);
@@ -305,6 +496,7 @@ function Chat() {
             message: m.message,
             sender: m.sender.name,
             createdAt: m.createdAt,
+            dID: m.dID,
           }));
           setChat(messages);
           lastMessageCountRef.current = messages.length;
@@ -373,8 +565,17 @@ function Chat() {
                 </div>
               </div>
 
-              <div className="relative flex-1 p-4 overflow-y-auto bg-primary/5">
+              <div className="relative flex-1 p-2 overflow-y-auto bg-primary/5">
                 {messagesList}
+                {contextMenu && (
+                  <ContextMenu
+                    position={contextMenu}
+                    onClose={closeContextMenu}
+                    onDelete={handleDeleteMessage}
+                    isDeleting={isDeleting}
+                  />
+                )}
+
                 <div ref={bottomRef} />
               </div>
 

@@ -5,6 +5,7 @@ import Message from "../models/messageModel.js";
 export const sendMessage = async (req, res) => {
   const userId = req.user._id;
   const clubId = req.body.clubId;
+  const dID = req.body.dID;
 
   try {
     const club = await Club.findById(clubId);
@@ -30,6 +31,7 @@ export const sendMessage = async (req, res) => {
       sender: userId,
       club: clubId,
       message: newMessage,
+      dID,
     });
 
     const io = req.app.get("io");
@@ -289,10 +291,10 @@ export const markMessageAsRead = async (req, res) => {
 
 export const deleteMessageForUser = async (req, res) => {
   const userId = req.user._id;
-  const { messageId } = req.body;
+  const { dID } = req.body;
 
   try {
-    const message = await Message.findById(messageId);
+    const message = await Message.findOne({ dID });
 
     if (!message) {
       return res.status(404).json({
