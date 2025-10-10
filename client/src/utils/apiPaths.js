@@ -67,5 +67,6 @@ export const api_paths = {
     get_messages: "/api/messages",
     get_unread_messages_count: "/api/messages/unread-count",
     mark_read_many: "/api/messages/mark-read-many",
+    delete_message_for_me: "/api/messages/delete-for-me",
   },
 };

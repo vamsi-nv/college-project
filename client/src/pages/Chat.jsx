@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback, memo, useMemo } from "react";
-import { LuSend } from "react-icons/lu";
+import { LuSend, LuTrash2 } from "react-icons/lu";
 import socket from "../utils/socket";
 import { useAuth } from "../context/UserContextProvider";
 import { PiArrowLeft } from "react-icons/pi";
@@ -203,12 +203,14 @@ const ContextMenu = memo(({ position, onClose, onDelete, isDeleting }) => {
       <button
         onClick={onDelete}
         disabled={isDeleting}
-        className={`w-full p-2 text-sm text-left rounded-sm transition ${
+        className={`w-full p-2 text-sm text-left rounded-sm transition flex items-center gap-1 ${
           isDeleting
             ? "text-gray-400 cursor-not-allowed"
             : "text-red-600 hover:bg-red-50"
         }`}
       >
+        {" "}
+        <LuTrash2 />
         {isDeleting ? "Deleting..." : "Delete for me"}
       </button>
     </div>
@@ -240,7 +242,7 @@ const ClubItem = memo(({ club, currentClubId, unreadCount, onSelect }) => {
           {club.description}
         </p>
       </div>
-      {unreadCount > 0 && (
+      {unreadCount > 0 && currentClubId !== club?._id && (
         <div className="flex flex-col items-center justify-center">
           <span className="text-xs text-primary">new</span>
           <div className="bg-primary text-white text-xs rounded-full min-w-[22px] h-[22px] flex items-center justify-center px-1">

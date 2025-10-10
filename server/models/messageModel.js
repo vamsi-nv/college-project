@@ -31,12 +31,14 @@ const messageSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+        unique: true,
       },
     ],
 
     dID: {
       type: String,
       required: true,
+      unique: true,
     },
   },
   { timestamps: true }
