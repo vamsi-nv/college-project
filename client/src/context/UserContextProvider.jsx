@@ -187,7 +187,6 @@ function UserContextProvider({ children }) {
     }
   }, [user, fetchUnreadCount]);
 
-  // Fetch user clubs and their unread counts when user is available
   useEffect(() => {
     if (user) {
       const initializeClubData = async () => {
