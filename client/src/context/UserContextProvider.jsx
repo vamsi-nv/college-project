@@ -160,7 +160,9 @@ function UserContextProvider({ children }) {
   );
 
   useEffect(() => {
-    fetchCurrentUser();
+    if(localStorage.getItem("college-token")){
+      fetchCurrentUser();
+    }
   }, [fetchCurrentUser]);
 
   useEffect(() => {
